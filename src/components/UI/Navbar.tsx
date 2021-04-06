@@ -16,8 +16,8 @@ const Navbar = () => {
     user: { token, email },
   } = userState;
 
-  const [SignInModalOpen, setSignInModalOpen] = useState(false);
-  const [SignUpModalOpen, setSignUpModalOpen] = useState(false);
+  const [SignInModalOpen, setSignInModalOpen] = useState<boolean>(false);
+  const [SignUpModalOpen, setSignUpModalOpen] = useState<boolean>(false);
 
   const handleMainPageBtn = () => {
     history.push("/");
