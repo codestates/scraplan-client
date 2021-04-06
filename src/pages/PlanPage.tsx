@@ -1,7 +1,7 @@
 import React from "react";
 
 function PlanPage() {
-  return <div></div>;
+  return <div>플랜페이지</div>;
 }
 
 export default PlanPage;
