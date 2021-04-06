@@ -1,7 +1,4 @@
 // Action Types
-
-import { sign } from "crypto";
-
 // User Action
 export const SIGN_IN = "SIGN_IN" as const;
 export const SIGN_OUT = "SIGN_OUT" as const;
