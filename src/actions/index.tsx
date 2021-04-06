@@ -1,7 +1,4 @@
 // Action Types
-
-import { sign } from "crypto";
-
 // User Action
 export const SIGN_IN = "SIGN_IN" as const;
 export const SIGN_OUT = "SIGN_OUT" as const;
@@ -81,7 +78,7 @@ export const withdraw = (email: string, password: string) => {
   };
 };
 
-export const getGoogleToken = (data: object) => {
+export const getGoogleToken = (data: string) => {
   return {
     type: GET_GOOGLE_TOKEN,
     payload: {
