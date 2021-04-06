@@ -35,17 +35,16 @@ const Navbar = () => {
     dispatch(signOut());
     dispatch(getGoogleToken(""));
     history.push("/");
-    const payload = JSON.stringify({
-      email,
-    });
-    //   return fetch(`${process.env.REACT_APP_SERVER_URL}/user/signout`, {
-    //     method: "POST",
+    //   return fetch(`${process.env.REACT_APP_SERVER_URL}/sign/out`, {
+    //     method: "PUT",
     //     headers: {
     //       authorization: `Bearer ${token}`,
     //       "Content-Type": "application/json",
     //       credentials: "include",
     //     },
-    //     body: payload,
+    //     body: JSON.stringify({
+    //       email,
+    //     }),
     //   })
     //     .then((res) => res.json())
     //     .then((data) => data)

@@ -1,7 +1,11 @@
-import React from "react";
+import Navbar from "../components/UI/Navbar";
 
 function MainPage() {
-  return <div></div>;
+  return (
+    <div className="mainPage">
+      <Navbar />
+    </div>
+  );
 }
 
 export default MainPage;
