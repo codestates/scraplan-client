@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../reducers";
 import { useHistory } from "react-router-dom";
 import { signOut, getGoogleToken } from "../../actions";
+
 import Signin from "../User/Signin";
 import Signup from "../User/Signup";
 import "./UI.scss";
@@ -19,14 +20,22 @@ const Navbar = () => {
   const [SignInModalOpen, setSignInModalOpen] = useState<boolean>(false);
   const [SignUpModalOpen, setSignUpModalOpen] = useState<boolean>(false);
 
+  const closeSignInModal = () => {
+    setSignInModalOpen(false);
+  };
+
+  const closeSignUpModal = () => {
+    setSignUpModalOpen(false);
+  };
+
   const handleMainPageBtn = () => {
     history.push("/");
   };
   const handleSigninBtn = () => {
-    // signin Modal
+    setSignInModalOpen(true);
   };
   const handleSignupBtn = () => {
-    // signup Modal
+    setSignUpModalOpen(true);
   };
   const handleMyPageBtn = () => {
     history.push("/mypage");
@@ -53,23 +62,27 @@ const Navbar = () => {
   };
 
   return (
-    <div className="navbar">
-      <div className="navbar__logo" onClick={handleMainPageBtn}>
-        <img src="/images/logo.png" alt="" />
+    <>
+      {/* <Signup open={SignUpModalOpen} close={closeSignUpModal} /> */}
+      <Signin open={SignInModalOpen} close={closeSignInModal} />
+      <div className="navbar">
+        <div className="navbar__logo" onClick={handleMainPageBtn}>
+          <img src="/images/logo.png" alt="" />
+        </div>
+        <div className="navbar__btns">
+          <button
+            onClick={token.length === 0 ? handleSigninBtn : handleMyPageBtn}
+          >
+            {token.length === 0 ? "로그인" : "마이페이지"}
+          </button>
+          <button
+            onClick={token.length === 0 ? handleSignupBtn : handleSignoutBtn}
+          >
+            {token.length === 0 ? "회원가입" : "로그아웃"}
+          </button>
+        </div>
       </div>
-      <div className="navbar__btns">
-        <button
-          onClick={token.length === 0 ? handleSigninBtn : handleMyPageBtn}
-        >
-          {token.length === 0 ? "로그인" : "마이페이지"}
-        </button>
-        <button
-          onClick={token.length === 0 ? handleSignupBtn : handleSignoutBtn}
-        >
-          {token.length === 0 ? "회원가입" : "로그아웃"}
-        </button>
-      </div>
-    </div>
+    </>
   );
 };
 
