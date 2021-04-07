@@ -1,6 +1,6 @@
-import { GET_PLANS, GET_PLAN_CARDS } from "../actions/index";
-import { initialState, State } from "./initialState";
-import { Action } from "../actions/index";
+import { GET_PLANS, GET_PLAN_CARDS } from '../actions/index';
+import { initialState, State } from './initialState';
+import { Action } from '../actions/index';
 
 const planReducer = (state: State = initialState, action: Action): State => {
   switch (action.type) {
