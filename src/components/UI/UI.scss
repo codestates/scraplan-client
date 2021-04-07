@@ -1,5 +1,6 @@
 $main: #f36671;
 $dark: #191919;
+$mediumdark: rgba(0, 0, 0, 0.7);
 $light: #e8e8e8;
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
@@ -48,5 +49,102 @@ button {
         transition: all ease 0.3s;
       }
     }
+  }
+}
+
+// YesNoModal
+.yesnomodal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  &__outsider {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: $mediumdark;
+  }
+  &__wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    width: 380px;
+    height: 200px;
+    border-radius: 4px;
+    .yesnomodal__close-btn {
+      position: sticky;
+      background-color: #fff;
+      font-size: 20px;
+      border: 0;
+      outline: 0;
+      position: relative;
+      top: -52px;
+      left: 170px;
+      &:hover {
+        color: $main;
+        transition: all ease 0.2s;
+      }
+    }
+    .yesnomodal__title {
+      position: relative;
+      color: $dark;
+      font-weight: 700;
+      font-size: 20px;
+    }
+    .yesnomodal__btns {
+      position: relative;
+      top: 20px;
+      width: 180px;
+      height: 30px;
+      display: flex;
+      justify-content: space-between;
+      button {
+        font-size: 12px;
+        font-weight: 700;
+        border-radius: 4px;
+        width: 80px;
+        display: 60px;
+        background-color: #fff;
+        border: 1px solid $main;
+        outline: 0;
+        color: $main;
+        &:hover {
+          cursor: pointer;
+          background-color: $main;
+          border: 0;
+          outline: 0;
+          color: #fff;
+          transition: all ease 0.2s;
+        }
+      }
+    }
+  }
+}
+
+.show {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: show-modal 0.4s;
+}
+
+@keyframes show-modal {
+  from {
+    opacity: 0.3;
+    margin-top: 50px;
+  }
+  to {
+    opacity: 1;
+    margin-top: 0;
   }
 }
