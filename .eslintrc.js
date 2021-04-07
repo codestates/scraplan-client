@@ -18,5 +18,7 @@ module.exports = {
     // eslint-plugin-prettier와 eslint-config-prettier를 활성화한다. prettier 에러를 eslint 에러로 표시해 줄 것이다.
     // 이 설정은 반드시 extends 배열의 마지막 값이어야 한다.
   ],
-  rules: {},
+  rules: {
+    'prettier/prettier': 0,
+  },
 };
