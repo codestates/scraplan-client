@@ -78,7 +78,7 @@ export const withdraw = (email: string, password: string) => {
   };
 };
 
-export const getGoogleToken = (data: object) => {
+export const getGoogleToken = (data: string) => {
   return {
     type: GET_GOOGLE_TOKEN,
     payload: {
