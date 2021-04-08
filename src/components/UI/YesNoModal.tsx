@@ -6,33 +6,20 @@ type YesNoModalProps = {
   close: () => void;
   comment: string;
   handleAcceptAction?: () => void;
-  handleRejectAction?: () => void;
 };
 
 function YesNoModal(props: YesNoModalProps) {
-  const {
-    open,
-    close,
-    comment,
-    handleAcceptAction,
-    handleRejectAction,
-  } = props;
+  const { open, close, comment, handleAcceptAction } = props;
 
   useEffect(() => {
     window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") handleNoBtn();
+      if (e.key === "Escape") close();
     });
-  }, []);
+  }, [open]);
 
   const handleYesBtn = () => {
     if (handleAcceptAction) {
       handleAcceptAction();
-    }
-  };
-  const handleNoBtn = () => {
-    if (handleRejectAction) {
-      handleRejectAction();
-      close();
     }
   };
 
@@ -50,7 +37,7 @@ function YesNoModal(props: YesNoModalProps) {
               <button className="yesnomodal__btns-yes" onClick={handleYesBtn}>
                 네
               </button>
-              <button className="yesnomodal__btns-no" onClick={handleNoBtn}>
+              <button className="yesnomodal__btns-no" onClick={close}>
                 아니오
               </button>
             </div>
