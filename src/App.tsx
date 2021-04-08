@@ -14,13 +14,13 @@ function App() {
     <Router>
       <Switch>
         <Route path="/" exact component={MainPage} />
-        <Route path="/feedpage/:userid" component={FeedPage} />
+        <Route path="/feedpage" component={FeedPage} />
         <Route path="/mypage" component={MyPage} />
-        <Route path="/planpage" component={PlanPage} />
+        <Route path="/planpage/:planId" component={PlanPage} />
         <Route path="/edituserinfo" component={EditUserInfo} />
-        <Route path="/viewcuration" component={ViewCuration} />
-        <Route path="/curationmanagement" component={CurationManagement} />
-        <Route path="/curationrequest" component={CurationRequest} />
+        <Route path="/viewcuration/:curationId" component={ViewCuration} />
+        <Route path="/curation-management" component={CurationManagement} />
+        <Route path="/curation-request" component={CurationRequest} />
       </Switch>
     </Router>
   );
