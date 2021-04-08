@@ -1,0 +1,234 @@
+$main: #f36671;
+$dark: #191919;
+$mediumdark: rgba(0, 0, 0, 0.7);
+$light: #e8e8e8;
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border: none;
+  outline: none;
+  font-family: "Noto Sans KR", sans-serif;
+  color: $mediumdark;
+}
+html,
+body {
+  width: 100vw;
+}
+
+// MyPage
+.mypage {
+  display: flex;
+  flex-direction: column;
+  padding-top: 64px;
+  padding-left: 10rem;
+  width: 100vw;
+  height: auto;
+  min-width: 760px;
+  max-width: 1585px;
+  .mypage__header {
+    margin-top: 5rem;
+    &__title {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+    &__nickname {
+      height: 1.4rem;
+      font-size: 1rem;
+      margin-top: 2rem;
+      font-weight: 600;
+    }
+    &__email {
+      height: 2rem;
+      margin-top: 0.4rem;
+      margin-bottom: 0.8rem;
+      font-size: 0.8rem;
+    }
+    &__edit-btn {
+      background-color: $light;
+      height: 2rem;
+      width: 6rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 3px;
+      span {
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+      img {
+        margin-left: 0.3rem;
+        height: 0.8rem;
+        opacity: 0.7;
+      }
+      &:hover {
+        background-color: #1919194b;
+        transition: all ease 0.4s;
+      }
+    }
+  }
+  .mypage__menus {
+    margin-top: 10vh;
+    height: 4rem;
+    button {
+      width: 6rem;
+      height: 3rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      &:hover {
+        border-bottom: 3px solid $main;
+        color: $main;
+        transition: ease color 0.2s;
+      }
+    }
+  }
+  .mypage__contents {
+    &__title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 0;
+      width: 80vw;
+      border-bottom: 2px solid $light;
+      &-text {
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+      &__feedpage-btn {
+        display: flex;
+        color: $main;
+        align-items: center;
+        justify-content: center;
+        width: 12rem;
+        height: 2.2rem;
+        border-radius: 1.1rem;
+        background-color: $light;
+        margin-right: 10%;
+        span {
+          font-size: 0.8rem;
+          font-weight: 500;
+          margin-right: 2px;
+        }
+        img {
+          height: 0.8rem;
+          opacity: 0.7;
+        }
+        &:hover {
+          background-color: #f366725b;
+          transition: all ease 0.5s;
+        }
+      }
+    }
+    &__search-bar {
+      display: flex;
+      flex-direction: column;
+      padding: 1.2rem;
+      div {
+        display: flex;
+        align-items: center;
+        padding: 0.6rem 0;
+      }
+      p {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-right: 1.5rem;
+      }
+      h6 {
+        min-width: 1.8rem;
+        font-size: 0.8rem;
+        font-weight: 500;
+        margin-right: 0.8rem;
+      }
+      select,
+      input {
+        color: $dark;
+        background-color: $light;
+        height: 2rem;
+        padding: 1.1rem 1rem;
+        border-radius: 3px;
+        margin-left: -0.2rem;
+        margin-right: 1rem;
+      }
+      datalist {
+        max-height: 250px;
+        overflow-y: auto;
+      }
+      option {
+        color: #191919;
+      }
+      input[type="number"]::-webkit-inner-spin-button {
+        opacity: 1;
+      }
+      &-address {
+        display: flex;
+        flex-wrap: wrap;
+        input {
+          width: 8rem;
+        }
+        &__reset-btn {
+          font-size: 0.8rem;
+          font-weight: 500;
+          margin-left: 0.8rem;
+          &:hover {
+            color: $main;
+          }
+        }
+      }
+      &-daycount {
+        display: flex;
+        flex-wrap: wrap;
+        input {
+          width: 8rem;
+        }
+      }
+      .mypage__contents__search-bar-daycount-max {
+        margin-right: 30vw;
+      }
+      &-search-btn {
+        background-color: #f36672a9;
+        color: #fff;
+        font-weight: 400;
+        width: 8rem;
+        height: 2.3rem;
+        border-radius: 3px;
+        &:hover {
+          background-color: #f36671;
+          transition: all ease 0.5s;
+        }
+      }
+    }
+    &__plans {
+      display: flex;
+      flex-wrap: wrap;
+      width: 80vw;
+      border-top: 2px solid $light;
+      padding: 1.6rem;
+      &__add-plan {
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 1rem;
+        width: 400px;
+        height: 180px;
+        border: 2px dashed $light;
+        img {
+          height: 1rem;
+          opacity: 0.6;
+        }
+        p {
+          opacity: 0.7;
+          font-size: 0.9rem;
+          margin-top: 0.5rem;
+        }
+        &:hover {
+          background-color: #f3667236;
+          transition: 0.5s all ease;
+        }
+      }
+    }
+  }
+}
