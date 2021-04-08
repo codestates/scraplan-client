@@ -1,13 +1,7 @@
-import {
-  useState,
-  useEffect,
-  useCallback,
-  createRef,
-  KeyboardEvent,
-} from "react";
+import { useState, useEffect, useCallback, useRef, KeyboardEvent } from "react";
 import { useDispatch } from "react-redux";
 import { signIn } from "../../actions";
-import "../User/User.scss";
+import "./User.scss";
 
 type SigninProps = {
   open: boolean;
@@ -17,9 +11,8 @@ type SigninProps = {
 const Signin = (props: SigninProps) => {
   const { open, close } = props;
   const dispatch = useDispatch();
-  const modalWrapper = createRef<HTMLInputElement>();
-  const refEmail = createRef<HTMLInputElement>();
-  const refPassword = createRef<HTMLInputElement>();
+  const refEmail = useRef<HTMLInputElement | null>(null);
+  const refPassword = useRef<HTMLInputElement | null>(null);
 
   const [inputEmail, setInputEmail] = useState<string>("");
   const [inputPassword, setInputPassword] = useState<string>("");
@@ -127,7 +120,7 @@ const Signin = (props: SigninProps) => {
   };
 
   return (
-    <div className={`signin ${open ? "show" : ""}`} ref={modalWrapper}>
+    <div className={`signin ${open ? "show" : ""}`}>
       {open ? (
         <>
           <div className="signin__outsider" onClick={handleCloseBtn}></div>
