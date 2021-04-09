@@ -65,6 +65,7 @@ const Navbar = () => {
     <>
       {/* <Signup open={SignUpModalOpen} close={closeSignUpModal} /> */}
       <Signin open={SignInModalOpen} close={closeSignInModal} />
+      <Signup open={SignUpModalOpen} close={closeSignUpModal} />
       <div className="navbar">
         <div className="navbar__logo" onClick={handleMainPageBtn}>
           <img src="/images/logo.png" alt="" />
