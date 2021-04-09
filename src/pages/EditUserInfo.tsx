@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userEditInfo, withdraw } from "../actions";
 import Navbar from "../components/UI/Navbar";
-import YesNoModal from "../components/UI/YesNoModal";
+import Modal from "../components/UI/Modal";
 import { RootState } from "../reducers";
 
 function EditUserInfo() {
@@ -199,7 +199,8 @@ function EditUserInfo() {
   return (
     <>
       <Navbar />
-      <YesNoModal
+      <Modal
+        modalType={"yesNoModal"}
         open={openModal}
         close={handleModalClose}
         comment={modalComment}
