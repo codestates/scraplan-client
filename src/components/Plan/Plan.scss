@@ -1,0 +1,74 @@
+$main: #f36671;
+$dark: #191919;
+$mediumdark: rgba(0, 0, 0, 0.7);
+$light: #e8e8e8;
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+.plansummary {
+  width: 400px;
+  height: 180px;
+  margin: 1.2rem;
+  border-radius: 3px;
+  &__contents__plan {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 0.4rem;
+    width: 400px;
+    height: 180px;
+    background-color: $light;
+    border-radius: 3px;
+    z-index: 1;
+    &__title {
+      margin-left: 2rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    &__info {
+      margin-left: 2rem;
+      font-size: 0.8rem;
+    }
+    &__description {
+      margin-top: 1rem;
+      margin-left: 2rem;
+      white-space: nowrap;
+      overflow: hidden;
+      font-size: 0.9rem;
+      width: 280px;
+      height: 2rem;
+      text-overflow: ellipsis;
+    }
+    &:hover {
+      background-color: #f7858f60;
+    }
+  }
+  &__contents__plan:hover + &__contents__plan-hover {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    position: relative;
+    top: -188px;
+    width: 400px;
+    height: 180px;
+    transition: all ease 0.5s;
+  }
+
+  &__contents__plan-hover {
+    display: none;
+    &__cancel-btn {
+      background-color: rgba(0, 0, 0, 0);
+      cursor: pointer;
+    }
+    &__share-btn {
+      img {
+        opacity: 0.7;
+        width: 1rem;
+        height: 1rem;
+      }
+      span {
+        opacity: 0.7;
+      }
+    }
+  }
+}
