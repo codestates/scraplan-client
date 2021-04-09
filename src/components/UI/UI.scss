@@ -22,12 +22,14 @@ button {
   height: 64px;
   width: 100vw;
   min-width: 760px;
-  max-width: 1585px;
+  max-width: 1792px;
   justify-content: space-between;
+  background-color: #fff;
+  border-bottom: 1px solid $light;
   .navbar__logo {
     img {
       height: 24px;
-      padding: 0px 80px;
+      padding: 0 10rem;
       cursor: pointer;
     }
   }
