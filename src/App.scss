@@ -1,7 +1,13 @@
 $main: #f36671;
 $dark: #191919;
 $mediumdark: rgba(0, 0, 0, 0.7);
+$lightdark: #666;
 $light: #e8e8e8;
+
+.hidden {
+  opacity: 0;
+  transition: 0.4s all ease;
+}
 
 //EditUserInfo Page
 .edit-userinfo {
@@ -405,7 +411,7 @@ body {
       display: flex;
       width: 68vw;
       padding: 1rem 4rem;
-      border-top:  2px solid $light;
+      border-top: 2px solid $light;
       p {
         font-size: 1rem;
         font-weight: 600;
@@ -465,8 +471,133 @@ body {
           h4 {
             margin-right: 1rem;
           }
-       }
+        }
       }
     }
   }
+}
+
+// PlanPage
+.planpage {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  border: 1px solid #555;
+  &__layout {
+    position: absolute;
+    display: flex;
+    z-index: 999;
+    justify-content: space-between;
+    align-items: center;
+    width: 100vw;
+    height: 80px;
+    margin-top: 64px;
+    background-color: rgba(0, 0, 0, 0);
+    &__options {
+      display: flex;
+      align-items: center;
+      margin-left: 8rem;
+      height: 64px;
+      &__option {
+        font-weight: 500;
+        border-radius: 3px;
+        font-size: 0.85rem;
+        &:hover {
+          font-weight: 600;
+          color: $main;
+        }
+        box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.1);
+        width: 36px;
+        height: 36px;
+        margin-right: 0.6rem;
+        &-desc,
+        &-desc-second {
+          display: none;
+        }
+        &-desc-second {
+          margin-left: 46px;
+        }
+        &:hover + &-desc,
+        &:hover + &-desc-second {
+          display: block;
+          position: absolute;
+          font-size: 0.8rem;
+          font-weight: 500;
+          top: 4rem;
+          padding: 0.3rem 1rem;
+          color: $main;
+          background-color: rgba(255, 255, 255, 0.7);
+        }
+      }
+      &__theme {
+        border-radius: 3px;
+        font-size: 0.85rem;
+        &:hover {
+          font-weight: 600;
+          color: $main;
+        }
+        box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.1);
+        width: 3rem;
+        height: 36px;
+      }
+      &__theme-list {
+        display: none;
+      }
+      &__theme:hover + &__theme-list,
+      &__theme-list:hover {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        top: 50px;
+        left: -48px;
+        width: 240px;
+        height: 120px;
+      }
+      &__theme-list__inner {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        border-radius: 3px;
+        width: 16em;
+        height: 46px;
+        padding: 1rem 1.2rem;
+        box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+        position: relative;
+        &__item {
+          border-radius: 5px;
+          font-size: 1.3rem;
+          width: 2rem;
+          height: 2rem;
+          border: 2px solid #eeeee800;
+          background-color: #eeeee84d;
+          &:hover {
+            border: 2px solid #fa818b;
+            background-color: #f366721a;
+          }
+        }
+      }
+    }
+    &__search-bar {
+      display: flex;
+      left: 45%;
+      position: absolute;
+      width: 14rem;
+      padding: 0.5rem 1.6rem;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 9rem;
+      box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.1);
+      input {
+        width: 80%;
+      }
+    }
+  }
+}
+
+#planpage__map {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(238, 238, 232);
 }
