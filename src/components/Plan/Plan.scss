@@ -5,8 +5,8 @@ $light: #e8e8e8;
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 .plansummary {
-  width: 400px;
-  height: 180px;
+  width: 370px;
+  height: 170px;
   margin: 1.2rem;
   border-radius: 3px;
   &__contents__plan {
@@ -14,8 +14,8 @@ $light: #e8e8e8;
     flex-direction: column;
     justify-content: center;
     margin-bottom: 0.4rem;
-    width: 400px;
-    height: 180px;
+    width: 370px;
+    height: 170px;
     background-color: $light;
     border-radius: 3px;
     z-index: 1;
@@ -49,8 +49,8 @@ $light: #e8e8e8;
     justify-content: space-between;
     position: relative;
     top: -188px;
-    width: 400px;
-    height: 180px;
+    width: 370px;
+    height: 170px;
     transition: all ease 0.5s;
   }
 

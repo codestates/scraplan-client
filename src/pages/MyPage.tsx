@@ -2,10 +2,11 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { RootState } from "../reducers";
-import { getPlans } from "../actions";
+import { getPlans, getCurationsRequests } from "../actions";
 import Navbar from "../components/UI/Navbar";
 import PlanSummary from "../components/Plan/PlanSummary";
 import mapdata from "../data/mapdata.json";
+import CurationRequestItem from "../components/Curation/CurationRequestItem";
 
 const MyPage = () => {
   const history = useHistory();
@@ -20,6 +21,29 @@ const MyPage = () => {
       writer: "guest",
       dayCount: 3,
       representAddr: "울산광역시",
+    },
+  ]);
+
+  const [curationsRequestsList, setCurationsRequestsList] = useState([
+    {
+      id: 0,
+      title: "서울 여행",
+      requester: "tester",
+      cordinates: [10, 10],
+      address: "서울시 강남구 -",
+      requestComment: "이 장소에 대해 추가해주세요~! ",
+      requestTheme: 3,
+      status: 1,
+    },
+    {
+      id: 1,
+      title: "서울 여행",
+      requester: "tester",
+      cordinates: [10, 10],
+      address: "서울시 성동구 마장동",
+      requestComment: "이 장소에 대해 추가해주세요~! ",
+      requestTheme: 3,
+      status: 3,
     },
   ]);
 
@@ -43,6 +67,23 @@ const MyPage = () => {
   useEffect(() => {
     setAddrList(mapdata);
     setAddrListSi(Object.keys(mapdata));
+  }, []);
+
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/curation-requests/${email}`, {
+      method: "GET",
+      headers: {
+        authorization: `bearer ${token}`,
+        "Content-Type": "application/json",
+        credentials: "include",
+      },
+    })
+      .then((res) => res.json())
+      .then((body) => {
+        dispatch(getCurationsRequests(body.curationRequests));
+        setCurationsRequestsList(body.curationRequests);
+      })
+      .catch((err) => console.error(err));
   }, []);
 
   useEffect(() => {
@@ -81,39 +122,39 @@ const MyPage = () => {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setInputAddrSi(e.target?.value);
     },
-    [inputAddrSi]
+    [inputAddrSi],
   );
   const handleChangeAddrGun = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setInputAddrGun(e.target?.value);
     },
-    [inputAddrGun]
+    [inputAddrGun],
   );
   const handleChangeAddrGu = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setInputAddrGu(e.target?.value);
     },
-    [inputAddrGu]
+    [inputAddrGu],
   );
 
   const handleChangeAddrDong = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setInputAddrDong(e.target?.value);
     },
-    [inputAddrDong]
+    [inputAddrDong],
   );
 
   const handleChangeDaycountMin = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setInputDaycountMin(e.target?.value);
     },
-    [inputDaycountMin]
+    [inputDaycountMin],
   );
   const handleChangeDaycountMax = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setInputDaycountMax(e.target?.value);
     },
-    [inputDaycountMax]
+    [inputDaycountMax],
   );
   const handleAddrReset = (): void => {
     setInputAddrSi("");
@@ -124,6 +165,7 @@ const MyPage = () => {
 
   const handleGetPlansByFilter = () => {
     if (Number(inputDaycountMin) > Number(inputDaycountMax)) {
+      // modal 로 수정할 예정
       alert("최소값이 최대값보다 작아야합니다.");
     } else {
       const addr =
@@ -132,14 +174,14 @@ const MyPage = () => {
         (inputAddrGu === "-" ? "" : inputAddrGu) +
         inputAddrDong;
       fetch(
-        `${process.env.REACT_APP_SERVER_URL}/plans?writer-email=${email}min-day=${inputDaycountMin}&max-day=${inputDaycountMax}&addr=${addr}`,
+        `${process.env.REACT_APP_SERVER_URL}/plans?writer-email=${email}&min-day=${inputDaycountMin}&max-day=${inputDaycountMax}&addr=${addr}`,
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
             credentials: "include",
           },
-        }
+        },
       )
         .then((res) => res.json())
         .then((body) => {
@@ -173,7 +215,7 @@ const MyPage = () => {
         <div className="mypage__menus">
           <button onClick={() => handleMenuBtn("myPlans")}>내 일정 관리</button>
           <button onClick={() => handleMenuBtn("myCurationRequest")}>
-            요청 확인
+            큐레이션 요청
           </button>
         </div>
         {curMenu === "myPlans" ? (
@@ -317,7 +359,24 @@ const MyPage = () => {
             </div>
           </div>
         ) : (
-          <></>
+          <div className="mypage__contents">
+            <div className="mypage__contents__title">
+              <p className="mypage__contents__title-text">큐레이션 요청 확인</p>
+            </div>
+            <div className="mypage__contents__notice-img">
+              <img src="" alt="" />
+            </div>
+            <div className="mypage__contents__req-table">
+              <div className="mypage__contents__req-table__top-bar">
+                <p>요청번호</p>
+                <p>상태</p>
+                <p>제목</p>
+              </div>
+              {curationsRequestsList.map((item) => {
+                return <CurationRequestItem props={item} />;
+              })}
+            </div>
+          </div>
         )}
       </div>
     </>
