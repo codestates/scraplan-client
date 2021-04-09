@@ -54,27 +54,21 @@ export const signOut = () => {
 export const userEditInfo = (
   token: string,
   email: string,
-  password: string,
-  nickname: string
+  nickname: string,
 ) => {
   return {
     type: USER_EDIT_INFO,
     payload: {
       token,
       email,
-      password,
       nickname,
     },
   };
 };
 
-export const withdraw = (email: string, password: string) => {
+export const withdraw = () => {
   return {
     type: WITHDRAW,
-    payload: {
-      email,
-      password,
-    },
   };
 };
 
