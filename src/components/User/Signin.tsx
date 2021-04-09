@@ -36,14 +36,14 @@ const Signin = (props: SigninProps) => {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setInputEmail(e.target?.value);
     },
-    [inputEmail]
+    [inputEmail],
   );
 
   const handleChangePassword = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setInputPassword(e.target?.value);
     },
-    [inputPassword]
+    [inputPassword],
   );
 
   const handleCloseBtn = (): void => {
