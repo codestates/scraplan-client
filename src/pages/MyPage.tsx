@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import { RootState } from "../reducers";
 import { getPlans, getCurationsRequests } from "../actions";
 import Navbar from "../components/UI/Navbar";
+import Modal from "../components/UI/Modal";
 import PlanSummary from "../components/Plan/PlanSummary";
 import mapdata from "../data/mapdata.json";
 import CurationRequestItem from "../components/Curation/CurationRequestItem";
@@ -12,6 +13,10 @@ const MyPage = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const userState = useSelector((state: RootState) => state.userReducer);
+
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [modalComment, setModalComment] = useState<string>("");
+
   const [curMenu, setCurMenu] = useState<string>("myPlans");
   const [planList, setPlanList] = useState([
     {
@@ -118,6 +123,13 @@ const MyPage = () => {
     setCurMenu(menu);
   };
 
+  const handleModalOpen = () => {
+    setOpenModal(true);
+  };
+  const handleModalClose = () => {
+    setOpenModal(false);
+  };
+
   const handleChangeAddrSi = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setInputAddrSi(e.target?.value);
@@ -166,7 +178,8 @@ const MyPage = () => {
   const handleGetPlansByFilter = () => {
     if (Number(inputDaycountMin) > Number(inputDaycountMax)) {
       // modal 로 수정할 예정
-      alert("최소값이 최대값보다 작아야합니다.");
+      setModalComment("최소값이 최대값보다 작아야합니다.");
+      handleModalOpen();
     } else {
       const addr =
         inputAddrSi +
@@ -195,6 +208,12 @@ const MyPage = () => {
   return (
     <>
       <Navbar />
+      <Modal
+        modalType={"alertModal"}
+        open={openModal}
+        close={handleModalClose}
+        comment={modalComment}
+      />
       <div className="mypage">
         <div className="mypage__header">
           <div className="mypage__header__title">마이페이지</div>
