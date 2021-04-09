@@ -23,7 +23,7 @@ const Signin = (props: SigninProps) => {
     window.addEventListener("keydown", (e) => {
       if (e.key === "Escape") handleCloseBtn();
     });
-  }, []);
+  }, [open]);
 
   const handleKeyPressEnter = (e: KeyboardEvent): void => {
     if (e.key === "Enter") {
