@@ -290,7 +290,13 @@ body {
       div {
         display: flex;
         align-items: center;
-        padding: 0.6rem 0;
+      }
+      input {
+        background-color: $light;
+        width: 4rem;
+        height: 2rem;
+        padding: 1.1rem 1.2rem;
+        border-radius: 3px;
       }
       p {
         font-size: 0.9rem;
@@ -298,36 +304,58 @@ body {
         margin-right: 1.5rem;
       }
       h6 {
-        min-width: 1.8rem;
+        margin-right: 0.6rem;
+        min-width: 0.8rem;
         font-size: 0.8rem;
         font-weight: 500;
-        margin-right: 0.8rem;
-      }
-      select,
-      input {
-        color: $dark;
-        background-color: $light;
-        height: 2rem;
-        padding: 1.1rem 1rem;
-        border-radius: 3px;
-        margin-left: -0.2rem;
-        margin-right: 1rem;
-      }
-      datalist {
-        max-height: 250px;
-        overflow-y: auto;
-      }
-      option {
-        color: #191919;
       }
       input[type="number"]::-webkit-inner-spin-button {
         opacity: 1;
       }
       &-address {
         display: flex;
+        align-items: center;
         flex-wrap: wrap;
-        input {
-          width: 8rem;
+        margin-bottom: 1rem;
+        &-all {
+          display: flex;
+          justify-content: center;
+          border-radius: 3px;
+          background-color: $light;
+          min-width: 19.1rem;
+          padding: 0.2rem 1rem;
+          span {
+            padding: 0.4rem 0rem;
+            ul {
+              box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.1);
+              background-color: #fff;
+              height: 10rem;
+              overflow-y: scroll;
+              z-index: 900;
+              position: relative;
+              list-style: none;
+              margin-top: 1.2rem;
+              li {
+                padding: 0.4rem 2rem;
+                &:hover {
+                  background-color: #eee;
+                }
+              }
+            }
+          }
+        }
+        &-si,
+        &-gun,
+        &-gu {
+          font-size: 0.9rem;
+          min-width: 3rem;
+          cursor: pointer;
+          width: auto;
+          text-align: center;
+          background-color: $light;
+          height: 2rem;
+          border-radius: 3px;
+          margin-right: 1rem;
         }
         &__reset-btn {
           font-size: 0.8rem;
@@ -343,6 +371,9 @@ body {
         flex-wrap: wrap;
         input {
           width: 8rem;
+        }
+        &-max-title {
+          margin-left: 1rem;
         }
       }
       .mypage__contents__search-bar-daycount-max {
