@@ -38,15 +38,15 @@ const MyPage = () => {
       address: "서울시 강남구 -",
       requestComment: "이 장소에 대해 추가해주세요~! ",
       requestTheme: 3,
-      status: 1,
+      status: 0,
     },
     {
       id: 1,
-      title: "서울 여행",
+      title: "마장동 소고기 투어",
       requester: "tester",
       cordinates: [10, 10],
       address: "서울시 성동구 마장동",
-      requestComment: "이 장소에 대해 추가해주세요~! ",
+      requestComment: "소고기는 마장동에서!",
       requestTheme: 3,
       status: 3,
     },
@@ -177,7 +177,6 @@ const MyPage = () => {
 
   const handleGetPlansByFilter = () => {
     if (Number(inputDaycountMin) > Number(inputDaycountMax)) {
-      // modal 로 수정할 예정
       setModalComment("최소값이 최대값보다 작아야합니다.");
       handleModalOpen();
     } else {
@@ -363,9 +362,10 @@ const MyPage = () => {
                 <img src="/images/add.png" alt="" />
                 <p>일정 만들기</p>
               </div>
-              {planList.map((plan) => {
+              {planList.map((plan, idx) => {
                 return (
                   <PlanSummary
+                    key={idx}
                     id={plan.id}
                     title={plan.title}
                     desc={plan.desc}
@@ -391,8 +391,8 @@ const MyPage = () => {
                 <p>상태</p>
                 <p>제목</p>
               </div>
-              {curationsRequestsList.map((item) => {
-                return <CurationRequestItem props={item} />;
+              {curationsRequestsList.map((item, idx) => {
+                return <CurationRequestItem key={idx} props={item} />;
               })}
             </div>
           </div>

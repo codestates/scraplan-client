@@ -245,6 +245,7 @@ body {
     }
   }
   .mypage__contents {
+    margin-bottom: 6rem;
     &__title {
       display: flex;
       align-items: center;
@@ -423,10 +424,14 @@ body {
       width: 68vw;
       padding: 1rem 4rem;
       border-top: 1px solid $light;
+      &:hover {
+        background-color: rgba(238, 238, 238, 0.3);
+      }
       &__details {
         display: flex;
         width: 100%;
         justify-content: space-between;
+        cursor: pointer;
         &__texts {
           display: flex;
           align-items: center;
@@ -437,7 +442,7 @@ body {
           }
           &-status {
             color: $main;
-            background-color: #f3667221;
+            background-color: #faecee;
             padding: 0.2rem 0.5rem;
             border-radius: 5px;
             font-size: 0.9rem;
@@ -452,10 +457,27 @@ body {
             border-radius: 1rem;
             opacity: 0.8;
             font-weight: 500;
+            background-color: #eee;
+            margin-left: 0.4rem;
+          }
+          &-showmore {
             &:hover {
-              background-color: #f366722f;
               color: $main;
+              background-color: #ffc6cb;
               transition: 0.4s all ease;
+            }
+          }
+          &-cancel {
+            &:hover {
+              color: $main;
+              background-color: #ffc6cb;
+              transition: 0.4s all ease;
+            }
+          }
+          &-limited {
+            background-color: #eee;
+            &:hover {
+              background-color: #ddd;
             }
           }
         }
@@ -463,8 +485,9 @@ body {
       &-showmore {
         display: flex;
         flex-direction: column;
-        padding: 0 20vw 1.2rem;
         width: 68vw;
+        padding: 0 4rem 1.2rem 4rem;
+        margin-left: 20rem;
         &__text {
           display: flex;
           margin-bottom: 0.3rem;
@@ -474,6 +497,15 @@ body {
         }
       }
     }
+  }
+}
+
+.limited-btn {
+  cursor: unset;
+  background-color: #eee;
+  &:hover {
+    color: #666;
+    background-color: #eee;
   }
 }
 
