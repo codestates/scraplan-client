@@ -14,7 +14,10 @@ const PlanPage = () => {
   const planState = useSelector((state: RootState) => state.planReducer);
   const { themeList } = planState;
 
-  const [LatLng, setLatLng] = useState<number[]>([33.450701, 126.570667]);
+  const [LatLng, setLatLng] = useState<number[]>([
+    37.5139795454969,
+    127.048963363388,
+  ]);
   const [map, setMap] = useState<any>({});
   const [mapLevel, setMapLevel] = useState<number>(5);
   const [mapBounds, setMapBounds] = useState<object>();
@@ -64,6 +67,12 @@ const PlanPage = () => {
   ]);
 
   const [inputKeyword, setInputKeyword] = useState<string>("");
+  const [keywordList, setKeywordList] = useState<any>([]);
+
+  const [searchLatLng, setSearchLatLng] = useState<number[]>([
+    37.5139795454969,
+    127.048963363388,
+  ]);
 
   useEffect(() => {
     window.kakao.maps.load(() => {
@@ -71,6 +80,7 @@ const PlanPage = () => {
     });
   }, []);
 
+  // marker request
   useEffect(() => {
     fetch(
       `${process.env.REACT_APP_SERVER_URL}/curations?coordinates=${mapBounds}`,
@@ -88,6 +98,31 @@ const PlanPage = () => {
       })
       .catch((err) => console.error(err));
   }, [mapBounds]);
+
+  // keyword request
+  useEffect(() => {
+    if (inputKeyword !== "") {
+      fetch(
+        `https://dapi.kakao.com/v2/local/search/keyword.json?query=${inputKeyword}&y=${LatLng[0]}&x=${LatLng[1]}&sort=distance`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `KakaoAK ${process.env.REACT_APP_KAKAO_MAP_RESTAPI_KEY}`,
+          },
+        },
+      )
+        .then((res) => res.json())
+        .then((body) => {
+          let newKeywordList: object[] = [];
+          body.documents.map((addr: any) => {
+            newKeywordList.push(addr.address_name);
+          });
+          setKeywordList(newKeywordList);
+          setSearchLatLng([body.documents[0].y, body.documents[0].x]);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [inputKeyword]);
 
   const handleChangeInputKeyword = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -185,8 +220,27 @@ const PlanPage = () => {
   const handleFilterByTheme = (): void => {};
 
   const handleSearchByKeyword = (): void => {
+    moveKakaoMap(searchLatLng[0], searchLatLng[1]);
+    setKeywordList([]);
+    setInputKeyword("");
+  };
+
+  const handleEnterSearch = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleSearchByKeyword();
+    }
+  };
+
+  const handleEscKey = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") {
+      setKeywordList([]);
+      setInputKeyword("");
+    }
+  };
+
+  const handleClickKeywordList = (addr: string) => {
     fetch(
-      `https://dapi.kakao.com/v2/local/search/keyword.json?query=${inputKeyword}`,
+      `https://dapi.kakao.com/v2/local/search/keyword.json?query=${addr}&y=${LatLng[0]}&x=${LatLng[1]}&sort=distance`,
       {
         method: "GET",
         headers: {
@@ -196,9 +250,12 @@ const PlanPage = () => {
     )
       .then((res) => res.json())
       .then((body) => {
+        setSearchLatLng([body.documents[0].y, body.documents[0].x]);
         moveKakaoMap(body.documents[0].y, body.documents[0].x);
       })
       .catch((err) => console.log(err));
+    setInputKeyword("");
+    setKeywordList([]);
   };
 
   const handleClickMarker = () => {
@@ -234,14 +291,31 @@ const PlanPage = () => {
             </div>
           </div>
         </div>
-        <div className={"planpage__layout__search-bar"}>
-          <input
-            type="text"
-            placeholder="지역 검색"
-            value={inputKeyword}
-            onChange={handleChangeInputKeyword}
-          ></input>
-          <button onClick={handleSearchByKeyword}>🔍</button>
+        <div className="planpage__layout__search-bar__wrapper">
+          <div className="planpage__layout__search-bar">
+            <input
+              type="text"
+              placeholder="지역 검색"
+              value={inputKeyword}
+              onChange={handleChangeInputKeyword}
+              onKeyPress={handleEnterSearch}
+              onKeyDown={handleEscKey}
+            ></input>
+            <button onClick={handleSearchByKeyword}>🔍</button>
+          </div>
+          {keywordList.length !== 0 ? (
+            <ul>
+              {keywordList.map((addr: string, idx: number) => {
+                return (
+                  <li key={idx} onClick={() => handleClickKeywordList(addr)}>
+                    {`👉🏻  ${addr}`}
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
       <div id="planpage__map"></div>
