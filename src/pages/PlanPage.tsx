@@ -2,6 +2,8 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
 import Navbar from "../components/UI/Navbar";
+import CurationList from "../components/Curation/CurationList";
+import PlanList from "../components/Plan/PlanList";
 require("dotenv").config();
 
 declare global {
@@ -71,6 +73,8 @@ const PlanPage = () => {
   return (
     <div className="planpage">
       <Navbar />
+      <CurationList />
+      <PlanList />
       <div className="planpage__layout">
         <div className="planpage__layout__options">
           <button className="planpage__layout__options__option">👀</button>
