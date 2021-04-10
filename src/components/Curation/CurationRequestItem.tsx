@@ -14,7 +14,7 @@ type CurationRequestItemProps = {
   status: number;
 };
 
-const CurationRequestItem = (props: any) => {
+const CurationRequestItem = ({ props }: any) => {
   const userState = useSelector((state: RootState) => state.userReducer);
   const statusCode = ["대기중", "처리중", "승인완료", "요청취소"];
   //0, 1, 2, 3 -> pending, processing, resolved, rejected
@@ -64,18 +64,37 @@ const CurationRequestItem = (props: any) => {
     <>
       <div className="mypage__contents__req-table__item">
         <div className="mypage__contents__req-table__item__details">
-          <div className="mypage__contents__req-table__item__details__texts">
+          <div
+            className="mypage__contents__req-table__item__details__texts"
+            onClick={handleShowmoreBtn}
+          >
             <p>31232</p>
             <p>
               <span className="mypage__contents__req-table__item__details__texts-status">
                 {statusCode[status]}
               </span>
             </p>
-            <p>서울 카페 추천</p>
+            <p>{title}</p>
           </div>
           <div className="mypage__contents__req-table__item__details__btns">
-            <button onClick={handleShowmoreBtn}>더보기</button>
-            <button onClick={handleCurationRequestCancelBtn}>취소</button>
+            <button
+              onClick={handleShowmoreBtn}
+              className="mypage__contents__req-table__item__details__btns-showmore"
+            >
+              {showmore ? "접기" : "더보기"}
+            </button>
+            {status === 3 ? (
+              <button
+                className="mypage__contents__req-table__item__details__btns-cancel"
+                onClick={handleCurationRequestCancelBtn}
+              >
+                취소
+              </button>
+            ) : (
+              <button className="mypage__contents__req-table__item__details__btns-limited">
+                취소불가
+              </button>
+            )}
           </div>
         </div>
       </div>

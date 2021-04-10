@@ -38,24 +38,28 @@ const MyPage = () => {
       address: "서울시 강남구 -",
       requestComment: "이 장소에 대해 추가해주세요~! ",
       requestTheme: 3,
-      status: 1,
+      status: 0,
     },
     {
       id: 1,
-      title: "서울 여행",
+      title: "마장동 소고기 투어",
       requester: "tester",
       cordinates: [10, 10],
       address: "서울시 성동구 마장동",
-      requestComment: "이 장소에 대해 추가해주세요~! ",
+      requestComment: "소고기는 마장동에서!",
       requestTheme: 3,
       status: 3,
     },
   ]);
 
-  const [inputAddrSi, setInputAddrSi] = useState<string>("");
-  const [inputAddrGun, setInputAddrGun] = useState<string>("");
-  const [inputAddrGu, setInputAddrGu] = useState<string>("");
-  const [inputAddrDong, setInputAddrDong] = useState<string>("");
+  const [inputAddrSi, setInputAddrSi] = useState<string>("선택");
+  const [inputAddrGun, setInputAddrGun] = useState<string>("선택");
+  const [inputAddrGu, setInputAddrGu] = useState<string>("선택");
+
+  const [toggleSi, setToggleSi] = useState<boolean>(false);
+  const [toggleGun, setToggleGun] = useState<boolean>(false);
+  const [toggleGu, setToggleGu] = useState<boolean>(false);
+
   const [inputDaycountMin, setInputDaycountMin] = useState<string>("1");
   const [inputDaycountMax, setInputDaycountMax] = useState<string>("1");
 
@@ -63,7 +67,6 @@ const MyPage = () => {
   const [addrListSi, setAddrListSi] = useState<string[]>([""]);
   const [addrListGun, setAddrListGun] = useState<string[]>([""]);
   const [addrListGu, setAddrListGu] = useState<string[]>([""]);
-  const [addrListDong, setAddrListDong] = useState<string[]>([""]);
 
   const {
     user: { token, email, nickname },
@@ -103,21 +106,9 @@ const MyPage = () => {
       addrList[inputAddrSi] &&
       addrList[inputAddrSi][inputAddrGun]
     ) {
-      setAddrListGu(Object.keys(addrList[inputAddrSi][inputAddrGun]));
+      setAddrListGu(addrList[inputAddrSi][inputAddrGun]);
     }
   }, [inputAddrGun]);
-
-  useEffect(() => {
-    if (
-      inputAddrSi !== "" &&
-      (inputAddrGun !== "" || inputAddrGu !== "") &&
-      addrList[inputAddrSi] &&
-      addrList[inputAddrSi][inputAddrGun] &&
-      addrList[inputAddrSi][inputAddrGun][inputAddrGu]
-    ) {
-      setAddrListDong(addrList[inputAddrSi][inputAddrGun][inputAddrGu]);
-    }
-  }, [inputAddrGu]);
 
   const handleMenuBtn = (menu: string): void => {
     setCurMenu(menu);
@@ -129,32 +120,6 @@ const MyPage = () => {
   const handleModalClose = () => {
     setOpenModal(false);
   };
-
-  const handleChangeAddrSi = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setInputAddrSi(e.target?.value);
-    },
-    [inputAddrSi],
-  );
-  const handleChangeAddrGun = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setInputAddrGun(e.target?.value);
-    },
-    [inputAddrGun],
-  );
-  const handleChangeAddrGu = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setInputAddrGu(e.target?.value);
-    },
-    [inputAddrGu],
-  );
-
-  const handleChangeAddrDong = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setInputAddrDong(e.target?.value);
-    },
-    [inputAddrDong],
-  );
 
   const handleChangeDaycountMin = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -168,24 +133,37 @@ const MyPage = () => {
     },
     [inputDaycountMax],
   );
+
+  const handleInputAddrSi = (si: string): void => {
+    setToggleSi(false);
+    setInputAddrSi(si);
+  };
+
+  const handleInputAddrGun = (gun: string): void => {
+    setToggleGun(false);
+    setInputAddrGun(gun);
+  };
+
+  const handleInputAddrGu = (gu: string): void => {
+    setToggleGu(false);
+    setInputAddrGu(gu);
+  };
+
   const handleAddrReset = (): void => {
     setInputAddrSi("");
     setInputAddrGun("");
     setInputAddrGu("");
-    setInputAddrDong("");
   };
 
   const handleGetPlansByFilter = () => {
     if (Number(inputDaycountMin) > Number(inputDaycountMax)) {
-      // modal 로 수정할 예정
       setModalComment("최소값이 최대값보다 작아야합니다.");
       handleModalOpen();
     } else {
       const addr =
         inputAddrSi +
         (inputAddrGun === "-" ? "" : inputAddrGun) +
-        (inputAddrGu === "-" ? "" : inputAddrGu) +
-        inputAddrDong;
+        (inputAddrGu === "-" ? "" : inputAddrGu);
       fetch(
         `${process.env.REACT_APP_SERVER_URL}/plans?writer-email=${email}&min-day=${inputDaycountMin}&max-day=${inputDaycountMax}&addr=${addr}`,
         {
@@ -254,77 +232,83 @@ const MyPage = () => {
             <div className="mypage__contents__search-bar">
               <div className="mypage__contents__search-bar-address">
                 <p>지역</p>
-                <div className="mypage__contents__search-bar-address-si">
-                  <h6>시/도</h6>
-                  <input
-                    list="existSi"
-                    value={inputAddrSi}
-                    onChange={handleChangeAddrSi}
-                  ></input>
-                  <datalist id="existSi">
-                    {addrListSi.map((si, idx) => {
-                      return (
-                        <option key={idx} value={si}>
-                          {si}
-                        </option>
-                      );
-                    })}
-                  </datalist>
-                  <div className="mypage__contents__search-bar-address-gun"></div>
-                  <h6>군</h6>
-                  <input
-                    list="existGun"
-                    value={inputAddrGun}
-                    onChange={handleChangeAddrGun}
-                  ></input>
-                  <datalist id="existGun">
-                    {addrListGun.map((gun, idx) => {
-                      return (
-                        <option key={idx} value={gun}>
-                          {gun}
-                        </option>
-                      );
-                    })}
-                  </datalist>
+                <h6>선택</h6>
+                <div className="mypage__contents__search-bar-address-all">
+                  <span className="mypage__contents__search-bar-address-si">
+                    <span onClick={() => setToggleSi(!toggleSi)}>
+                      {inputAddrSi}
+                    </span>
+                    {toggleSi ? (
+                      <ul>
+                        {addrListSi.map((si, idx) => {
+                          return (
+                            <li
+                              key={idx}
+                              value={si}
+                              onClick={() => handleInputAddrSi(si)}
+                            >
+                              {si}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    ) : (
+                      <></>
+                    )}
+                  </span>
+                  <h6>{">"}</h6>
+                  <span className="mypage__contents__search-bar-address-gun">
+                    <span onClick={() => setToggleGun(!toggleGun)}>
+                      {inputAddrGun}
+                    </span>
+                    {toggleGun ? (
+                      <ul>
+                        {addrListGun.map((gun, idx) => {
+                          return (
+                            <li
+                              key={idx}
+                              value={gun}
+                              onClick={() => handleInputAddrGun(gun)}
+                            >
+                              {gun}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    ) : (
+                      <></>
+                    )}
+                  </span>
+                  <h6>{">"}</h6>
+                  <span className="mypage__contents__search-bar-address-gu">
+                    <span onClick={() => setToggleGu(!toggleGu)}>
+                      {inputAddrGu}
+                    </span>
+                    {toggleGu ? (
+                      <ul>
+                        {addrListGu.map((gu, idx) => {
+                          return (
+                            <li
+                              key={idx}
+                              value={gu}
+                              onClick={() => handleInputAddrGu(gu)}
+                            >
+                              {gu}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    ) : (
+                      <></>
+                    )}
+                  </span>
                 </div>
-                <div className="mypage__contents__search-bar-address-gu">
-                  <h6>구</h6>
-                  <input
-                    list="existGu"
-                    value={inputAddrGu}
-                    onChange={handleChangeAddrGu}
-                  ></input>
-                  <datalist id="existGu">
-                    {addrListGu.map((gu, idx) => {
-                      return (
-                        <option key={idx} value={gu}>
-                          {gu}
-                        </option>
-                      );
-                    })}
-                  </datalist>
-                  <h6>동/읍/면</h6>
-                  <input
-                    list="existDong"
-                    value={inputAddrDong}
-                    onChange={handleChangeAddrDong}
-                  ></input>
-                  <datalist id="existDong">
-                    {addrListDong.map((dong, idx) => {
-                      return (
-                        <option key={idx} value={dong}>
-                          {dong}
-                        </option>
-                      );
-                    })}
-                  </datalist>
-                  <button
-                    className="mypage__contents__search-bar-address__reset-btn"
-                    onClick={handleAddrReset}
-                  >
-                    초기화
-                  </button>
-                </div>
+                <button
+                  className="mypage__contents__search-bar-address__reset-btn"
+                  onClick={handleAddrReset}
+                >
+                  초기화
+                </button>
               </div>
               <div className="mypage__contents__search-bar-daycount">
                 <p>기간</p>
@@ -336,7 +320,9 @@ const MyPage = () => {
                   value={inputDaycountMin}
                   onChange={handleChangeDaycountMin}
                 />
-                <h6>최대</h6>
+                <h6 className="mypage__contents__search-bar-daycount-max-title">
+                  최대
+                </h6>
                 <input
                   className="mypage__contents__search-bar-daycount-max"
                   type="number"
@@ -363,9 +349,10 @@ const MyPage = () => {
                 <img src="/images/add.png" alt="" />
                 <p>일정 만들기</p>
               </div>
-              {planList.map((plan) => {
+              {planList.map((plan, idx) => {
                 return (
                   <PlanSummary
+                    key={idx}
                     id={plan.id}
                     title={plan.title}
                     desc={plan.desc}
@@ -391,8 +378,8 @@ const MyPage = () => {
                 <p>상태</p>
                 <p>제목</p>
               </div>
-              {curationsRequestsList.map((item) => {
-                return <CurationRequestItem props={item} />;
+              {curationsRequestsList.map((item, idx) => {
+                return <CurationRequestItem key={idx} props={item} />;
               })}
             </div>
           </div>
