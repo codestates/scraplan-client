@@ -4,6 +4,110 @@ $mediumdark: rgba(0, 0, 0, 0.7);
 $light: #e8e8e8;
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
+.planlist {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 64px;
+  bottom: 0px;
+  right: 0px;
+  z-index: 999;
+  &__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 4rem;
+    border-radius: 0.5rem 0 0 0.5rem;
+    background-color: $light;
+    img {
+      height: 1.2rem;
+    }
+  }
+  .disappear {
+    animation: disappear-planlist 1s forwards;
+  }
+  &__wrapper {
+    background-color: $light;
+    width: 326px;
+    height: 100%;
+    border-radius: 0.5rem 0 0 0.5rem;
+    animation: appear-planlist 1s;
+    .planlist__content {
+      height: 100%;
+      padding: 1rem;
+      .planlist__title {
+        height: 5%;
+        display: flex;
+        margin-bottom: 1rem;
+      }
+      .planlist__represent-address {
+        height: 10%;
+        margin-bottom: 1rem;
+      }
+      .planlist__dailyplan {
+        display: flex;
+        flex-direction: column;
+        &__top-bar {
+          display: flex;
+          justify-content: center;
+          margin-bottom: 1rem;
+          &__select-day {
+            margin: 0 1rem 0 1rem;
+          }
+        }
+        &__plancards {
+          // height: 100%;
+          background-color: white;
+        }
+      }
+      .planlist__save {
+        float: right;
+        // display: flex;
+        // justify-content: center;
+        // align-items: center;
+        &__button {
+          text-align: center;
+          vertical-align: middle;
+          height: 2rem;
+          width: 6rem;
+          border-radius: 3px;
+          margin-top: 0.5rem;
+          margin-bottom: 0.5rem;
+          background-color: $main;
+          color: #fff;
+          font-size: 0.8rem;
+          font-weight: 400;
+          &:hover {
+            background-color: #b3535b;
+            transition: all ease 0.3s;
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes disappear-planlist {
+  from {
+    margin-right: 0;
+  }
+  to {
+    display: none;
+    margin-right: -326px;
+  }
+}
+
+@keyframes appear-planlist {
+  from {
+    margin-right: -326px;
+  }
+  to {
+    margin-right: 0;
+  }
+}
+
 .plansummary {
   width: 370px;
   height: 170px;
