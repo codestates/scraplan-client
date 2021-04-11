@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import PlanTimeline from "./PlanTimeline.jsx";
 
 const PlanList = () => {
   const [openList, setOpenList] = useState<boolean>(true);
@@ -77,7 +78,9 @@ const PlanList = () => {
                 {">"}
               </button>
             </div>
-            <ul className="planlist__dailyplan__plancards">Cards</ul>
+            <div className="planlist__dailyplan__plancards">
+              <PlanTimeline />
+            </div>
           </div>
           <div className="planlist__save">
             <button className="planlist__save__button">저장하기</button>
