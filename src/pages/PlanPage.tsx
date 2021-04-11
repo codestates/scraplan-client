@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../reducers";
 import Navbar from "../components/UI/Navbar";
 import CurationList from "../components/Curation/CurationList";
 import PlanList from "../components/Plan/PlanList";
+import { getCurationCards } from "../actions";
 require("dotenv").config();
 
 declare global {
@@ -15,6 +16,7 @@ declare global {
 const PlanPage = () => {
   const planState = useSelector((state: RootState) => state.planReducer);
   const { themeList } = planState;
+  const dispatch = useDispatch();
 
   const [LatLng, setLatLng] = useState<number[]>([
     37.5139795454969,
@@ -67,6 +69,7 @@ const PlanPage = () => {
       theme: 1,
     },
   ]);
+  const [curationId, setCurationId] = useState<number>();
 
   const [inputKeyword, setInputKeyword] = useState<string>("");
   const [keywordList, setKeywordList] = useState<any>([]);
@@ -260,8 +263,25 @@ const PlanPage = () => {
     setKeywordList([]);
   };
 
+  //
   const handleClickMarker = () => {
     alert("마커클릭");
+    fetch(`${process.env.REACT_APP_SERVER_URL}/curation-cards/${curationId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        credentials: "include",
+      },
+    })
+      .then((res) => res.json())
+      .then((body) => {
+        if (body) {
+          dispatch(getCurationCards(body));
+        } else {
+          alert("데이터가 없습니다.");
+        }
+      })
+      .catch((err) => console.error(err));
   };
 
   return (

@@ -1,39 +1,17 @@
 import React, { useCallback, useState } from "react";
 import CurationCard from "./CurationCard";
 import "./Curation.scss";
+import { useSelector } from "react-redux";
+import { RootState } from "../../reducers";
 
 const CurationList = () => {
   const [openList, setOpenList] = useState<boolean>(false);
   const [sortByTime, setSortByTime] = useState<boolean>(false);
-  const [curationCardsList, setCuratioinCardsList] = useState([
-    {
-      curationCardId: 0,
-      theme: 1,
-      title: "코딩하기 좋은 카페",
-      detail: "이 카페는 ~~~~",
-      photo: "https://~~~",
-      avgTime: 1.45,
-      feedbackCnt: 243,
-    },
-    {
-      curationCardId: 1,
-      theme: 4,
-      title: "카페 명소",
-      detail: "이 카페는 ~~~~",
-      photo: "https://~~~",
-      avgTime: 1,
-      feedbackCnt: 10,
-    },
-    {
-      curationCardId: 2,
-      theme: 5,
-      title: "마장동 축산물 시장",
-      detail: "이 카페는 ~~~~",
-      photo: "https://~~~",
-      avgTime: 1,
-      feedbackCnt: 10,
-    },
-  ]);
+  // curationcards는 리액트로
+  const curationState = useSelector(
+    (state: RootState) => state.curationReducer,
+  );
+  const { origin, sortByAvgTime } = curationState.curationCards;
 
   const handleListState = useCallback(() => {
     setOpenList(!openList);
@@ -64,9 +42,22 @@ const CurationList = () => {
             시간순
           </span>
           <ul className="curationlist__content__cards">
-            {curationCardsList.map((card) => {
-              return <CurationCard props={card} />;
-            })}
+            {(sortByTime ? sortByAvgTime : origin).map(
+              (
+                card: {
+                  curationCardId: number;
+                  theme: number;
+                  title: string;
+                  detail: string;
+                  photo: string;
+                  avgTime: number;
+                  feedbackCnt: number;
+                },
+                index: number,
+              ) => {
+                return <CurationCard props={card} key={index} />;
+              },
+            )}
           </ul>
         </div>
       </div>
