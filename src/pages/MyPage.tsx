@@ -150,9 +150,9 @@ const MyPage = () => {
   };
 
   const handleAddrReset = (): void => {
-    setInputAddrSi("");
-    setInputAddrGun("");
-    setInputAddrGu("");
+    setInputAddrSi("선택");
+    setInputAddrGun("선택");
+    setInputAddrGu("선택");
   };
 
   const handleGetPlansByFilter = () => {

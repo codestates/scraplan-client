@@ -4,6 +4,7 @@ $mediumdark: rgba(0, 0, 0, 0.7);
 $light: #e8e8e8;
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
+// PlanList
 .planlist {
   box-sizing: border-box;
   display: flex;
@@ -17,30 +18,95 @@ $light: #e8e8e8;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
+    width: 1.5rem;
     height: 4rem;
     border-radius: 0.5rem 0 0 0.5rem;
-    background-color: $light;
+    background-color: #f7f7f9;
+    box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.1);
     img {
-      height: 1.2rem;
+      height: 1rem;
     }
   }
   .disappear {
     animation: disappear-planlist 1s forwards;
   }
   &__wrapper {
-    background-color: $light;
-    width: 326px;
+    background-color: #f7f7f9;
+    width: 21rem;
     height: 100%;
+    padding: 2rem 1rem 3rem 1.2rem;
     border-radius: 0.5rem 0 0 0.5rem;
     animation: appear-planlist 1s;
     .planlist__content {
       height: 100%;
       padding: 1rem;
       .planlist__title {
-        height: 5%;
         display: flex;
+        flex-direction: column;
+        height: 5vh;
         margin-bottom: 1rem;
+        &__input {
+          font-size: 1.1rem;
+          font-weight: 700;
+          width: 13rem;
+          padding: 0.4rem 0;
+          border-bottom: $light 1.6px solid;
+          background-color: rgba(0, 0, 0, 0);
+          &::placeholder {
+            color: #ccc;
+          }
+          &:focus {
+            border-bottom: 1px solid #ebabb2;
+          }
+        }
+      }
+      .planlist__public-toggle__switch-text {
+        position: absolute;
+        left: 15.8rem;
+        top: 2.8rem;
+        font-size: 1rem;
+        width: 3rem;
+        text-align: center;
+        font-weight: 500;
+      }
+      .planlist__public-toggle {
+        position: absolute;
+        left: 18rem;
+        display: flex;
+        &__switch-checkbox {
+          display: none;
+        }
+        &__switch-label {
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
+          font-size: 1rem;
+          position: absolute;
+          height: 1.4rem;
+          width: 2.6rem;
+          border-radius: 50px;
+          border: #ccc 2px solid;
+          span {
+            margin-right: 0.6rem;
+            margin-left: 0.6rem;
+          }
+        }
+        &__ball {
+          cursor: pointer;
+          position: absolute;
+          left: 1.2px;
+          top: 1px;
+          background-color: rgb(214, 206, 148);
+          transition: all 0.2s linear;
+          border-radius: 50%;
+          height: 1rem;
+          width: 1rem;
+          text-align: center;
+        }
+        .moveToRight {
+          transform: translateX(1.2rem);
+          background-color: #ccc;
+        }
       }
       .planlist__represent-address {
         height: 10%;
@@ -58,15 +124,11 @@ $light: #e8e8e8;
           }
         }
         &__plancards {
-          // height: 100%;
           background-color: white;
         }
       }
       .planlist__save {
         float: right;
-        // display: flex;
-        // justify-content: center;
-        // align-items: center;
         &__button {
           text-align: center;
           vertical-align: middle;
@@ -108,6 +170,7 @@ $light: #e8e8e8;
   }
 }
 
+// Plan Summary
 .plansummary {
   width: 370px;
   height: 170px;

@@ -4,6 +4,9 @@ const PlanList = () => {
   const [openList, setOpenList] = useState<boolean>(true);
   const [inputTitle, setInputTitle] = useState<string>("");
   const [isShare, setIsShaer] = useState<boolean>(true);
+  const [publicToggleChecked, setPublicToggleChecked] = useState<boolean>(
+    false,
+  );
 
   const handleListState = useCallback(() => {
     setOpenList(!openList);
@@ -15,6 +18,10 @@ const PlanList = () => {
     },
     [inputTitle],
   );
+
+  const handlePublicToggle = () => {
+    setPublicToggleChecked(!publicToggleChecked);
+  };
 
   // 지역 정하기 => input list 사용
 
@@ -30,10 +37,33 @@ const PlanList = () => {
               className="planlist__title__input"
               value={inputTitle}
               onChange={handleInputTitle}
+              placeholder="제목을 입력하세요"
             />
-            <div className="planlist__share-toggle">공유버튼</div>
+            <p className="planlist__public-toggle__switch-text">
+              {publicToggleChecked ? "🔒" : "🔓"}
+            </p>
+            <div className="planlist__public-toggle">
+              <input
+                type="checkbox"
+                className="planlist__public-toggle__switch-checkbox"
+                checked={publicToggleChecked}
+                onChange={handlePublicToggle}
+                id="switch-input"
+              />
+
+              <label
+                htmlFor="switch-input"
+                className="planlist__public-toggle__switch-label"
+              >
+                <div
+                  className={`planlist__public-toggle__ball ${
+                    publicToggleChecked ? "moveToRight" : ""
+                  }`}
+                ></div>
+              </label>
+            </div>
+            <div className="planlist__represent-address">지역 설정</div>
           </div>
-          <div className="planlist__represent-address">지역 설정</div>
           <div className="planlist__dailyplan">
             <div className="planlist__dailyplan__top-bar">
               <button className="planlist__dailyplan__top-bar__prev">
