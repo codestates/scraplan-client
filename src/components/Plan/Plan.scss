@@ -124,7 +124,13 @@ $light: #e8e8e8;
           }
         }
         &__plancards {
-          background-color: white;
+          border: 1px solid #555;
+          height: 40rem;
+          overflow-y: scroll;
+          &__grid {
+            // position: absolute;
+            height: 3rem;
+          }
         }
       }
       .planlist__save {
@@ -237,5 +243,23 @@ $light: #e8e8e8;
         opacity: 0.7;
       }
     }
+  }
+}
+// Plan Timeline
+#plantimeline {
+  height: 500px;
+  overflow-y: scroll;
+}
+
+// Plan Card
+.plancard {
+  width: 15rem;
+  background-color: #fff;
+  border: 1px solid #555;
+  border-radius: 3px;
+  margin-bottom: 0.5rem;
+  display: flex;
+  &__title {
+    font-size: 0.9rem;
   }
 }

@@ -42,7 +42,7 @@ const CurationList = () => {
             시간순
           </span>
           <ul className="curationlist__content__cards">
-            {(sortByTime ? sortByAvgTime : origin).map(
+            {((sortByTime ? sortByAvgTime : origin) || [""]).map(
               (
                 card: {
                   curationCardId: number;
