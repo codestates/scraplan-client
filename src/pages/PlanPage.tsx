@@ -5,6 +5,7 @@ import Navbar from "../components/UI/Navbar";
 import CurationList from "../components/Curation/CurationList";
 import PlanList from "../components/Plan/PlanList";
 import { getCurationCards } from "../actions";
+import Modal from "../components/UI/Modal";
 require("dotenv").config();
 
 declare global {
@@ -78,6 +79,16 @@ const PlanPage = () => {
     37.5139795454969,
     127.048963363388,
   ]);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [modalType, setModalType] = useState<string>("");
+  const [modalComment, setModalComment] = useState<string>("");
+
+  const handleModalOpen = () => {
+    setOpenModal(true);
+  };
+  const handleModalClose = () => {
+    setOpenModal(false);
+  };
 
   useEffect(() => {
     window.kakao.maps.load(() => {
@@ -265,7 +276,6 @@ const PlanPage = () => {
 
   //
   const handleClickMarker = () => {
-    alert("마커클릭");
     fetch(`${process.env.REACT_APP_SERVER_URL}/curation-cards/${curationId}`, {
       method: "GET",
       headers: {
@@ -278,7 +288,9 @@ const PlanPage = () => {
         if (body) {
           dispatch(getCurationCards(body));
         } else {
-          alert("데이터가 없습니다.");
+          setModalComment("데이터가 없습니다.");
+          setModalType("alertModal");
+          handleModalOpen();
         }
       })
       .catch((err) => console.error(err));
@@ -289,6 +301,12 @@ const PlanPage = () => {
       <Navbar />
       <CurationList />
       <PlanList />
+      <Modal
+        open={openModal}
+        close={handleModalClose}
+        comment={modalComment}
+        modalType={modalType}
+      />
       <div className="planpage__layout">
         <div className="planpage__layout__options">
           <button className="planpage__layout__options__option">👀</button>
