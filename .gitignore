@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+!/node_modules/react-grid-layout/css/styles.css
+!/node_modules/react-resizable/css/styles.css
 /.pnp
 .pnp.js
 .env
