@@ -5,8 +5,7 @@ import GridLayout from "react-grid-layout";
 import PlanCard from "./PlanCard";
 import SetTime from "../UI/SetTime";
 import SetTheme from "../UI/SetTheme";
-import "../../../node_modules/react-grid-layout/css/styles.css";
-import "../../../node_modules/react-resizable/css/styles.css";
+import "./PlanTimeline.scss";
 
 const ReactGridLayout = WidthProvider(RGL);
 
