@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import PlanSummary from "../components/Plan/PlanSummary";
 import Navbar from "../components/UI/Navbar";
+import Signin from "../components/User/Signin";
 import Modal from "../components/UI/Modal";
 import mapdata from "../data/mapdata.json";
+import { RootState } from "../reducers";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getPlans, getCurationsRequests } from "../actions";
@@ -10,6 +12,8 @@ import { getPlans, getCurationsRequests } from "../actions";
 const FeedPage = () => {
   const history = useHistory();
   const dispatch = useDispatch();
+  const userState = useSelector((state: RootState) => state.userReducer);
+
   const [planList, setPlanList] = useState([
     {
       id: 0,
@@ -20,9 +24,11 @@ const FeedPage = () => {
       representAddr: "울산광역시",
     },
   ]);
-
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [modalComment, setModalComment] = useState<string>("");
+
+  const [SignInModalOpen, setSignInModalOpen] = useState<boolean>(false);
+  const [SignUpModalOpen, setSignUpModalOpen] = useState<boolean>(false);
 
   const [inputAddrSi, setInputAddrSi] = useState<string>("선택");
   const [inputAddrGun, setInputAddrGun] = useState<string>("선택");
@@ -39,6 +45,10 @@ const FeedPage = () => {
   const [addrListSi, setAddrListSi] = useState<string[]>([""]);
   const [addrListGun, setAddrListGun] = useState<string[]>([""]);
   const [addrListGu, setAddrListGu] = useState<string[]>([""]);
+
+  const {
+    user: { token, email, nickname },
+  } = userState;
 
   useEffect(() => {
     setAddrList(mapdata);
@@ -82,6 +92,10 @@ const FeedPage = () => {
   };
   const handleModalClose = () => {
     setOpenModal(false);
+  };
+
+  const closeSignInModal = () => {
+    setSignInModalOpen(false);
   };
 
   const handleChangeDaycountMin = useCallback(
@@ -146,6 +160,14 @@ const FeedPage = () => {
     }
   };
 
+  const handleCreateMyPlan = () => {
+    if (token.length > 0) {
+      history.push("/planpage/0");
+    } else {
+      setSignInModalOpen(true);
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -155,6 +177,7 @@ const FeedPage = () => {
         close={handleModalClose}
         comment={modalComment}
       />
+      <Signin open={SignInModalOpen} close={closeSignInModal} />
       <div className="feedpage">
         <div className="feedpage__banner">
           <div className="feedpage__banner__wrapper"></div>
@@ -167,7 +190,10 @@ const FeedPage = () => {
             다른 사람들은 <br />
             어떤 하루를 보낼까요?
           </p>
-          <button className="feedpage__banner__btn">
+          <button
+            className="feedpage__banner__btn"
+            onClick={handleCreateMyPlan}
+          >
             <p>나만의 일정 만들기</p>
             <img src="/images/next-pink.png" alt="" />
           </button>
