@@ -6,8 +6,7 @@ interface TimeProps {
 }
 
 const SetTime = ({ startTime, endTime }: TimeProps) => {
-  const [currentTime, setCurrentTime] = useState<string>("선택");
-  // const [currentTime, setCurrentTime] = useState<string>("0:15");
+  const [currentTime, setCurrentTime] = useState<string>("1:00");
   const [isSelectTime, setIsSelectTime] = useState<boolean>(false);
 
   useEffect(() => {
@@ -15,6 +14,12 @@ const SetTime = ({ startTime, endTime }: TimeProps) => {
       setCurrentTime(getTimeFromProps("10:30", "11:15"));
     }
   }, []);
+
+  useEffect(() => {
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") setIsSelectTime(false);
+    });
+  }, [isSelectTime]);
 
   const getTimeFromProps = (startTime: string, endTime: string) => {
     const numStartTime = startTime.replace(":", "");
@@ -66,13 +71,14 @@ const SetTime = ({ startTime, endTime }: TimeProps) => {
         <div className="set-time__text__unit">H</div>
       </div>
       <div
-        className={`set-time__input-wrapper ${isSelectTime ? "" : "hidden"}`}
+        className={`${isSelectTime ? "" : "hidden"} set-time__input-wrapper `}
       >
         {isSelectTime ? (
-          <ul>
+          <ul className={`${isSelectTime ? "" : "hidden"}`}>
             {selectTimeList().map((time, idx) => {
               return (
                 <li
+                  className={`${isSelectTime ? "" : "hidden"}`}
                   key={idx}
                   value={time}
                   onClick={() => handleInputTime(time)}

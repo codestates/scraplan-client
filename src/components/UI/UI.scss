@@ -175,13 +175,14 @@ button {
   top: 0.05rem;
   &__img {
     box-sizing: border-box;
-    width: 1.5rem;
-    height: 1.5rem;
-    border: 1px solid $main;
-    border-radius: 4px;
-    text-align: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    font-size: 0.85rem;
+    border: 2px solid #e8e8e8;
+    border-radius: 8px;
+    background-color: #fff;
     &:hover {
-      background-color: $main;
+      background-color: #eee;
       cursor: pointer;
     }
     div {
@@ -199,16 +200,16 @@ button {
     align-items: center;
     width: 11rem;
     height: 2rem;
-    border-radius: 4px;
-    background-color: pink;
+    border-radius: 6px;
+    background-color: #e8e8e881;
     .selectTheme {
-      width: 1.5rem;
+      width: 1.55rem;
       height: 1.5rem;
-      border-radius: 4px;
-      border: 1px solid $main;
-      background-color: white;
+      border-radius: 8px;
+      // background-color: #fff;
+      font-size: 0.8rem;
       &:hover {
-        background-color: $main;
+        background-color: #ffeaec;
         cursor: pointer;
       }
       &-pick {
@@ -216,8 +217,7 @@ button {
         width: 100%;
         height: 100%;
         text-align: center;
-        margin-left: 1px;
-        margin-top: -2px;
+        margin-top: 1px;
       }
     }
   }
@@ -232,33 +232,37 @@ button {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    width: 3rem;
-    height: 1.5rem;
     text-align: center;
-    padding: 2.5px 4px 0 4px;
-    border-radius: 4px;
-    border: 1px solid $main;
-    font-size: 0.8rem;
-    font-weight: 700;
+    width: 3rem;
+    height: 1.4rem;
+    color: #fff;
+    padding: 0px 8px 1px 8px;
+    border-radius: 6px;
+    background-color: #f3707a;
+    vertical-align: center;
+    div {
+      font-size: 0.65rem;
+      font-weight: 500;
+      color: white;
+    }
     &:hover {
       background-color: $main;
       cursor: pointer;
       .set-time__text__currentTime,
       .set-time__text__unit {
-        color: white;
+        color: #ddd;
       }
     }
   }
   &__input-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0.2rem 0 0.2rem 0.2rem;
     width: 4rem;
-    background-color: pink;
+    background-color: #fff;
     border-radius: 4px;
+    overflow-y: scroll;
+    height: 6rem;
     ul {
-      background-color: pink;
+      display: block;
+      background-color: #f3667215;
       width: 100%;
       height: 8rem;
       overflow-y: scroll;
@@ -267,11 +271,10 @@ button {
         text-align: center;
         margin-left: 2px;
         box-sizing: border-box;
-        border-radius: 4px;
         font-size: 0.8rem;
         font-weight: 500;
         &:hover {
-          border: 1px solid #fff;
+          background-color: #f3667221;
           cursor: pointer;
         }
       }

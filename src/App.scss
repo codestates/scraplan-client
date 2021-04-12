@@ -1,11 +1,12 @@
-$main: #f36671;
+$main: #fa6470;
 $dark: #191919;
 $mediumdark: rgba(0, 0, 0, 0.7);
 $lightdark: #666;
 $light: #e8e8e8;
 
 .hidden {
-  opacity: 0;
+  display: none;
+  pointer-events: none;
   transition: 0.4s all ease;
 }
 
