@@ -295,3 +295,73 @@ $light: #e8e8e8;
     font-size: 0.9rem;
   }
 }
+
+// AddPlan
+.addPlan {
+  position: absolute;
+  // top: 5rem;
+  // right: 25rem;
+  display: flex;
+  flex-direction: column;
+  width: 24rem;
+  // height: 15rem;
+  padding: 1rem 1rem 0 2rem;
+  background-color: #fff;
+  border: 2px solid $main;
+  border-radius: 0.5rem;
+  &__cancle-btn {
+    margin-left: auto;
+    &:hover {
+      color: $main;
+      transition: all ease 0.2s;
+    }
+  }
+  &__wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 2rem 0 0;
+    .addPlan__title {
+      width: 100%;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      border-bottom: 2px solid $light;
+      &:focus {
+        outline: none;
+        outline: 1px solid $main;
+        transition: all ease 0.3s;
+      }
+    }
+    .addPlan__address {
+      display: flex;
+      align-items: center;
+      height: 2rem;
+      margin-bottom: 1rem;
+      img {
+        flex: none;
+        margin-right: 0.6rem;
+        height: 1.2rem;
+      }
+      input {
+        background-color: $light;
+        flex: 1 1 auto;
+        height: 100%;
+        border-radius: 0.5rem;
+      }
+    }
+    .addPlan__submit-btn {
+      margin-left: auto;
+      margin-bottom: 2rem;
+      width: 5rem;
+      height: 2rem;
+      border-radius: 0.5rem;
+      border: 1px solid $main;
+      color: $main;
+      &:hover {
+        background-color: $main;
+        color: #fff;
+        transition: all ease 0.2s;
+      }
+    }
+  }
+}

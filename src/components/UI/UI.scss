@@ -227,6 +227,7 @@ button {
 .set-time {
   position: absolute;
   left: 2rem;
+  top: 0.05rem;
   z-index: 999;
   &__text {
     display: flex;
