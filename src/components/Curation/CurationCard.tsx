@@ -1,5 +1,5 @@
-import React from "react";
-import { useHistory } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import ViewCuration from "../../pages/ViewCuration";
 
 interface CurationCardProps {
   props: {
@@ -24,12 +24,23 @@ const CurationCard = ({ props }: CurationCardProps) => {
     feedbackCnt,
   } = props;
   const themeList = ["🍽", "☕️", "🕹", "🚴🏻", "🚗", "🤔"];
-  const history = useHistory();
-  const handleClickCurationCard = () => {
-    history.push(`/viewcuration/${curationCardId}`);
+
+  const [openViewCuration, setOpenViewCuration] = useState<boolean>(false);
+
+  const handleViewCurationOpen = () => {
+    setOpenViewCuration(true);
   };
+  const handleViewCurationClose = () => {
+    setOpenViewCuration(false);
+  };
+
   return (
-    <li className="curation-card" onClick={handleClickCurationCard}>
+    <li className="curation-card" onClick={handleViewCurationOpen}>
+      <ViewCuration
+        open={openViewCuration}
+        close={handleViewCurationClose}
+        curationCard={props}
+      />
       <div className="curation-card__info">
         <div className="curation-card__info__theme">
           <span>{`${themeList[theme]}`}</span>
