@@ -78,6 +78,22 @@ const MyPage = () => {
   }, []);
 
   useEffect(() => {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/plans?writer-email=${email}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        credentials: "include",
+      },
+    })
+      .then((res) => res.json())
+      .then((body) => {
+        dispatch(getPlans(body.plans));
+        setPlanList(body.plans);
+      })
+      .catch((err) => console.error(err));
+  });
+
+  useEffect(() => {
     fetch(`${process.env.REACT_APP_SERVER_URL}/curation-requests/${email}`, {
       method: "GET",
       headers: {

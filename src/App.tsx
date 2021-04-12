@@ -8,7 +8,7 @@ import EditUserInfo from "./pages/EditUserInfo";
 import CurationManagement from "./pages/Admin/CurationManagement";
 import CurationRequest from "./pages/Admin/CurationRequest";
 
-function App() {
+const App = () => {
   return (
     <Router>
       <Switch>
@@ -22,6 +22,6 @@ function App() {
       </Switch>
     </Router>
   );
-}
+};
 
 export default App;
