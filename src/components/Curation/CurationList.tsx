@@ -7,7 +7,7 @@ import { RootState } from "../../reducers";
 const CurationList = () => {
   const [openList, setOpenList] = useState<boolean>(false);
   const [sortByTime, setSortByTime] = useState<boolean>(false);
-  // curationcards는 리액트로
+
   const curationState = useSelector(
     (state: RootState) => state.curationReducer,
   );
@@ -16,7 +16,6 @@ const CurationList = () => {
   const handleListState = useCallback(() => {
     setOpenList(!openList);
   }, [openList]);
-
   return (
     <div className="curationlist">
       <div className={`curationlist__wrapper ${openList ? "" : "disappear"}`}>

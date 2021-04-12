@@ -3,6 +3,10 @@ $dark: #191919;
 $mediumdark: rgba(0, 0, 0, 0.7);
 $light: #e8e8e8;
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 // CurationList
 .curationlist {
   box-sizing: border-box;
@@ -184,5 +188,42 @@ $light: #e8e8e8;
     //   font-weight: 500;
     //   color: $main;
     // }
+  }
+}
+
+// Feedbck
+.feedback {
+  flex: 0 0 30%;
+  width: 126px;
+  margin: 0.3rem;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  padding: 0.6rem;
+  border-radius: 4px;
+  box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.1);
+  div {
+    display: flex;
+    align-items: center;
+  }
+  &__emotion {
+    padding: 0rem 0.15rem;
+    text-align: center;
+    border-radius: 8px;
+  }
+  &__time {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0 0.2rem;
+    text-align: center;
+    border-radius: 6px;
+  }
+  &__comment {
+    font-size: 0.8rem;
+    font-weight: 400;
+    max-height: 80px;
+    overflow-y: hidden;
+    // text-overflow: ellipsis;
+    word-wrap: break-word;
   }
 }

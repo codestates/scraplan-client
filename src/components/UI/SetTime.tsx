@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { isStringLiteral } from "typescript";
 
 interface TimeProps {
   startTime?: string;
