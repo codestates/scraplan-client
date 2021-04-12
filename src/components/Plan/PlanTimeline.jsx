@@ -14,7 +14,7 @@ class PlanTimeline extends React.Component {
   static defaultProps = {
     isDraggable: true,
     isResizable: true,
-    items: 12,
+    items: 6,
     rowHeight: 28,
     onLayoutChange: function () {},
     cols: 1,
@@ -22,11 +22,11 @@ class PlanTimeline extends React.Component {
     compactType: null,
     preventCollision: true,
     transformScale: 1,
+    width: 240,
   };
 
   constructor(props) {
     super(props);
-
     const layout = this.generateLayout();
     this.state = { layout };
   }
@@ -48,9 +48,9 @@ class PlanTimeline extends React.Component {
     return _.map(new Array(p.items), function (item, i) {
       const y = _.result(p, "y") || Math.ceil(1) + 1;
       return {
-        x: (i * 2) % 12,
+        x: (i * 1) % 12,
         y: Math.floor(i / 6),
-        w: 2,
+        w: 1,
         h: y,
         i: i.toString(),
       };
