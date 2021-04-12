@@ -4,9 +4,13 @@ import React, { useRef, useState } from "react";
 // 그중 theme을 받는다.
 interface ThemeProps {
   themeIndex?: number;
+  type?: string;
 }
-const SetTheme = ({ themeIndex }: ThemeProps) => {
-  const themeList = ["🍽", "☕️", "🕹", "🚴🏻", "🚗", "🤔"];
+const SetTheme = ({ themeIndex, type }: ThemeProps) => {
+  const themeList =
+    type === "feedback"
+      ? ["😃", "🤔", "😡"]
+      : ["🍽", "☕️", "🕹", "🚴🏻", "🚗", "🤔"];
   const [currentThemeIndex, setCurrentThemeIndex] = useState<number>(
     themeIndex || 0,
   );
@@ -30,9 +34,14 @@ const SetTheme = ({ themeIndex }: ThemeProps) => {
       >
         <div>{themeList[currentThemeIndex]}</div>
       </div>
-      <div className={`set-theme__select-btn ${isSelectTheme ? "" : "hidden"}`}>
-        {isSelectTheme ? (
-          themeList.map((theme, index) => {
+
+      {isSelectTheme ? (
+        <span
+          className={`set-theme__select-btn ${isSelectTheme ? "" : "hidden"} ${
+            type === "feedback" ? "feedback" : ""
+          }`}
+        >
+          {themeList.map((theme, index) => {
             return (
               <div
                 className="selectTheme"
@@ -43,11 +52,11 @@ const SetTheme = ({ themeIndex }: ThemeProps) => {
                 <div className="selectTheme-pick">{theme}</div>
               </div>
             );
-          })
-        ) : (
-          <></>
-        )}
-      </div>
+          })}
+        </span>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
