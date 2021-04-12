@@ -171,9 +171,8 @@ button {
   width: 1.5rem;
   height: 1.5rem;
   position: absolute;
-  margin-left: 0.2rem;
-  margin-top: 0.2rem;
-
+  left: 0.1rem;
+  top: 0.05rem;
   &__img {
     box-sizing: border-box;
     width: 1.5rem;
@@ -183,12 +182,16 @@ button {
     text-align: center;
     &:hover {
       background-color: $main;
+      cursor: pointer;
     }
     div {
       position: relative;
       margin-left: 2px;
       margin-top: -2px;
     }
+  }
+  .feedback {
+    width: 7rem;
   }
   &__select-btn {
     display: flex;
@@ -206,6 +209,7 @@ button {
       background-color: white;
       &:hover {
         background-color: $main;
+        cursor: pointer;
       }
       &-pick {
         box-sizing: border-box;
@@ -214,6 +218,62 @@ button {
         text-align: center;
         margin-left: 1px;
         margin-top: -2px;
+      }
+    }
+  }
+}
+
+//SetTime
+.set-time {
+  position: absolute;
+  left: 2rem;
+  z-index: 999;
+  &__text {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 3rem;
+    height: 1.5rem;
+    text-align: center;
+    padding: 2.5px 4px 0 4px;
+    border-radius: 4px;
+    border: 1px solid $main;
+    font-size: 0.8rem;
+    font-weight: 700;
+    &:hover {
+      background-color: $main;
+      cursor: pointer;
+      .set-time__text__currentTime,
+      .set-time__text__unit {
+        color: white;
+      }
+    }
+  }
+  &__input-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.2rem 0 0.2rem 0.2rem;
+    width: 4rem;
+    background-color: pink;
+    border-radius: 4px;
+    ul {
+      background-color: pink;
+      width: 100%;
+      height: 8rem;
+      overflow-y: scroll;
+      list-style: none;
+      li {
+        text-align: center;
+        margin-left: 2px;
+        box-sizing: border-box;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        &:hover {
+          border: 1px solid #fff;
+          cursor: pointer;
+        }
       }
     }
   }
