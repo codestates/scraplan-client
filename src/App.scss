@@ -673,17 +673,22 @@ body {
         background-color: rgba(255, 255, 255, 0.9);
         border-radius: 3px;
         border: 1px solid rgba(0, 0, 0, 0.1);
-        max-height: 10rem;
+        max-height: 15rem;
         box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.1);
         overflow-y: scroll;
         li {
           cursor: pointer;
           list-style: none;
           padding: 0.3rem 1rem;
-          height: 2rem;
+          height: 3rem;
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
+          .address_name {
+            font-size: 0.4rem;
+            color: rgb(180, 176, 176);
+            padding-left: 1.5rem;
+          }
           &:hover {
             background-color: #f366721e;
           }
