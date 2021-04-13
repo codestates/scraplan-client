@@ -7,6 +7,7 @@ import PlanPage from "./pages/PlanPage";
 import EditUserInfo from "./pages/EditUserInfo";
 import CurationManagement from "./pages/Admin/CurationManagement";
 import CurationRequest from "./pages/Admin/CurationRequest";
+import Notification from "./components/UI/Notification";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/curation-management" component={CurationManagement} />
         <Route path="/curation-request" component={CurationRequest} />
       </Switch>
+      <Notification />
     </Router>
   );
 };

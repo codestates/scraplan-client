@@ -1,7 +1,10 @@
+import { Dispatch } from "redux";
+
 // Action Types
 // User Action
 export const SIGN_IN = "SIGN_IN" as const;
 export const SIGN_OUT = "SIGN_OUT" as const;
+export const USER_INFO = "USER_INFO" as const;
 export const USER_EDIT_INFO = "USER_EDIT_INFO" as const;
 export const WITHDRAW = "WITHDRAW" as const;
 export const GET_GOOGLE_TOKEN = "GET_GOOGLE_TOKEN" as const;
@@ -15,9 +18,15 @@ export const GET_CURATIONS = "GET_CURATIONS" as const;
 export const GET_CURATION_CARDS = "GET_CURATION_CARDS" as const;
 export const GET_CURATION_REQUESTS = "GET_CURATION_REQUESTS" as const;
 
+// Notification Action
+export const NOTIFY = "NOTIFY";
+export const ENQUEUE_NOTIFICATION = "ENQUEUE_NOTIFICATION" as const;
+export const DEQUEUE_NOTIFICATION = "DEQUEUE_NOTIFICATION" as const;
+
 export type Action =
   | ReturnType<typeof signIn>
   | ReturnType<typeof signOut>
+  | ReturnType<typeof userInfo>
   | ReturnType<typeof userEditInfo>
   | ReturnType<typeof withdraw>
   | ReturnType<typeof getGoogleToken>
@@ -25,23 +34,24 @@ export type Action =
   | ReturnType<typeof getPlanCards>
   | ReturnType<typeof getCurations>
   | ReturnType<typeof getCurationCards>
-  | ReturnType<typeof getCurationsRequests>;
+  | ReturnType<typeof getCurationsRequests>
+  | ReturnType<typeof enqueueNotification>
+  | ReturnType<typeof dequeueNotification>;
 
-export type User = {
+export interface User {
   token: string;
   email: string;
   nickname: string;
-};
+}
 
 // Action Creators
 // User Action Creator
-export const signIn = (token: string, email: string, nickname: string) => {
+export const signIn = (token: string, email: string, nickname: "") => {
   return {
     type: SIGN_IN,
     payload: {
       token,
       email,
-      nickname,
     },
   };
 };
@@ -51,6 +61,18 @@ export const signOut = () => {
     type: SIGN_OUT,
   };
 };
+
+export const userInfo = (token: string, email: string, nickname: string) => {
+  return {
+    type: USER_INFO,
+    payload: {
+      token,
+      email,
+      nickname,
+    },
+  };
+};
+
 export const userEditInfo = (
   token: string,
   email: string,
@@ -125,5 +147,36 @@ export const getCurationsRequests = (data: any) => {
     payload: {
       data,
     },
+  };
+};
+
+export const notify = (message: string, dismissTime: number = 5000) => (
+  dispatch: Dispatch,
+) => {
+  const uuid = Math.random();
+  dispatch(enqueueNotification(message, dismissTime, uuid));
+  setTimeout(() => {
+    dispatch(dequeueNotification());
+  }, dismissTime);
+};
+
+export const enqueueNotification = (
+  message: string,
+  dismissTime: number,
+  uuid: number,
+) => {
+  return {
+    type: ENQUEUE_NOTIFICATION,
+    payload: {
+      message,
+      dismissTime,
+      uuid,
+    },
+  };
+};
+
+export const dequeueNotification = () => {
+  return {
+    type: DEQUEUE_NOTIFICATION,
   };
 };

@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { notify } from "../../actions";
+import { RootState } from "../../reducers";
+import Modal from "../UI/Modal";
 import "./Plan.scss";
 
 declare global {
@@ -18,14 +22,17 @@ type PlanSummaryProps = {
 };
 
 const PlanSummary = (props: PlanSummaryProps) => {
-  const { id, title, desc, writer, dayCount, representAddr } = props;
-
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  const { id, title, desc, writer, dayCount, representAddr } = props;
+  const userState = useSelector((state: RootState) => state.userReducer);
+  const {
+    user: { token, email, nickname },
+  } = userState;
 
   const [toggleShareBtn, setToggleShareBtn] = useState<boolean>(false);
-  const [urlShareDoneText, setUrlShareDoneText] = useState<boolean>(false);
-
-  useEffect(() => {}, []);
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
   const handleToggleShareBtn = () => {
     setToggleShareBtn(!toggleShareBtn);
@@ -33,6 +40,13 @@ const PlanSummary = (props: PlanSummaryProps) => {
 
   const handleClickShowmore = () => {
     history.push(`/planpage/${id}`);
+  };
+
+  const handleModalOpen = () => {
+    setOpenModal(true);
+  };
+  const handleModalClose = () => {
+    setOpenModal(false);
   };
 
   const handleShareKakao = () => {
@@ -70,59 +84,88 @@ const PlanSummary = (props: PlanSummaryProps) => {
     dummy.select();
     document.execCommand("copy");
     document.body.removeChild(dummy);
-    setUrlShareDoneText(true);
+    dispatch(notify(`클립보드 복사 완료 🙌🏻`));
+  };
+
+  const handleDeletePlan = () => {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/plan`, {
+      method: "DELETE",
+      headers: {
+        authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        credentials: "include",
+      },
+      body: JSON.stringify({
+        email,
+        planId: id,
+      }),
+    })
+      .then((res) => res.json())
+      .then((body) => {
+        handleModalClose();
+      })
+      .catch((err) => console.error(err));
   };
 
   return (
-    <div className="plansummary">
-      <div className="plansummary__contents__plan">
-        <span className="plansummary__contents__plan__title">{title}</span>
-        <p className="plansummary__contents__plan__info">
-          {`${representAddr}   |   ${dayCount}박 ${dayCount + 1}일`}{" "}
-        </p>
-        <span className="plansummary__contents__plan__description">
-          {desc} 여행을 떠나요
-        </span>
-        {/* 토스트로 대체 예정 */}
-        {/* <p
-          className={`plansummary__contents__plan__copied ${
-            urlShareDoneText ? "show" : ""
-          }`}
-        >
-          클립보드에 복사되었습니다.
-        </p> */}
-        <div className="plansummary__contents__plan__showmore">
-          <img src="/images/next.png" alt="" />
-          <p
-            className="plansummary__contents__plan__showmore-text"
-            onClick={handleClickShowmore}
-          >
-            일정보러가기
+    <>
+      <Modal
+        modalType={"yesNoModal"}
+        open={openModal}
+        close={handleModalClose}
+        comment={"일정을 삭제하시겠어요?"}
+        handleAcceptAction={handleDeletePlan}
+      />
+      <div className="plansummary">
+        <div className="plansummary__contents__plan">
+          <span className="plansummary__contents__plan__title">{title}</span>
+          <p className="plansummary__contents__plan__info">
+            {`${representAddr}   |   ${dayCount}박 ${dayCount + 1}일`}{" "}
           </p>
-        </div>
-        <div className="plansummary__contents__plan-hover">
-          <button className="plansummary__contents__plan-hover__cancel-btn">
-            &times;
-          </button>
-          <button
-            className="plansummary__contents__plan-hover__share-btn"
-            onClick={handleToggleShareBtn}
-          >
-            <img src="images/share.png" alt=""></img>
-            <div
-              className={`plansummary__share-btn__list ${
-                toggleShareBtn ? "" : "hidden"
-              }`}
+          <span className="plansummary__contents__plan__description">
+            {desc} 여행을 떠나요
+          </span>
+          <div className="plansummary__contents__plan__showmore">
+            <img src="/images/next.png" alt="" />
+            <p
+              className="plansummary__contents__plan__showmore-text"
+              onClick={handleClickShowmore}
             >
-              <button className="kakao-link" onClick={handleShareKakao}>
-                카톡으로 공유하기
+              일정보러가기
+            </p>
+          </div>
+          <div className="plansummary__contents__plan-hover">
+            {nickname === writer ? (
+              <button
+                className="plansummary__contents__plan-hover__cancel-btn"
+                onClick={handleModalOpen}
+              >
+                &times;
               </button>
-              <button onClick={handleShareUrl}>URL로 공유하기</button>
-            </div>
-          </button>
+            ) : (
+              <></>
+            )}
+
+            <button
+              className="plansummary__contents__plan-hover__share-btn"
+              onClick={handleToggleShareBtn}
+            >
+              <img src="images/share.png" alt=""></img>
+              <div
+                className={`plansummary__share-btn__list ${
+                  toggleShareBtn ? "" : "hidden"
+                }`}
+              >
+                <button className="kakao-link" onClick={handleShareKakao}>
+                  카톡으로 공유하기
+                </button>
+                <button onClick={handleShareUrl}>URL로 공유하기</button>
+              </div>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

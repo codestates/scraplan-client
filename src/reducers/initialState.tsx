@@ -11,6 +11,7 @@ export type State = {
   curationCards: any;
   curationRequests: any;
   themeList: string[];
+  notifications: string[];
 };
 
 export const initialState: State = {
@@ -88,4 +89,5 @@ export const initialState: State = {
   },
   curationRequests: {},
   themeList: ["🍽", "☕️", "🎬", "🚴🏻", "🏔", "🤔"],
+  notifications: [],
 };

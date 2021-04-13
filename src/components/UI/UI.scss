@@ -282,3 +282,45 @@ button {
     }
   }
 }
+
+// Toast
+.notification-container {
+  font-size: 0.85rem;
+  position: fixed;
+  z-index: 999;
+  bottom: 2vh;
+  right: 12px;
+}
+
+.notification {
+  transition: transform 0.6s ease-in-out;
+  animation: toast-in-right 1s;
+  background: #f3667293;
+  transition: 0.3s ease;
+  border-radius: 3px;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.6);
+  color: #000;
+  opacity: 0.9;
+  font-weight: 400;
+  height: 2.2rem;
+  width: 13rem;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem;
+  text-align: center;
+  vertical-align: center;
+}
+
+.fade-out {
+  opacity: 0;
+  transform: opacity 3s;
+}
+
+@keyframes toast-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
