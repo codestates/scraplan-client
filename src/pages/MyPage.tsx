@@ -27,6 +27,14 @@ const MyPage = () => {
       dayCount: 3,
       representAddr: "울산광역시",
     },
+    {
+      id: 0,
+      title: "2박3일 울산여행",
+      desc: "여행을 떠나보세요!",
+      writer: "guest",
+      dayCount: 3,
+      representAddr: "울산광역시",
+    },
   ]);
 
   const [curationsRequestsList, setCurationsRequestsList] = useState([
@@ -76,6 +84,22 @@ const MyPage = () => {
     setAddrList(mapdata);
     setAddrListSi(Object.keys(mapdata));
   }, []);
+
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/plans?writer-email=${email}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        credentials: "include",
+      },
+    })
+      .then((res) => res.json())
+      .then((body) => {
+        dispatch(getPlans(body.plans));
+        setPlanList(body.plans);
+      })
+      .catch((err) => console.error(err));
+  });
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_SERVER_URL}/curation-requests/${email}`, {

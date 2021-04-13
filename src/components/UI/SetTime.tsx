@@ -7,7 +7,7 @@ interface TimeProps {
 }
 
 const SetTime = ({ startTime, endTime, giveTimeToParent }: TimeProps) => {
-  const [currentTime, setCurrentTime] = useState<string>("선택");
+  const [currentTime, setCurrentTime] = useState<string>("1:00");
   const [isSelectTime, setIsSelectTime] = useState<boolean>(false);
 
   useEffect(() => {
@@ -16,6 +16,11 @@ const SetTime = ({ startTime, endTime, giveTimeToParent }: TimeProps) => {
     }
   }, []);
 
+  useEffect(() => {
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") setIsSelectTime(false);
+    });
+  }, [isSelectTime]);
   // 추가할때가 아닌 서버로 부터 받은 startTime, endTime이 존재할 경우 사이 시간을 구하는 함수
   const getTimeFromProps = useCallback(
     (startTime: string, endTime: string) => {
@@ -74,13 +79,14 @@ const SetTime = ({ startTime, endTime, giveTimeToParent }: TimeProps) => {
         <div className="set-time__text__unit">H</div>
       </div>
       <div
-        className={`set-time__input-wrapper ${isSelectTime ? "" : "hidden"}`}
+        className={`${isSelectTime ? "" : "hidden"} set-time__input-wrapper `}
       >
         {isSelectTime ? (
-          <ul>
+          <ul className={`${isSelectTime ? "" : "hidden"}`}>
             {selectTimeList().map((time, idx) => {
               return (
                 <li
+                  className={`${isSelectTime ? "" : "hidden"}`}
                   key={idx}
                   value={time}
                   onClick={() => handleInputTime(time)}

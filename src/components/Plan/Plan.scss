@@ -1,7 +1,7 @@
 $main: #f36671;
 $dark: #191919;
 $mediumdark: rgba(0, 0, 0, 0.7);
-$light: #e8e8e8;
+$light: #f7f7f9;
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 * {
@@ -34,7 +34,8 @@ $light: #e8e8e8;
     animation: disappear-planlist 1s forwards;
   }
   &__wrapper {
-    background-color: #f7f7f9;
+    background-color: #fff;
+    background-color: $light;
     width: 23rem;
     height: 100%;
     padding: 2rem 1rem 3rem 1.2rem;
@@ -157,13 +158,13 @@ $light: #e8e8e8;
             left: 0.2rem;
             width: 270px;
             div {
-              border-bottom: 1px solid #ccc;
+              border-bottom: 1px solid #eee;
               position: relative;
               height: 68px;
               margin-top: 8px;
-              font-size: 0.8rem;
+              font-size: 0.7rem;
               span {
-                color: #888;
+                color: #bac0c8;
                 padding: 0.2rem 0.5rem;
                 border-radius: 5rem;
               }
@@ -216,69 +217,180 @@ $light: #e8e8e8;
 
 // Plan Summary
 .plansummary {
-  width: 370px;
-  height: 170px;
-  margin: 1.2rem;
+  width: 350px;
+  height: 190px;
+  margin: 1rem;
   border-radius: 3px;
+  box-shadow: 0px 1px 4px 1px rgba(0, 0, 0, 0.1);
   &__contents__plan {
     display: flex;
     flex-direction: column;
     justify-content: center;
     margin-bottom: 0.4rem;
-    width: 370px;
-    height: 170px;
-    background-color: $light;
+    width: 360px;
+    height: 200px;
     border-radius: 3px;
     z-index: 1;
     &__title {
-      margin-left: 2rem;
-      font-size: 1.1rem;
+      width: 280px;
+      position: absolute;
+      margin-bottom: 6.5rem;
+      margin-left: 2.5rem;
+      font-size: 1.03rem;
       font-weight: 600;
-    }
-    &__info {
-      margin-left: 2rem;
-      font-size: 0.8rem;
-    }
-    &__description {
-      margin-top: 1rem;
-      margin-left: 2rem;
       white-space: nowrap;
       overflow: hidden;
-      font-size: 0.9rem;
-      width: 280px;
-      height: 2rem;
       text-overflow: ellipsis;
     }
-    &:hover {
-      background-color: #f7858f60;
+    &__info {
+      width: 270px;
+      position: absolute;
+      margin-bottom: 3.8rem;
+      margin-left: 2.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      opacity: 0.7;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-  }
-  &__contents__plan:hover + &__contents__plan-hover {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: space-between;
-    position: relative;
-    top: -188px;
-    width: 370px;
-    height: 170px;
-    transition: all ease 0.5s;
-  }
-
-  &__contents__plan-hover {
-    display: none;
-    &__cancel-btn {
-      background-color: rgba(0, 0, 0, 0);
+    &__description {
+      position: absolute;
+      margin-top: 1.5rem;
+      margin-left: 2.5rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 0.8rem;
+      width: 270px;
+      height: 2rem;
+    }
+    // &__copied {
+    //   opacity: 0;
+    //   width: 0rem;
+    //   position: absolute;
+    //   background-color: rgba(255, 122, 122, 0.3);
+    //   overflow: hidden;
+    //   white-space: nowrap;
+    //   font-size: 0.75rem;
+    //   font-weight: 500;
+    //   padding: 0.2rem 0.3rem;
+    //   margin-top: 9rem;
+    //   margin-left: 10rem;
+    //   text-align: center;
+    //   border-radius: 3px;
+    // }
+    // .show {
+    //   opacity: 1;
+    //   width: 11rem;
+    //   transition: all 3s ease;
+    // }
+    &__showmore {
       cursor: pointer;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.1);
+      width: 2rem;
+      height: 2rem;
+      border-radius: 1.1rem;
+      margin-left: 2.5rem;
+      margin-top: 6rem;
+      display: flex;
+      overflow: hidden;
+      flex-wrap: nowrap;
+      align-items: center;
+      img {
+        margin: 0.75rem;
+        width: 0.7rem;
+        height: 0.7rem;
+        opacity: 0.7;
+      }
+      p {
+        color: #555;
+        opacity: 0;
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-bottom: 0.1rem;
+        margin-right: 0.7rem;
+      }
     }
+  }
+  &:hover .plansummary__contents__plan__showmore {
+    width: 8rem;
+    border-radius: 4rem;
+    transition: 0.3s all ease;
+    background-color: #fddde1;
+  }
+  &:hover .plansummary__contents__plan__showmore-text {
+    opacity: 1;
+    transition: 0.5s all ease;
+    transition-delay: 0.2s;
+  }
+  &__contents__plan:hover &__contents__plan-hover {
+    display: block;
+  }
+  //바꾸기
+  &__contents__plan-hover {
+    // display: none;
+    display: block;
+    position: absolute;
+    width: 60px;
+    height: 170px;
     &__share-btn {
+      cursor: pointer;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.1);
+      width: 2rem;
+      height: 2rem;
+      border-radius: 1.1rem;
+      position: absolute;
+      top: 7.2rem;
+      left: 18rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      &:hover {
+        background-color: #f8f8f8;
+      }
       img {
         opacity: 0.7;
-        width: 1rem;
-        height: 1rem;
+        width: 0.8rem;
+        height: 0.8rem;
       }
-      span {
-        opacity: 0.7;
+      &-hover {
+        position: absolute;
+        margin-right: 3rem;
+      }
+      div {
+        position: absolute;
+        left: 2.5rem;
+        top: 0.8rem;
+        width: 8rem;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        button {
+          padding: 0.2rem 0.5rem;
+          width: 100%;
+          text-align: left;
+          border-bottom: 1px solid #eee;
+          &:hover {
+            background-color: rgba(238, 238, 238, 0.7);
+          }
+        }
+      }
+    }
+    &__cancel-btn {
+      background-color: #fff;
+      position: absolute;
+      cursor: pointer;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      top: 0.5rem;
+      left: 18.2rem;
+      font-weight: 500;
+      font-size: 1.1rem;
+      opacity: 0.6;
+      &:hover {
+        color: $main;
+        background-color: #f3667234;
       }
     }
   }
@@ -288,11 +400,31 @@ $light: #e8e8e8;
 .plancard {
   width: 200px;
   display: flex;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.7);
   border-radius: 3px;
-  box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 2px 0.2px rgba(0, 0, 0, 0.1);
   &__title {
-    font-size: 0.9rem;
+    color: #525762;
+    height: 1.2rem;
+    vertical-align: center;
+    position: relative;
+    top: 8%;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-top: 0.1rem;
+    margin-left: 6.6rem;
+  }
+  .set-theme {
+    margin-left: 1rem;
+    top: 8%;
+  }
+  .set-time {
+    margin-top: 0.1rem;
+    margin-left: 1rem;
+    top: 8%;
+  }
+  &__delete-btn {
+    display: none;
   }
 }
 
@@ -473,4 +605,12 @@ $light: #e8e8e8;
       }
     }
   }
+.react-grid-item:hover .plancard__delete-btn {
+  display: block;
+  position: absolute;
+  top: 8%;
+  margin-left: 12.2rem;
+  height: 1.2rem;
+  color: $main;
+  font-weight: 600;
 }

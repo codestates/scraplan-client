@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 // props로 plancard 데이터를 받는다.
 // 그중 theme을 받는다.
@@ -18,6 +18,12 @@ const SetTheme = ({ themeIndex, type, giveThemeIndexToParent }: ThemeProps) => {
   // const [currentThemeIndex, setCurrentThemeIndex] = useState<number>(0);
   const [isSelectTheme, setIsSelectTheme] = useState<boolean>(false);
   const refTheme = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") setIsSelectTheme(false);
+    });
+  }, [isSelectTheme]);
 
   const handleSelectTheme = (e: React.MouseEvent<HTMLElement>) => {
     const selectThemeIndex = themeList.findIndex(
