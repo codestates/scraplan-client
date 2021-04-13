@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useRef, useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userEditInfo, withdraw } from "../actions";
@@ -6,16 +6,18 @@ import Navbar from "../components/UI/Navbar";
 import Modal from "../components/UI/Modal";
 import { RootState } from "../reducers";
 
-function EditUserInfo() {
+const EditUserInfo = () => {
   const userState = useSelector((state: RootState) => state.userReducer);
   const {
     user: { token, email, nickname },
   } = userState;
   const dispatch = useDispatch();
   const history = useHistory();
+
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [modalComment, setModalComment] = useState<string>("");
-  const [inputNickname, setInputNickname] = useState<string>(nickname);
+
+  const [inputNickname, setInputNickname] = useState<string>("");
   const [inputPassword, setInputPassword] = useState<string>("");
   const [inputPasswordCheck, setInputPasswordCheck] = useState<string>("");
   const [inputWithdrawal, setInputWithdrawal] = useState<string>("");
@@ -179,7 +181,7 @@ function EditUserInfo() {
       },
       body: JSON.stringify({
         email,
-        password: inputPassword,
+        password: inputWithdrawal,
       }),
     })
       .then((res) => res.json())
@@ -319,6 +321,6 @@ function EditUserInfo() {
       </div>
     </>
   );
-}
+};
 
 export default EditUserInfo;

@@ -4,6 +4,7 @@ import { Dispatch } from "redux";
 // User Action
 export const SIGN_IN = "SIGN_IN" as const;
 export const SIGN_OUT = "SIGN_OUT" as const;
+export const USER_INFO = "USER_INFO" as const;
 export const USER_EDIT_INFO = "USER_EDIT_INFO" as const;
 export const WITHDRAW = "WITHDRAW" as const;
 export const GET_GOOGLE_TOKEN = "GET_GOOGLE_TOKEN" as const;
@@ -25,6 +26,7 @@ export const DEQUEUE_NOTIFICATION = "DEQUEUE_NOTIFICATION" as const;
 export type Action =
   | ReturnType<typeof signIn>
   | ReturnType<typeof signOut>
+  | ReturnType<typeof userInfo>
   | ReturnType<typeof userEditInfo>
   | ReturnType<typeof withdraw>
   | ReturnType<typeof getGoogleToken>
@@ -44,13 +46,12 @@ export interface User {
 
 // Action Creators
 // User Action Creator
-export const signIn = (token: string, email: string, nickname: string) => {
+export const signIn = (token: string, email: string, nickname: "") => {
   return {
     type: SIGN_IN,
     payload: {
       token,
       email,
-      nickname,
     },
   };
 };
@@ -60,6 +61,18 @@ export const signOut = () => {
     type: SIGN_OUT,
   };
 };
+
+export const userInfo = (token: string, email: string, nickname: string) => {
+  return {
+    type: USER_INFO,
+    payload: {
+      token,
+      email,
+      nickname,
+    },
+  };
+};
+
 export const userEditInfo = (
   token: string,
   email: string,
