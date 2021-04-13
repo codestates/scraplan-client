@@ -1,3 +1,5 @@
+import { Dispatch } from "redux";
+
 // Action Types
 // User Action
 export const SIGN_IN = "SIGN_IN" as const;
@@ -15,6 +17,11 @@ export const GET_CURATIONS = "GET_CURATIONS" as const;
 export const GET_CURATION_CARDS = "GET_CURATION_CARDS" as const;
 export const GET_CURATION_REQUESTS = "GET_CURATION_REQUESTS" as const;
 
+// Notification Action
+export const NOTIFY = "NOTIFY";
+export const ENQUEUE_NOTIFICATION = "ENQUEUE_NOTIFICATION" as const;
+export const DEQUEUE_NOTIFICATION = "DEQUEUE_NOTIFICATION" as const;
+
 export type Action =
   | ReturnType<typeof signIn>
   | ReturnType<typeof signOut>
@@ -25,13 +32,15 @@ export type Action =
   | ReturnType<typeof getPlanCards>
   | ReturnType<typeof getCurations>
   | ReturnType<typeof getCurationCards>
-  | ReturnType<typeof getCurationsRequests>;
+  | ReturnType<typeof getCurationsRequests>
+  | ReturnType<typeof enqueueNotification>
+  | ReturnType<typeof dequeueNotification>;
 
-export type User = {
+export interface User {
   token: string;
   email: string;
   nickname: string;
-};
+}
 
 // Action Creators
 // User Action Creator
@@ -125,5 +134,36 @@ export const getCurationsRequests = (data: any) => {
     payload: {
       data,
     },
+  };
+};
+
+export const notify = (message: string, dismissTime: number = 5000) => (
+  dispatch: Dispatch,
+) => {
+  const uuid = Math.random();
+  dispatch(enqueueNotification(message, dismissTime, uuid));
+  setTimeout(() => {
+    dispatch(dequeueNotification());
+  }, dismissTime);
+};
+
+export const enqueueNotification = (
+  message: string,
+  dismissTime: number,
+  uuid: number,
+) => {
+  return {
+    type: ENQUEUE_NOTIFICATION,
+    payload: {
+      message,
+      dismissTime,
+      uuid,
+    },
+  };
+};
+
+export const dequeueNotification = () => {
+  return {
+    type: DEQUEUE_NOTIFICATION,
   };
 };
