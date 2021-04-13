@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { notify } from "../../actions";
 import "./Plan.scss";
 
 declare global {
@@ -21,9 +23,9 @@ const PlanSummary = (props: PlanSummaryProps) => {
   const { id, title, desc, writer, dayCount, representAddr } = props;
 
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const [toggleShareBtn, setToggleShareBtn] = useState<boolean>(false);
-  const [urlShareDoneText, setUrlShareDoneText] = useState<boolean>(false);
 
   useEffect(() => {}, []);
 
@@ -70,7 +72,7 @@ const PlanSummary = (props: PlanSummaryProps) => {
     dummy.select();
     document.execCommand("copy");
     document.body.removeChild(dummy);
-    setUrlShareDoneText(true);
+    dispatch(notify(`클립보드 복사 완료 🙌🏻`));
   };
 
   return (
@@ -83,14 +85,6 @@ const PlanSummary = (props: PlanSummaryProps) => {
         <span className="plansummary__contents__plan__description">
           {desc} 여행을 떠나요
         </span>
-        {/* 토스트로 대체 예정 */}
-        {/* <p
-          className={`plansummary__contents__plan__copied ${
-            urlShareDoneText ? "show" : ""
-          }`}
-        >
-          클립보드에 복사되었습니다.
-        </p> */}
         <div className="plansummary__contents__plan__showmore">
           <img src="/images/next.png" alt="" />
           <p
