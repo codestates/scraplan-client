@@ -125,7 +125,7 @@ function EditUserInfo() {
   // 수정 - 모달창에서 예를 눌렀을 때 실행되는 함수
   const handleAcceptUserEditInfo = () => {
     fetch(`${process.env.REACT_APP_SERVER_URL}/user/edit-info`, {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -133,8 +133,8 @@ function EditUserInfo() {
       },
       body: JSON.stringify({
         email,
-        inputNickname,
-        inputPassword,
+        nickname: inputNickname,
+        password: inputPassword,
       }),
     })
       .then((res) => res.json())
@@ -179,7 +179,7 @@ function EditUserInfo() {
       },
       body: JSON.stringify({
         email,
-        inputPassword,
+        password: inputPassword,
       }),
     })
       .then((res) => res.json())

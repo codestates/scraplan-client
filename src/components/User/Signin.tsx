@@ -65,14 +65,14 @@ const Signin = (props: SigninProps) => {
       return;
     }
     return fetch(`${process.env.REACT_APP_SERVER_URL}/sign/in`, {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         credentials: "include",
       },
       body: JSON.stringify({
-        inputEmail,
-        inputPassword,
+        email: inputEmail,
+        password: inputPassword,
       }),
     })
       .then((res) => res.json())
