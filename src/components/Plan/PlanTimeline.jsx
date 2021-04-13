@@ -6,6 +6,7 @@ import PlanCard from "./PlanCard";
 import SetTime from "../UI/SetTime";
 import SetTheme from "../UI/SetTheme";
 import "./PlanTimeline.scss";
+import "./Plan.scss";
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -36,8 +37,13 @@ class PlanTimeline extends React.Component {
         <div className="plancard" key={i}>
           <SetTheme />
           <SetTime />
-          <div className="plancard__title">{`제목 ${i}`}</div>
-          <button className="plancard__delete-btn"></button>
+          <div className="plancard__title">{`맛있는 카페 ${i}`}</div>
+          <button
+            className="plancard__delete-btn"
+            onClick={this.handlePlanCardDelete}
+          >
+            ⓧ
+          </button>
         </div>
       );
     });
@@ -58,6 +64,9 @@ class PlanTimeline extends React.Component {
   onLayoutChange(layout) {
     this.props.onLayoutChange(layout);
   }
+
+  handlePlanCardDelete() {}
+
   render() {
     return (
       <ReactGridLayout

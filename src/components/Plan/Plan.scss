@@ -1,7 +1,7 @@
 $main: #f36671;
 $dark: #191919;
 $mediumdark: rgba(0, 0, 0, 0.7);
-$light: #e8e8e8;
+$light: #f7f7f9;
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 * {
@@ -34,7 +34,8 @@ $light: #e8e8e8;
     animation: disappear-planlist 1s forwards;
   }
   &__wrapper {
-    background-color: #f7f7f9;
+    background-color: #fff;
+    background-color: $light;
     width: 23rem;
     height: 100%;
     padding: 2rem 1rem 3rem 1.2rem;
@@ -157,13 +158,13 @@ $light: #e8e8e8;
             left: 0.2rem;
             width: 270px;
             div {
-              border-bottom: 1px solid #ccc;
+              border-bottom: 1px solid #eee;
               position: relative;
               height: 68px;
               margin-top: 8px;
-              font-size: 0.8rem;
+              font-size: 0.7rem;
               span {
-                color: #888;
+                color: #bac0c8;
                 padding: 0.2rem 0.5rem;
                 border-radius: 5rem;
               }
@@ -288,10 +289,40 @@ $light: #e8e8e8;
 .plancard {
   width: 200px;
   display: flex;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.7);
   border-radius: 3px;
-  box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 2px 0.2px rgba(0, 0, 0, 0.1);
   &__title {
-    font-size: 0.9rem;
+    color: #525762;
+    height: 1.2rem;
+    vertical-align: center;
+    position: relative;
+    top: 8%;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-top: 0.1rem;
+    margin-left: 6.6rem;
   }
+  .set-theme {
+    margin-left: 1rem;
+    top: 8%;
+  }
+  .set-time {
+    margin-top: 0.1rem;
+    margin-left: 1rem;
+    top: 8%;
+  }
+  &__delete-btn {
+    display: none;
+  }
+}
+
+.react-grid-item:hover .plancard__delete-btn {
+  display: block;
+  position: absolute;
+  top: 8%;
+  margin-left: 12.2rem;
+  height: 1.2rem;
+  color: $main;
+  font-weight: 600;
 }
