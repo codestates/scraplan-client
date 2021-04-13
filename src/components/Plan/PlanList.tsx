@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import AddPlan from "./AddPlan";
 import PlanTimeline from "./PlanTimeline";
 
 const PlanList = () => {
@@ -8,6 +9,15 @@ const PlanList = () => {
   const [publicToggleChecked, setPublicToggleChecked] = useState<boolean>(
     false,
   );
+  const [openAddRequest, setOpenAddRequest] = useState<boolean>(false);
+
+  const handleOpenAddRequset = useCallback(() => {
+    setOpenAddRequest(true);
+  }, [openAddRequest]);
+
+  const handleCloseAddRequest = useCallback(() => {
+    setOpenAddRequest(false);
+  }, [openAddRequest]);
 
   const handleListState = useCallback(() => {
     setOpenList(!openList);
@@ -15,7 +25,7 @@ const PlanList = () => {
 
   const handleInputTitle = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setInputTitle(e.target?.value);
+      setInputTitle(e.target.value);
     },
     [inputTitle],
   );
@@ -27,6 +37,11 @@ const PlanList = () => {
   // 지역 정하기 => input list 사용
   return (
     <div className="planlist">
+      <AddPlan
+        type="addPlan"
+        open={openAddRequest}
+        close={handleCloseAddRequest}
+      />
       <div className="planlist__toggle" onClick={handleListState}>
         <img src="/images/prev-pink.png"></img>
       </div>
@@ -85,11 +100,15 @@ const PlanList = () => {
                   .fill(true)
                   .map((grid, idx) => {
                     return (
-                      <div>
-                        <span>{`${Math.floor(idx / 2)}:${
-                          (idx * 30) % 60 === 0 ? "00" : "30"
-                        }`}</span>
-                      </div>
+                      <>
+                        <div onClick={handleOpenAddRequset} key={idx}>
+                          <span>
+                            {`${Math.floor(idx / 2)}:${
+                              (idx * 30) % 60 === 0 ? "00" : "30"
+                            }`}
+                          </span>
+                        </div>
+                      </>
                     );
                   })}
               </div>
