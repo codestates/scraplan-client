@@ -605,12 +605,13 @@ $light: #f7f7f9;
       }
     }
   }
-.react-grid-item:hover .plancard__delete-btn {
-  display: block;
-  position: absolute;
-  top: 8%;
-  margin-left: 12.2rem;
-  height: 1.2rem;
-  color: $main;
-  font-weight: 600;
+  .react-grid-item:hover .plancard__delete-btn {
+    display: block;
+    position: absolute;
+    top: 8%;
+    margin-left: 12.2rem;
+    height: 1.2rem;
+    color: $main;
+    font-weight: 600;
+  }
 }
