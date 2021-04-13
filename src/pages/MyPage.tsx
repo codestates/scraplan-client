@@ -33,7 +33,7 @@ const MyPage = () => {
       id: 0,
       title: "2박3일 울산여행",
       desc: "여행을 떠나보세요!",
-      writer: "guest",
+      writer: "jooing",
       dayCount: 3,
       representAddr: "울산광역시",
     },
