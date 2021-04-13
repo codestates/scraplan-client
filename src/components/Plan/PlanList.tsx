@@ -14,6 +14,7 @@ const PlanList = () => {
   const handleOpenAddRequset = useCallback(() => {
     setOpenAddRequest(true);
   }, [openAddRequest]);
+
   const handleCloseAddRequest = useCallback(() => {
     setOpenAddRequest(false);
   }, [openAddRequest]);
@@ -24,7 +25,7 @@ const PlanList = () => {
 
   const handleInputTitle = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setInputTitle(e.target?.value);
+      setInputTitle(e.target.value);
     },
     [inputTitle],
   );
@@ -99,13 +100,15 @@ const PlanList = () => {
                   .fill(true)
                   .map((grid, idx) => {
                     return (
-                      <div onClick={handleOpenAddRequset} key={idx}>
-                        <span>
-                          {`${Math.floor(idx / 2)}:${
-                            (idx * 30) % 60 === 0 ? "00" : "30"
-                          }`}
-                        </span>
-                      </div>
+                      <>
+                        <div onClick={handleOpenAddRequset} key={idx}>
+                          <span>
+                            {`${Math.floor(idx / 2)}:${
+                              (idx * 30) % 60 === 0 ? "00" : "30"
+                            }`}
+                          </span>
+                        </div>
+                      </>
                     );
                   })}
               </div>

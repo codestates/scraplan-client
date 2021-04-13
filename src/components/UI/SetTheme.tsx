@@ -5,8 +5,9 @@ import React, { useRef, useState } from "react";
 interface ThemeProps {
   themeIndex?: number;
   type?: string;
+  giveThemeIndexToParent?: (index: number) => void;
 }
-const SetTheme = ({ themeIndex, type }: ThemeProps) => {
+const SetTheme = ({ themeIndex, type, giveThemeIndexToParent }: ThemeProps) => {
   const themeList =
     type === "feedback"
       ? ["😃", "🤔", "😡"]
@@ -22,6 +23,9 @@ const SetTheme = ({ themeIndex, type }: ThemeProps) => {
     const selectThemeIndex = themeList.findIndex(
       (select) => select === e.currentTarget.textContent,
     );
+    if (giveThemeIndexToParent) {
+      giveThemeIndexToParent(selectThemeIndex);
+    }
     setCurrentThemeIndex(selectThemeIndex);
     setIsSelectTheme(!isSelectTheme);
   };

@@ -6,6 +6,7 @@ import CurationList from "../components/Curation/CurationList";
 import PlanList from "../components/Plan/PlanList";
 import { getCurationCards } from "../actions";
 import Modal from "../components/UI/Modal";
+import AddPlan from "../components/Plan/AddPlan";
 require("dotenv").config();
 
 declare global {
@@ -82,6 +83,15 @@ const PlanPage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [modalType, setModalType] = useState<string>("");
   const [modalComment, setModalComment] = useState<string>("");
+  const [openAddRequest, setOpenAddRequest] = useState<boolean>(false);
+
+  const handleOpenAddRequset = () => {
+    setOpenAddRequest(true);
+  };
+
+  const handleCloseAddRequest = () => {
+    setOpenAddRequest(false);
+  };
 
   const handleModalOpen = () => {
     setOpenModal(true);
@@ -117,6 +127,10 @@ const PlanPage = () => {
 
   // keyword request
   useEffect(() => {
+    handleSearchKeywordKaKao();
+  }, [inputKeyword]);
+
+  const handleSearchKeywordKaKao = () => {
     if (inputKeyword !== "") {
       fetch(
         `https://dapi.kakao.com/v2/local/search/keyword.json?query=${inputKeyword}&y=${LatLng[0]}&x=${LatLng[1]}&sort=distance`,
@@ -131,14 +145,17 @@ const PlanPage = () => {
         .then((body) => {
           let newKeywordList: object[] = [];
           body.documents.map((addr: any) => {
-            newKeywordList.push(addr.address_name);
+            newKeywordList.push({
+              place_name: addr.place_name,
+              address_name: addr.address_name,
+            });
           });
           setKeywordList(newKeywordList);
           setSearchLatLng([body.documents[0].y, body.documents[0].x]);
         })
         .catch((err) => console.log(err));
     }
-  }, [inputKeyword]);
+  };
 
   const handleChangeInputKeyword = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -307,13 +324,23 @@ const PlanPage = () => {
         comment={modalComment}
         modalType={modalType}
       />
+      <AddPlan
+        open={openAddRequest}
+        close={handleCloseAddRequest}
+        type="requestCuration"
+      />
       <div className="planpage__layout">
         <div className="planpage__layout__options">
           <button className="planpage__layout__options__option">👀</button>
           <span className="planpage__layout__options__option-desc">
             내일정만 보기
           </span>
-          <button className="planpage__layout__options__option">✚</button>
+          <button
+            className="planpage__layout__options__option"
+            onClick={handleOpenAddRequset}
+          >
+            ✚
+          </button>
           <span className="planpage__layout__options__option-desc-second">
             큐레이션 추가신청
           </span>
@@ -347,10 +374,14 @@ const PlanPage = () => {
           </div>
           {keywordList.length !== 0 ? (
             <ul>
-              {keywordList.map((addr: string, idx: number) => {
+              {keywordList.map((addr: any, idx: number) => {
                 return (
-                  <li key={idx} onClick={() => handleClickKeywordList(addr)}>
-                    {`👉🏻  ${addr}`}
+                  <li
+                    key={idx}
+                    onClick={() => handleClickKeywordList(addr.address_name)}
+                  >
+                    <div className="place_name">{`👉🏻  ${addr.place_name}`}</div>
+                    <div className="address_name">{addr.address_name}</div>
                   </li>
                 );
               })}
