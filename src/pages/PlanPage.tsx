@@ -6,7 +6,6 @@ import CurationList from "../components/Curation/CurationList";
 import PlanList from "../components/Plan/PlanList";
 import { getCurationCards } from "../actions";
 import Modal from "../components/UI/Modal";
-require("dotenv").config();
 
 declare global {
   interface Window {
