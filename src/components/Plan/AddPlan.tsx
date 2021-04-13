@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../reducers";
 import Modal from "../UI/Modal";
@@ -9,6 +9,9 @@ interface AddPlanProps {
   type: string;
   open: boolean;
   close: () => void;
+  LatLng: any;
+  setSearchLatLng?: any;
+  moveKakaoMap?: any;
 }
 
 // SetTime으로 부터 startTime, endTime 추가로 계산한 기간까지 가져오는 용도
@@ -18,27 +21,67 @@ interface GetTimeInfo {
   period: string | undefined;
 }
 
-const AddPlan = ({ type, open, close }: AddPlanProps) => {
+const AddPlan = ({
+  type,
+  open,
+  close,
+  LatLng,
+  setSearchLatLng,
+  moveKakaoMap,
+}: AddPlanProps) => {
   const userState = useSelector((state: RootState) => state.userReducer);
   const {
     user: { token, email, nickname },
   } = userState;
-  const dispatch = useDispatch();
-
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [modalComment, setModalComment] = useState<string>("");
-  const [inputTitlePlan, setInputTitlePlan] = useState<string>("");
-  const [inputTitleCuration, setInputTitleCuration] = useState<string>("");
-  const [inputDescCuration, setInputDescCuration] = useState<string>("");
-  const [inputKeywordPlan, setInputKeywordPlan] = useState<string>("");
-  const [inputKeywordCuration, setInputKeywordCuration] = useState<string>("");
-  const refTitlePlan = useRef<HTMLInputElement>(null);
-  const refTitleCuration = useRef<HTMLInputElement>(null);
-  const refDescCuration = useRef<HTMLTextAreaElement>(null);
-  const [requestThemePlan, setRequestThemePlan] = useState<number>(0);
-  const [requestThemeCuration, setRequestThemeCuration] = useState<number>(0);
-  const [requestTimePlan, setRequestTimePlan] = useState<string>("0:15");
+  const [inputTitle, setInputTitle] = useState<string>("");
+  const [inputKeyword, setInputKeyword] = useState<string>("");
+  const [inputDesc, setInputDesc] = useState<string>("");
+  const [keywordList, setKeywordList] = useState<any>([]);
+  const refTitle = useRef<HTMLInputElement>(null);
+  const refDesc = useRef<HTMLTextAreaElement>(null);
+  const refAddress = useRef<HTMLInputElement>(null);
+  const [requestTheme, setRequestTheme] = useState<number>(0);
+  const [requestTime, setRequestTime] = useState<string>("0:15");
+  const [completeSearch, setCompleteSearch] = useState<boolean>(false);
+  const [forRequestLatLng, setForRequestLatLng] = useState<number[]>([]);
+  const [forRequestAddress, setForRequestAddress] = useState<string>("");
 
+  useEffect(() => {
+    if (inputKeyword !== "" && LatLng && !completeSearch) {
+      fetch(
+        `https://dapi.kakao.com/v2/local/search/keyword.json?query=${inputKeyword}&y=${LatLng[0]}&x=${LatLng[1]}&sort=distance`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `KakaoAK ${process.env.REACT_APP_KAKAO_MAP_RESTAPI_KEY}`,
+          },
+        },
+      )
+        .then((res) => res.json())
+        .then((body) => {
+          let newKeywordList: object[] = [];
+          body.documents.map((addr: any) => {
+            newKeywordList.push({
+              place_name: addr.place_name,
+              address_name: addr.address_name,
+            });
+          });
+          setKeywordList(newKeywordList);
+          setSearchLatLng([body.documents[0].y, body.documents[0].x]);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [inputKeyword]);
+
+  useEffect(() => {
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") handleCloseBtn();
+    });
+  }, [open]);
+
+  // 모달 관리
   const handleModalOpen = () => {
     setOpenModal(true);
   };
@@ -46,108 +89,131 @@ const AddPlan = ({ type, open, close }: AddPlanProps) => {
     setOpenModal(false);
   };
 
-  // Plan 추가 - SetTheme로 부터 테마의 인덱스를 얻는 함수
-  const handleGetRequestThemePlan = (themeIndex: number) => {
-    setRequestThemePlan(themeIndex);
-  };
-  // Curation 요청 - SetTheme로 부터 테마의 인덱스를 얻는 함수
-  const handleGetRequestThemeCuration = (themeIndex: number) => {
-    setRequestThemeCuration(themeIndex);
-  };
-  // Plan 추가 - SetTime로 부터 기간을 얻는 함수
-  const handleGetRequestTimePlan = (period: string) => {
-    setRequestTimePlan(period);
+  const handleCloseBtn = () => {
+    setInputTitle("");
+    setInputKeyword("");
+    setInputDesc("");
+    close();
   };
 
-  const handleInputTitlePlan = useCallback(
+  // SetTheme로 부터 테마의 인덱스를 얻는 함수
+  const handleGetRequestTheme = (themeIndex: number) => {
+    setRequestTheme(themeIndex);
+  };
+  // (Plan 추가만) SetTime로 부터 기간을 얻는 함수
+  const handleGetRequestTime = (period: string) => {
+    setRequestTime(period);
+  };
+
+  // 타이틀 입력 함수
+  const handleInputTitle = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setInputTitlePlan(e.target.value);
+      setInputTitle(e.target.value);
     },
-    [inputTitlePlan],
+    [inputTitle],
   );
-
-  const handleInputTitleCuration = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setInputTitleCuration(e.target.value);
-    },
-    [inputTitleCuration],
-  );
-
-  const handleInputDescCuration = useCallback(
+  // (Curation 요청일때만) 추가 설명
+  const handleInputDesc = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setInputDescCuration(e.target.value);
+      setInputDesc(e.target.value);
     },
-    [inputDescCuration],
+    [inputDesc],
   );
-
-  const handleInputKeywordPlan = useCallback(
+  // 장소 검색
+  const handleInputKeyword = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setInputKeywordPlan(e.target?.value);
+      if (completeSearch) {
+        setCompleteSearch(false);
+      }
+      setInputKeyword(e.target?.value);
     },
-    [inputKeywordPlan],
+    [inputKeyword],
   );
 
-  const handleInputKeywordCuration = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setInputKeywordCuration(e.target?.value);
-    },
-    [inputKeywordCuration],
-  );
+  // 검색하면 리스트들이 렌더링 -> 클릭 시 장소칸이 채워지는 함수
+  // const handleClickKeywordList = (place_name: string) => {
+  //   moveKakaoMap();
+  //   setCompleteSearch(true);
+  //   setInputKeyword(place_name);
+  //   setKeywordList([]);
+  // };
 
-  // Plan 추가하기 버튼
-  const handleAddPlanSubmitBtn = useCallback(() => {
-    if (inputTitlePlan === "") {
-      refTitlePlan.current?.focus();
-    }
-  }, [inputTitlePlan]);
-
-  // 큐레이션 요청 버튼
-  const handleRequestCurationSubmitBtn = useCallback(() => {
-    if (inputTitleCuration === "") {
-      refTitleCuration.current?.focus();
-      return;
-    }
-    if (inputDescCuration === "") {
-      refDescCuration.current?.focus();
-      return;
-    }
-    return fetch(`${process.env.REACT_APP_SERVER_URL}/curation-request`, {
-      method: "POST",
-      headers: {
-        authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-        credentials: "include",
+  const handleClickKeywordList = (name: string, address: string) => {
+    setCompleteSearch(true);
+    setInputKeyword(name);
+    setForRequestAddress(address);
+    setKeywordList([]);
+    fetch(
+      `https://dapi.kakao.com/v2/local/search/keyword.json?query=${address}&y=${LatLng[0]}&x=${LatLng[1]}&sort=distance`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `KakaoAK ${process.env.REACT_APP_KAKAO_MAP_RESTAPI_KEY}`,
+        },
       },
-      body: JSON.stringify({
-        requestTitle: inputTitleCuration,
-        email,
-        // 수정
-        coordinates: [],
-        // 수정
-        address: "",
-        requestComment: inputDescCuration,
-        // 수정
-        requestTheme: requestThemeCuration,
-      }),
-    })
+    )
       .then((res) => res.json())
       .then((body) => {
-        if (body.message) {
-          setInputTitleCuration("");
-          setInputDescCuration("");
-          close();
-          setModalComment("요청이 정상 처리되었습니다.");
-          handleModalOpen();
-        } else {
-          setInputTitleCuration("");
-          setInputDescCuration("");
-          close();
-          setModalComment("요청이 실패되었습니다.");
-          handleModalOpen();
-        }
+        setSearchLatLng([body.documents[0].y, body.documents[0].x]);
+        moveKakaoMap(body.documents[0].y, body.documents[0].x);
+        setForRequestLatLng([body.documents[0].y, body.documents[0].x]);
       })
       .catch((err) => console.log(err));
-  }, [inputTitleCuration, inputDescCuration]);
+  };
+
+  // 제출 버튼
+  const handleSubmitBtn = () => {
+    // 1. plan 추가일 경우
+    // 2. curation 요청일 경우
+    if (inputTitle === "") {
+      refTitle.current?.focus();
+      return;
+    }
+    if (inputKeyword === "") {
+      refAddress.current?.focus();
+      return;
+    }
+    if (type === "addPlan") {
+      // List 공부 하고..!
+      alert("추가하기!!");
+      return;
+    }
+    if (type === "requestCuration" && inputDesc === "") {
+      refDesc.current?.focus();
+      return;
+    }
+    if (type === "requestCuration") {
+      return fetch(`${process.env.REACT_APP_SERVER_URL}/curation-request`, {
+        method: "POST",
+        headers: {
+          authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          credentials: "include",
+        },
+        body: JSON.stringify({
+          requestTitle: inputTitle,
+          email,
+          coordinates: forRequestLatLng,
+          address: forRequestAddress,
+          requestComment: inputDesc,
+          // 수정
+          requestTheme: requestTheme,
+        }),
+      })
+        .then((res) => res.json())
+        .then((body) => {
+          if (body.message) {
+            handleCloseBtn();
+            setModalComment("요청이 정상 처리되었습니다.");
+            handleModalOpen();
+          } else {
+            setModalComment("요청이 실패되었습니다.");
+            handleModalOpen();
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  };
 
   return (
     <>
@@ -157,93 +223,77 @@ const AddPlan = ({ type, open, close }: AddPlanProps) => {
         close={handleModalClose}
         comment={modalComment}
       />
-      {open && type === "addPlan" ? (
-        <div className="addPlan">
+      {open ? (
+        // <div className='addPlan'>
+        <div
+          className={`addPlan ${type === "requestCuration" ? "addDesc" : ""}`}
+        >
           <button className="addPlan__cancle-btn" onClick={close}>
             &times;
           </button>
           <div className="addPlan__wrapper">
             <div className="addPlan__select-box">
-              <SetTheme giveThemeIndexToParent={handleGetRequestThemePlan} />
-              <SetTime giveTimeToParent={handleGetRequestTimePlan} />
+              <SetTheme giveThemeIndexToParent={handleGetRequestTheme} />
+              {type === "requestCuration" ? <></> : <SetTime />}
             </div>
             <input
               type="text"
               placeholder="일정 제목을 입력해주세요."
               className="addPlan__title"
-              onChange={handleInputTitlePlan}
-              ref={refTitlePlan}
+              value={inputTitle}
+              onChange={handleInputTitle}
+              ref={refTitle}
             ></input>
             <div className="addPlan__address">
               <img src="/images/placeholder.png" />
               <input
                 type="text"
                 placeholder="지역 검색"
-                value={inputKeywordPlan}
-                onChange={handleInputKeywordPlan}
+                value={inputKeyword}
+                onChange={handleInputKeyword}
+                ref={refAddress}
               ></input>
+              {keywordList.length !== 0 ? (
+                <ul>
+                  {keywordList.map((addr: any, idx: number) => {
+                    return (
+                      <li
+                        key={idx}
+                        onClick={() =>
+                          handleClickKeywordList(
+                            addr.place_name,
+                            addr.address_name,
+                          )
+                        }
+                      >
+                        <div className="place_name">{`👉🏻  ${addr.place_name}`}</div>
+                        <div className="address_name">{addr.address_name}</div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : (
+                <></>
+              )}
             </div>
-            <button
-              className="addPlan__submit-btn"
-              onClick={handleAddPlanSubmitBtn}
-            >
-              추가하기
+            {type === "requestCuration" ? (
+              <div className="addPlan__description">
+                <img src="/images/like.png" />
+                <textarea
+                  onChange={handleInputDesc}
+                  value={inputDesc}
+                  placeholder="추천하시는 이유가 있나요~?"
+                  ref={refDesc}
+                ></textarea>
+              </div>
+            ) : (
+              <></>
+            )}
+            <button className="addPlan__submit-btn" onClick={handleSubmitBtn}>
+              {type === "requestCuration" ? "신청하기" : "추가하기"}
             </button>
           </div>
         </div>
-      ) : open && type === "requestCuration" ? (
-        <>
-          <div className="addPlan-curationReq">
-            <button className="addPlan-curationReq__cancle-btn" onClick={close}>
-              &times;
-            </button>
-            <div className="addPlan-curationReq__wrapper">
-              <div className="addPlan-curationReq__select-box">
-                <SetTheme
-                  giveThemeIndexToParent={handleGetRequestThemeCuration}
-                />
-              </div>
-              <input
-                type="text"
-                placeholder="일정 제목을 입력해주세요."
-                className="addPlan-curationReq__title"
-                onChange={handleInputTitleCuration}
-                ref={refTitleCuration}
-              ></input>
-              <div className="addPlan-curationReq__address">
-                <img src="/images/placeholder.png" />
-                <input
-                  type="text"
-                  placeholder="지역 검색"
-                  value={inputKeywordCuration}
-                  onChange={handleInputKeywordCuration}
-                ></input>
-              </div>
-              <div className="addPlan-curationReq__description">
-                <img src="/images/like.png" />
-                {/* <input
-                  type="text"
-                  onChange={handleInputDescCuration}
-                  value={inputDescCuration}
-                  placeholder="추천하시는 이유가 있나요~?"
-                  ref={refDescCuration}
-                ></input> */}
-                <textarea
-                  onChange={handleInputDescCuration}
-                  value={inputDescCuration}
-                  placeholder="추천하시는 이유가 있나요~?"
-                  ref={refDescCuration}
-                ></textarea>
-              </div>
-              <button
-                className="addPlan-curationReq__submit-btn"
-                onClick={handleRequestCurationSubmitBtn}
-              >
-                신청하기
-              </button>
-            </div>
-          </div>
-        </>
       ) : (
         <></>
       )}

@@ -85,7 +85,7 @@ const PlanPage = () => {
   const [modalComment, setModalComment] = useState<string>("");
   const [openAddRequest, setOpenAddRequest] = useState<boolean>(false);
 
-  const handleOpenAddRequset = () => {
+  const handleOpenAddRequest = () => {
     setOpenAddRequest(true);
   };
 
@@ -127,10 +127,6 @@ const PlanPage = () => {
 
   // keyword request
   useEffect(() => {
-    handleSearchKeywordKaKao();
-  }, [inputKeyword]);
-
-  const handleSearchKeywordKaKao = () => {
     if (inputKeyword !== "") {
       fetch(
         `https://dapi.kakao.com/v2/local/search/keyword.json?query=${inputKeyword}&y=${LatLng[0]}&x=${LatLng[1]}&sort=distance`,
@@ -155,7 +151,7 @@ const PlanPage = () => {
         })
         .catch((err) => console.log(err));
     }
-  };
+  }, [inputKeyword]);
 
   const handleChangeInputKeyword = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -317,17 +313,16 @@ const PlanPage = () => {
     <div className="planpage">
       <Navbar />
       <CurationList />
-      <PlanList />
+      <PlanList
+        LatLng={LatLng}
+        setSearchLatLng={setSearchLatLng}
+        moveKakaoMap={moveKakaoMap}
+      />
       <Modal
         open={openModal}
         close={handleModalClose}
         comment={modalComment}
         modalType={modalType}
-      />
-      <AddPlan
-        open={openAddRequest}
-        close={handleCloseAddRequest}
-        type="requestCuration"
       />
       <div className="planpage__layout">
         <div className="planpage__layout__options">
@@ -337,10 +332,18 @@ const PlanPage = () => {
           </span>
           <button
             className="planpage__layout__options__option"
-            onClick={handleOpenAddRequset}
+            onClick={handleOpenAddRequest}
           >
             ✚
           </button>
+          <AddPlan
+            open={openAddRequest}
+            close={handleCloseAddRequest}
+            type="requestCuration"
+            LatLng={LatLng}
+            setSearchLatLng={setSearchLatLng}
+            moveKakaoMap={moveKakaoMap}
+          />
           <span className="planpage__layout__options__option-desc-second">
             큐레이션 추가신청
           </span>
