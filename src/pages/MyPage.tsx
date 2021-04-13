@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { RootState } from "../reducers";
-import { getPlans, getCurationsRequests } from "../actions";
+import { userInfo, getPlans, getCurationsRequests } from "../actions";
 import Navbar from "../components/UI/Navbar";
 import Modal from "../components/UI/Modal";
 import PlanSummary from "../components/Plan/PlanSummary";
@@ -16,6 +16,8 @@ const MyPage = () => {
 
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [modalComment, setModalComment] = useState<string>("");
+
+  const [userNickname, setUserNickname] = useState<string>("");
 
   const [curMenu, setCurMenu] = useState<string>("myPlans");
   const [planList, setPlanList] = useState([
@@ -80,9 +82,30 @@ const MyPage = () => {
     user: { token, email, nickname },
   } = userState;
 
+  console.log(token, email);
+
   useEffect(() => {
     setAddrList(mapdata);
     setAddrListSi(Object.keys(mapdata));
+  }, []);
+
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/user/info/${email}`, {
+      method: "GET",
+      headers: {
+        authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        credentials: "include",
+      },
+    })
+      .then((res) => res.json())
+      .then((body) => {
+        if (body.isValid) {
+          dispatch(userInfo(token, body.email, body.nickname));
+          setUserNickname(body.nickname);
+        }
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   useEffect(() => {
@@ -99,7 +122,7 @@ const MyPage = () => {
         setPlanList(body.plans);
       })
       .catch((err) => console.error(err));
-  });
+  }, []);
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_SERVER_URL}/curation-requests/${email}`, {
@@ -219,7 +242,7 @@ const MyPage = () => {
       <div className="mypage">
         <div className="mypage__header">
           <div className="mypage__header__title">마이페이지</div>
-          <p className="mypage__header__nickname">{nickname}</p>
+          <p className="mypage__header__nickname">{userNickname}</p>
           <p className="mypage__header__email">
             {email === "" ? "guest@scraplan.com" : email}
           </p>

@@ -44,21 +44,20 @@ const Navbar = () => {
     dispatch(signOut());
     dispatch(getGoogleToken(""));
     history.push("/");
-    //   return fetch(`${process.env.REACT_APP_SERVER_URL}/sign/out`, {
-    //     method: "PUT",
-    //     headers: {
-    //       authorization: `Bearer ${token}`,
-    //       "Content-Type": "application/json",
-    //       credentials: "include",
-    //     },
-    //     body: JSON.stringify({
-    //       email,
-    //     }),
-    //   })
-    //     .then((res) => res.json())
-    //     .then((data) => data)
-    //     .catch((err) => console.error(err));
-    // };
+    return fetch(`${process.env.REACT_APP_SERVER_URL}/sign/out`, {
+      method: "PATCH",
+      headers: {
+        authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        credentials: "include",
+      },
+      body: JSON.stringify({
+        email,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => data)
+      .catch((err) => console.error(err));
   };
 
   return (

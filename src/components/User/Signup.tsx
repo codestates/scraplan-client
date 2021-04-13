@@ -165,9 +165,9 @@ const Signup = (props: SignupProps) => {
           credentials: "include",
         },
         body: JSON.stringify({
-          inputEmail,
-          inputNickname,
-          inputPassword,
+          email: inputEmail,
+          nickname: inputNickname,
+          password: inputPassword,
         }),
       })
         .then((res) => res.json())

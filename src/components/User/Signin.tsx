@@ -65,20 +65,20 @@ const Signin = (props: SigninProps) => {
       return;
     }
     return fetch(`${process.env.REACT_APP_SERVER_URL}/sign/in`, {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         credentials: "include",
       },
       body: JSON.stringify({
-        inputEmail,
-        inputPassword,
+        email: inputEmail,
+        password: inputPassword,
       }),
     })
       .then((res) => res.json())
       .then((body) => {
         if (body.accessToken) {
-          dispatch(signIn(body.accessToken, inputEmail, body.nickname));
+          dispatch(signIn(body.accessToken, inputEmail, ""));
           handleCloseBtn();
         } else {
           setDenyMessage("이메일과 비밀번호를 다시 확인해주세요");
