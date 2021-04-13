@@ -27,6 +27,14 @@ const MyPage = () => {
       dayCount: 3,
       representAddr: "울산광역시",
     },
+    {
+      id: 0,
+      title: "2박3일 울산여행",
+      desc: "여행을 떠나보세요!",
+      writer: "guest",
+      dayCount: 3,
+      representAddr: "울산광역시",
+    },
   ]);
 
   const [curationsRequestsList, setCurationsRequestsList] = useState([
