@@ -130,14 +130,6 @@ const AddPlan = ({
     [inputKeyword],
   );
 
-  // 검색하면 리스트들이 렌더링 -> 클릭 시 장소칸이 채워지는 함수
-  // const handleClickKeywordList = (place_name: string) => {
-  //   moveKakaoMap();
-  //   setCompleteSearch(true);
-  //   setInputKeyword(place_name);
-  //   setKeywordList([]);
-  // };
-
   const handleClickKeywordList = (name: string, address: string) => {
     setCompleteSearch(true);
     setInputKeyword(name);
