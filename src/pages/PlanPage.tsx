@@ -7,7 +7,6 @@ import PlanList from "../components/Plan/PlanList";
 import { getCurationCards } from "../actions";
 import Modal from "../components/UI/Modal";
 import AddPlan from "../components/Plan/AddPlan";
-require("dotenv").config();
 
 declare global {
   interface Window {
@@ -75,7 +74,7 @@ const PlanPage = () => {
 
   const [inputKeyword, setInputKeyword] = useState<string>("");
   const [keywordList, setKeywordList] = useState<any>([]);
-
+  const [searchMode, setSearchMode] = useState<boolean>(false);
   const [searchLatLng, setSearchLatLng] = useState<number[]>([
     37.5139795454969,
     127.048963363388,
@@ -139,7 +138,8 @@ const PlanPage = () => {
 
   // keyword request
   useEffect(() => {
-    if (inputKeyword !== "") {
+    setSearchMode(true);
+    if (inputKeyword !== "" && searchMode) {
       fetch(
         `https://dapi.kakao.com/v2/local/search/keyword.json?query=${inputKeyword}&y=${LatLng[0]}&x=${LatLng[1]}&sort=distance`,
         {
@@ -319,15 +319,21 @@ const PlanPage = () => {
           markerList[i].coordinates[0],
           markerList[i].coordinates[1],
         );
-        var marker = new window.kakao.maps.Marker({
+        let marker = new window.kakao.maps.Marker({
           map,
           position,
           title: markerList[i].address,
           image: markerImage,
         });
-        window.kakao.maps.event.addListener(marker, "click", handleClickMarker);
+
+        ((marker, curationId, curationAddr) => {
+          window.kakao.maps.event.addListener(marker, "click", () => {
+            console.log(curationId);
+            handleClickMarker(curationId, curationAddr);
+          });
+        })(marker, markerList[i].id, markerList[i].address);
+        marker.setMap(map);
       }
-      marker.setMap(map);
     }
   };
 
@@ -355,11 +361,12 @@ const PlanPage = () => {
   const handleSearchByKeyword = (): void => {
     moveKakaoMap(searchLatLng[0], searchLatLng[1]);
     setKeywordList([]);
-    setInputKeyword("");
+    setInputKeyword(inputKeyword);
   };
 
   const handleEnterSearch = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
+      setSearchMode(false);
       handleSearchByKeyword();
     }
   };
@@ -387,12 +394,12 @@ const PlanPage = () => {
         moveKakaoMap(body.documents[0].y, body.documents[0].x);
       })
       .catch((err) => console.log(err));
-    setInputKeyword("");
+    setInputKeyword(addr);
     setKeywordList([]);
+    setSearchMode(false);
   };
 
-  //
-  const handleClickMarker = () => {
+  const handleClickMarker = (curationId: number, curationAddr: string) => {
     fetch(`${process.env.REACT_APP_SERVER_URL}/curation-cards/${curationId}`, {
       method: "GET",
       headers: {
@@ -405,18 +412,28 @@ const PlanPage = () => {
         if (body) {
           dispatch(getCurationCards(body));
         } else {
-          setModalComment("데이터가 없습니다.");
-          setModalType("alertModal");
-          handleModalOpen();
         }
       })
       .catch((err) => console.error(err));
+  };
+  const handleAddToPlan = (props: any, e: Event) => {
+    // curaton 에서 + 버튼 클릭시 plan으로 정보를 넘겨주는 함수
+    e.stopPropagation();
+    const {
+      curationCardId,
+      theme,
+      title,
+      detail,
+      photo,
+      avgTime,
+      feedbackCnt,
+    } = props;
   };
 
   return (
     <div className="planpage">
       <Navbar />
-      <CurationList />
+      <CurationList addEventFunc={handleAddToPlan} />
       <PlanList
         LatLng={LatLng}
         setSearchLatLng={setSearchLatLng}
@@ -495,7 +512,7 @@ const PlanPage = () => {
                 return (
                   <li
                     key={idx}
-                    onClick={() => handleClickKeywordList(addr.address_name)}
+                    onClick={() => handleClickKeywordList(addr.place_name)}
                   >
                     <div className="place_name">{`👉🏻  ${addr.place_name}`}</div>
                     <div className="address_name">{addr.address_name}</div>

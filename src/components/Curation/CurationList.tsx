@@ -4,7 +4,7 @@ import "./Curation.scss";
 import { useSelector } from "react-redux";
 import { RootState } from "../../reducers";
 
-const CurationList = () => {
+const CurationList = ({ addEventFunc }: any) => {
   const [openList, setOpenList] = useState<boolean>(false);
   const [sortByTime, setSortByTime] = useState<boolean>(false);
 
@@ -114,7 +114,13 @@ const CurationList = () => {
                 },
                 index: number,
               ) => {
-                return <CurationCard props={card} key={index} />;
+                return (
+                  <CurationCard
+                    props={card}
+                    key={index}
+                    addEventFunc={addEventFunc}
+                  />
+                );
               },
             )}
           </ul>
