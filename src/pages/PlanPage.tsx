@@ -84,6 +84,7 @@ const PlanPage = () => {
   const [modalComment, setModalComment] = useState<string>("");
   const [openAddRequest, setOpenAddRequest] = useState<boolean>(false);
   const [viewOnlyMine, setViewOnlyMine] = useState<boolean>(false);
+  const [selectTheme, setSelectTheme] = useState<number>(-1);
 
   const handleOpenAddRequest = () => {
     setOpenAddRequest(true);
@@ -349,7 +350,9 @@ const PlanPage = () => {
     alert("내 일정만 보기");
   };
 
-  const handleFilterByTheme = (): void => {};
+  const handleFilterByTheme = (idx: number): void => {
+    setSelectTheme(idx);
+  };
 
   const handleViewState = () => {
     if (!viewOnlyMine) {
@@ -473,19 +476,19 @@ const PlanPage = () => {
             setSearchLatLng={setSearchLatLng}
             moveKakaoMap={moveKakaoMap}
           />
-          <button className="planpage__layout__options__theme">테마</button>
-          {/* 여기부터*/}
-          {/* <span className="planpage__layout__options__option-desc-third">
-            큐레이션 추가신청
-          </span> */}
-          {/*여기까지 */}
+          <button className="planpage__layout__options__theme">
+            {selectTheme === -1
+              ? "테마"
+              : ["🍽", "☕️", "🕹", "🚴🏻", "🚗", "🤔"][selectTheme]}
+          </button>
           <div className="planpage__layout__options__theme-list">
             <div className={`planpage__layout__options__theme-list__inner`}>
-              {["🍽", "☕️", "🕹", "🚴🏻", "🚗", "🤔"].map((theme) => {
+              {["All", "🍽", "☕️", "🕹", "🚴🏻", "🚗", "🤔"].map((theme, idx) => {
                 return (
                   <button
+                    key={idx}
                     className="planpage__layout__options__theme-list__inner__item"
-                    onClick={handleFilterByTheme}
+                    onClick={() => handleFilterByTheme(idx - 1)}
                   >
                     {theme}
                   </button>
