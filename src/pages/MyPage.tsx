@@ -82,6 +82,8 @@ const MyPage = () => {
     user: { token, email, nickname },
   } = userState;
 
+  console.log(token, email);
+
   useEffect(() => {
     setAddrList(mapdata);
     setAddrListSi(Object.keys(mapdata));
