@@ -7,7 +7,6 @@ import PlanList from "../components/Plan/PlanList";
 import { getCurationCards } from "../actions";
 import Modal from "../components/UI/Modal";
 import AddPlan from "../components/Plan/AddPlan";
-require("dotenv").config();
 
 declare global {
   interface Window {
@@ -165,7 +164,7 @@ const PlanPage = () => {
   );
 
   const loadKakaoMap = () => {
-    let container = document.getElementById("planpage__map");
+    let container = document.getElementById("curation-management__map");
     let options = {
       center: new window.kakao.maps.LatLng(LatLng[0], LatLng[1]),
       level: mapLevel,
@@ -198,15 +197,21 @@ const PlanPage = () => {
           markerList[i].coordinates[0],
           markerList[i].coordinates[1],
         );
-        var marker = new window.kakao.maps.Marker({
+        let marker = new window.kakao.maps.Marker({
           map,
           position,
           title: markerList[i].address,
           image: markerImage,
         });
-        window.kakao.maps.event.addListener(marker, "click", handleClickMarker);
+
+        ((marker, curationId) => {
+          window.kakao.maps.event.addListener(marker, "click", () => {
+            console.log(curationId);
+            handleClickMarker(curationId);
+          });
+        })(marker, markerList[i].id);
+        marker.setMap(map);
       }
-      marker.setMap(map);
     });
 
     // level(zoom) event controller
@@ -233,15 +238,20 @@ const PlanPage = () => {
         markerList[i].coordinates[0],
         markerList[i].coordinates[1],
       );
-      var marker = new window.kakao.maps.Marker({
+      let marker = new window.kakao.maps.Marker({
         map,
         position,
         title: markerList[i].address,
         image: markerImage,
       });
-      window.kakao.maps.event.addListener(marker, "click", handleClickMarker);
+      ((marker, curationId) => {
+        window.kakao.maps.event.addListener(marker, "click", () => {
+          console.log(curationId);
+          handleClickMarker(curationId);
+        });
+      })(marker, markerList[i].id);
+      marker.setMap(map);
     }
-    marker.setMap(map);
   };
 
   const moveKakaoMap = (lat: number, lng: number) => {
@@ -291,8 +301,7 @@ const PlanPage = () => {
     setKeywordList([]);
   };
 
-  //
-  const handleClickMarker = () => {
+  const handleClickMarker = (curationId: number) => {
     fetch(`${process.env.REACT_APP_SERVER_URL}/curation-cards/${curationId}`, {
       method: "GET",
       headers: {
@@ -305,18 +314,29 @@ const PlanPage = () => {
         if (body) {
           dispatch(getCurationCards(body));
         } else {
-          setModalComment("데이터가 없습니다.");
-          setModalType("alertModal");
-          handleModalOpen();
         }
       })
       .catch((err) => console.error(err));
   };
 
+  const handleAddToPlan = (props: any, e: Event) => {
+    // curaton 에서 + 버튼 클릭시 plan으로 정보를 넘겨주는 함수
+    e.stopPropagation();
+    const {
+      curationCardId,
+      theme,
+      title,
+      detail,
+      photo,
+      avgTime,
+      feedbackCnt,
+    } = props;
+  };
+
   return (
     <div className="planpage">
       <Navbar />
-      <CurationList />
+      <CurationList addEventFunc={handleAddToPlan} />
       <PlanList />
       <Modal
         open={openModal}

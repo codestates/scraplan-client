@@ -11,9 +11,10 @@ interface CurationCardProps {
     avgTime: number;
     feedbackCnt: number;
   };
+  addEventFunc: any;
 }
 
-const CurationCard = ({ props }: CurationCardProps) => {
+const CurationCard = ({ props, addEventFunc }: CurationCardProps) => {
   const {
     curationCardId,
     theme,
@@ -53,7 +54,12 @@ const CurationCard = ({ props }: CurationCardProps) => {
           </div>
         </div>
       </div>
-      <div className="curation-card__add-btn">✚</div>
+      <div
+        className="curation-card__add-btn"
+        onClick={(e) => addEventFunc(props, e)}
+      >
+        ✚
+      </div>
       <div className="curation-card__add-btn-desc">내일정에 추가</div>
     </li>
   );
