@@ -36,7 +36,11 @@ const AdminPage = () => {
             {menu === "request" ? "큐레이션 요청" : "큐레이션 관리"}
           </p>
           <div className="adminpage__main__contents">
-            {menu === "request" ? <CurationRequest /> : <CurationManagement />}
+            {menu === "request" ? (
+              <CurationRequest setMenu={setMenu} />
+            ) : (
+              <CurationManagement />
+            )}
           </div>
         </div>
       </div>

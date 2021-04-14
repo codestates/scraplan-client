@@ -7,7 +7,7 @@ type CurationRequestItemProps = {
   id: number;
   title: string;
   requester: string;
-  cordinates: [];
+  coordinates: [];
   address: string;
   requestComment: string;
   requestTheme: number;
@@ -22,7 +22,7 @@ const CurationRequestItem = ({ props }: any) => {
     id,
     title,
     requester,
-    cordinates,
+    coordinates,
     address,
     requestComment,
     requestTheme,

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../reducers";
-import { getCurationCards } from "../../actions";
+import { getCurationCards, getCurationsRequestsResolved } from "../../actions";
 import CurationList from "../../components/Curation/CurationList";
 import {
   uploadScraplanThumbnail,
@@ -17,10 +17,13 @@ declare global {
 
 const CurationManagement = () => {
   const dispatch = useDispatch();
-  const userState = useSelector((state: RootState) => state.userReducer);
+  const state = useSelector((state: RootState) => state);
   const {
-    user: { token, email, nickname },
-  } = userState;
+    userReducer: {
+      user: { token, email, nickname },
+    },
+    curationReducer,
+  } = state;
 
   const [mode, setMode] = useState<string>("create");
 
@@ -96,6 +99,30 @@ const CurationManagement = () => {
   const [inputTime, setInputTime] = useState<string>("");
   const [inputTheme, setInputTheme] = useState<number>(0);
 
+  const [curationResolved, setCurationResolved] = useState<any>({});
+
+  useEffect(() => {
+    if (curationReducer.curationRequestsResolved) {
+      const {
+        id,
+        requester,
+        coordinates,
+        address,
+        requestTitle,
+        requestComment,
+        requestTheme,
+        status,
+      } = curationReducer.curationRequestsResolved;
+      setCurationResolved(curationReducer.curationRequestsResolved);
+      setInputTitle(requestTitle);
+      setInputKeyword(address);
+      setInputDesc(requestComment);
+      setInputTheme(requestTheme);
+    }
+    dispatch(getCurationsRequestsResolved({}));
+    setSearchMode(false);
+  }, []);
+
   useEffect(() => {
     window.kakao.maps.load(() => {
       loadKakaoMap();
@@ -150,7 +177,6 @@ const CurationManagement = () => {
 
         ((marker, curationId, curationAddr) => {
           window.kakao.maps.event.addListener(marker, "click", () => {
-            console.log(curationId);
             handleClickMarker(curationId, curationAddr);
           });
         })(marker, markerList[i].id, markerList[i].address);
@@ -190,7 +216,6 @@ const CurationManagement = () => {
       });
       ((marker, curationId, curationAddr) => {
         window.kakao.maps.event.addListener(marker, "click", () => {
-          console.log(curationId);
           handleClickMarker(curationId, curationAddr);
         });
       })(marker, markerList[i].id, markerList[i].address);
@@ -415,6 +440,31 @@ const CurationManagement = () => {
         }
       })
       .catch((err) => console.error(err));
+
+    // 요청으로 들어온 경우 승인처리
+    if (Object.keys(curationResolved).length !== 0) {
+      const { id } = curationResolved;
+      await fetch(`${process.env.REACT_APP_SERVER_URL}/curation-requests`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          credentials: "include",
+          authorization: token,
+        },
+        body: JSON.stringify({
+          email,
+          id,
+          status: 2,
+        }),
+      })
+        .then((res) => res.json())
+        .then((body) => {
+          if (body.message === "Successfully updated status") {
+            // Modal - 승인 완료
+          }
+        })
+        .catch((err) => console.error(err));
+    }
   };
 
   const handleEditCurationCard = () => {

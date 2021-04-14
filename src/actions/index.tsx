@@ -17,7 +17,7 @@ export const GET_PLAN_CARDS = "GET_PLAN_CARDS" as const;
 export const GET_CURATIONS = "GET_CURATIONS" as const;
 export const GET_CURATION_CARDS = "GET_CURATION_CARDS" as const;
 export const GET_CURATION_REQUESTS = "GET_CURATION_REQUESTS" as const;
-
+export const GET_CURATION_REQUESTS_RESOLVED = "GET_CURATION_REQUESTS_RESOLVED" as const;
 // Notification Action
 export const NOTIFY = "NOTIFY";
 export const ENQUEUE_NOTIFICATION = "ENQUEUE_NOTIFICATION" as const;
@@ -35,6 +35,7 @@ export type Action =
   | ReturnType<typeof getCurations>
   | ReturnType<typeof getCurationCards>
   | ReturnType<typeof getCurationsRequests>
+  | ReturnType<typeof getCurationsRequestsResolved>
   | ReturnType<typeof enqueueNotification>
   | ReturnType<typeof dequeueNotification>;
 
@@ -144,6 +145,15 @@ export const getCurationCards = (data: any) => {
 export const getCurationsRequests = (data: any) => {
   return {
     type: GET_CURATION_REQUESTS,
+    payload: {
+      data,
+    },
+  };
+};
+
+export const getCurationsRequestsResolved = (data: any) => {
+  return {
+    type: GET_CURATION_REQUESTS_RESOLVED,
     payload: {
       data,
     },
