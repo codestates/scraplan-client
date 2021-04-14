@@ -7,7 +7,6 @@ import PlanList from "../components/Plan/PlanList";
 import { getCurationCards } from "../actions";
 import Modal from "../components/UI/Modal";
 import AddPlan from "../components/Plan/AddPlan";
-import { transpileModule } from "typescript";
 require("dotenv").config();
 
 declare global {
