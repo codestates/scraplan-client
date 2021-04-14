@@ -657,7 +657,23 @@ body {
             border: 2px solid #fa818b;
             background-color: #f366721a;
           }
+          &:first-child {
+            font-size: 0.8rem;
+            font-weight: 500;
+          }
         }
+        // &:first-child {
+        //   border-radius: 5px;
+        //   font-size: 0.5rem;
+        //   width: 2rem;
+        //   height: 2rem;
+        //   border: 2px solid #eeeee800;
+        //   background-color: #eeeee84d;
+        //   &:hover {
+        //     border: 2px solid #fa818b;
+        //     background-color: #f366721a;
+        //   }
+        // }
       }
     }
     .planpage__layout__search-bar__wrapper {
