@@ -74,7 +74,7 @@ const PlanPage = () => {
 
   const [inputKeyword, setInputKeyword] = useState<string>("");
   const [keywordList, setKeywordList] = useState<any>([]);
-
+  const [searchMode, setSearchMode] = useState<boolean>(false);
   const [searchLatLng, setSearchLatLng] = useState<number[]>([
     37.5139795454969,
     127.048963363388,
@@ -84,7 +84,7 @@ const PlanPage = () => {
   const [modalComment, setModalComment] = useState<string>("");
   const [openAddRequest, setOpenAddRequest] = useState<boolean>(false);
 
-  const handleOpenAddRequset = () => {
+  const handleOpenAddRequest = () => {
     setOpenAddRequest(true);
   };
 
@@ -126,11 +126,8 @@ const PlanPage = () => {
 
   // keyword request
   useEffect(() => {
-    handleSearchKeywordKaKao();
-  }, [inputKeyword]);
-
-  const handleSearchKeywordKaKao = () => {
-    if (inputKeyword !== "") {
+    setSearchMode(true);
+    if (inputKeyword !== "" && searchMode) {
       fetch(
         `https://dapi.kakao.com/v2/local/search/keyword.json?query=${inputKeyword}&y=${LatLng[0]}&x=${LatLng[1]}&sort=distance`,
         {
@@ -154,7 +151,7 @@ const PlanPage = () => {
         })
         .catch((err) => console.log(err));
     }
-  };
+  }, [inputKeyword]);
 
   const handleChangeInputKeyword = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -164,7 +161,7 @@ const PlanPage = () => {
   );
 
   const loadKakaoMap = () => {
-    let container = document.getElementById("curation-management__map");
+    let container = document.getElementById("planpage__map");
     let options = {
       center: new window.kakao.maps.LatLng(LatLng[0], LatLng[1]),
       level: mapLevel,
@@ -204,12 +201,12 @@ const PlanPage = () => {
           image: markerImage,
         });
 
-        ((marker, curationId) => {
+        ((marker, curationId, curationAddr) => {
           window.kakao.maps.event.addListener(marker, "click", () => {
             console.log(curationId);
-            handleClickMarker(curationId);
+            handleClickMarker(curationId, curationAddr);
           });
-        })(marker, markerList[i].id);
+        })(marker, markerList[i].id, markerList[i].address);
         marker.setMap(map);
       }
     });
@@ -244,12 +241,12 @@ const PlanPage = () => {
         title: markerList[i].address,
         image: markerImage,
       });
-      ((marker, curationId) => {
+      ((marker, curationId, curationAddr) => {
         window.kakao.maps.event.addListener(marker, "click", () => {
           console.log(curationId);
-          handleClickMarker(curationId);
+          handleClickMarker(curationId, curationAddr);
         });
-      })(marker, markerList[i].id);
+      })(marker, markerList[i].id, markerList[i].address);
       marker.setMap(map);
     }
   };
@@ -265,11 +262,12 @@ const PlanPage = () => {
   const handleSearchByKeyword = (): void => {
     moveKakaoMap(searchLatLng[0], searchLatLng[1]);
     setKeywordList([]);
-    setInputKeyword("");
+    setInputKeyword(inputKeyword);
   };
 
   const handleEnterSearch = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
+      setSearchMode(false);
       handleSearchByKeyword();
     }
   };
@@ -297,11 +295,12 @@ const PlanPage = () => {
         moveKakaoMap(body.documents[0].y, body.documents[0].x);
       })
       .catch((err) => console.log(err));
-    setInputKeyword("");
+    setInputKeyword(addr);
     setKeywordList([]);
+    setSearchMode(false);
   };
 
-  const handleClickMarker = (curationId: number) => {
+  const handleClickMarker = (curationId: number, curationAddr: string) => {
     fetch(`${process.env.REACT_APP_SERVER_URL}/curation-cards/${curationId}`, {
       method: "GET",
       headers: {
@@ -318,7 +317,6 @@ const PlanPage = () => {
       })
       .catch((err) => console.error(err));
   };
-
   const handleAddToPlan = (props: any, e: Event) => {
     // curaton 에서 + 버튼 클릭시 plan으로 정보를 넘겨주는 함수
     e.stopPropagation();
@@ -337,17 +335,16 @@ const PlanPage = () => {
     <div className="planpage">
       <Navbar />
       <CurationList addEventFunc={handleAddToPlan} />
-      <PlanList />
+      <PlanList
+        LatLng={LatLng}
+        setSearchLatLng={setSearchLatLng}
+        moveKakaoMap={moveKakaoMap}
+      />
       <Modal
         open={openModal}
         close={handleModalClose}
         comment={modalComment}
         modalType={modalType}
-      />
-      <AddPlan
-        open={openAddRequest}
-        close={handleCloseAddRequest}
-        type="requestCuration"
       />
       <div className="planpage__layout">
         <div className="planpage__layout__options">
@@ -357,10 +354,18 @@ const PlanPage = () => {
           </span>
           <button
             className="planpage__layout__options__option"
-            onClick={handleOpenAddRequset}
+            onClick={handleOpenAddRequest}
           >
             ✚
           </button>
+          <AddPlan
+            open={openAddRequest}
+            close={handleCloseAddRequest}
+            type="requestCuration"
+            LatLng={LatLng}
+            setSearchLatLng={setSearchLatLng}
+            moveKakaoMap={moveKakaoMap}
+          />
           <span className="planpage__layout__options__option-desc-second">
             큐레이션 추가신청
           </span>
@@ -398,7 +403,7 @@ const PlanPage = () => {
                 return (
                   <li
                     key={idx}
-                    onClick={() => handleClickKeywordList(addr.address_name)}
+                    onClick={() => handleClickKeywordList(addr.place_name)}
                   >
                     <div className="place_name">{`👉🏻  ${addr.place_name}`}</div>
                     <div className="address_name">{addr.address_name}</div>

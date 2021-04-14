@@ -2,7 +2,17 @@ import React, { useCallback, useState } from "react";
 import AddPlan from "./AddPlan";
 import PlanTimeline from "./PlanTimeline";
 
-const PlanList = () => {
+interface ForAddPlanProps {
+  LatLng?: number[];
+  setSearchLatLng?: any;
+  moveKakaoMap?: any;
+}
+
+const PlanList = ({
+  LatLng,
+  setSearchLatLng,
+  moveKakaoMap,
+}: ForAddPlanProps) => {
   const [openList, setOpenList] = useState<boolean>(true);
   const [inputTitle, setInputTitle] = useState<string>("");
   const [isShare, setIsShaer] = useState<boolean>(true);
@@ -41,6 +51,9 @@ const PlanList = () => {
         type="addPlan"
         open={openAddRequest}
         close={handleCloseAddRequest}
+        LatLng={LatLng}
+        setSearchLatLng={setSearchLatLng}
+        moveKakaoMap={moveKakaoMap}
       />
       <div className="planlist__toggle" onClick={handleListState}>
         <img src="/images/prev-pink.png"></img>

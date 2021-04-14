@@ -467,6 +467,7 @@ $light: #f7f7f9;
       }
     }
     .addPlan__address {
+      position: relative;
       display: flex;
       align-items: center;
       height: 2rem;
@@ -482,6 +483,67 @@ $light: #f7f7f9;
         height: 100%;
         border-radius: 0.5rem;
         padding-left: 0.5rem;
+        &:focus {
+          outline: none;
+          border: 1px solid $main;
+          border-radius: 0.5rem;
+          transition: all ease 0.3s;
+        }
+      }
+      ul {
+        font-size: 0.8rem;
+        position: absolute;
+        top: 2.5rem;
+        left: 1.8rem;
+        width: 90%;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 3px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        max-height: 15rem;
+        box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.1);
+        overflow-y: scroll;
+        li {
+          cursor: pointer;
+          list-style: none;
+          padding: 0.3rem 1rem;
+          height: 3rem;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          .address_name {
+            font-size: 0.4rem;
+            color: rgb(180, 176, 176);
+            padding-left: 1.5rem;
+          }
+          &:hover {
+            background-color: #f366721e;
+          }
+        }
+      }
+    }
+    .addPlan__description {
+      display: flex;
+      align-items: center;
+      height: 4rem;
+      margin-bottom: 1rem;
+      img {
+        flex: none;
+        margin-right: 0.6rem;
+        height: 1.2rem;
+      }
+      textarea {
+        resize: none;
+        background-color: $light;
+        flex: 1 1 auto;
+        height: 100%;
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        &:focus {
+          outline: none;
+          border: 1px solid $main;
+          border-radius: 0.5rem;
+          transition: all ease 0.3s;
+        }
       }
     }
     .addPlan__submit-btn {
@@ -500,118 +562,19 @@ $light: #f7f7f9;
     }
   }
 }
-
-.addPlan-curationReq {
+.addDesc {
   position: absolute;
-  top: 9rem;
+  top: 3.2rem;
   left: 10.8rem;
-  display: flex;
-  flex-direction: column;
-  width: 24rem;
-  // height: 15rem;
+  height: 19rem;
   padding: 1rem 1rem 0 2rem;
-  background-color: #fff;
-  border: 2px solid $main;
-  border-radius: 0.5rem;
-  z-index: 999;
-  &__cancle-btn {
-    margin-left: auto;
-    &:hover {
-      color: $main;
-      transition: all ease 0.2s;
-    }
-  }
-  &__wrapper {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    padding: 2rem 2rem 0 0;
-    .addPlan-curationReq__title {
-      width: 100%;
-      margin-bottom: 1rem;
-      font-size: 1rem;
-      border-bottom: 2px solid $light;
-      padding-left: 0.5rem;
-      &:focus {
-        outline: none;
-        border: 1px solid $main;
-        border-radius: 0.5rem;
-        transition: all ease 0.3s;
-      }
-    }
-    .addPlan-curationReq__address {
-      display: flex;
-      align-items: center;
-      height: 2rem;
-      margin-bottom: 1rem;
-      img {
-        flex: none;
-        margin-right: 0.6rem;
-        height: 1.2rem;
-      }
-      input {
-        background-color: $light;
-        flex: 1 1 auto;
-        height: 100%;
-        border-radius: 0.5rem;
-        padding-left: 0.5rem;
-      }
-    }
-    .addPlan-curationReq__description {
-      display: flex;
-      align-items: center;
-      height: 4rem;
-      margin-bottom: 1rem;
-      img {
-        flex: none;
-        margin-right: 0.6rem;
-        height: 1.2rem;
-      }
-      // input {
-      //   background-color: $light;
-      //   flex: 1 1 auto;
-      //   height: 100%;
-      //   border-radius: 0.5rem;
-      //   padding-left: 0.5rem;
-      // }
-      textarea {
-        resize: none;
-        background-color: $light;
-        flex: 1 1 auto;
-        height: 100%;
-        border-radius: 0.5rem;
-        padding: 0.5rem;
-
-        &:focus {
-          outline: none;
-          border: 1px solid $main;
-          border-radius: 0.5rem;
-          transition: all ease 0.3s;
-        }
-      }
-    }
-    .addPlan-curationReq__submit-btn {
-      margin-left: auto;
-      margin-bottom: 2rem;
-      width: 5rem;
-      height: 2rem;
-      border-radius: 0.5rem;
-      border: 1px solid $main;
-      color: $main;
-      &:hover {
-        background-color: $main;
-        color: #fff;
-        transition: all ease 0.2s;
-      }
-    }
-  }
-  .react-grid-item:hover .plancard__delete-btn {
-    display: block;
-    position: absolute;
-    top: 8%;
-    margin-left: 12.2rem;
-    height: 1.2rem;
-    color: $main;
-    font-weight: 600;
-  }
+}
+.react-grid-item:hover .plancard__delete-btn {
+  display: block;
+  position: absolute;
+  top: 8%;
+  margin-left: 12.2rem;
+  height: 1.2rem;
+  color: $main;
+  font-weight: 600;
 }
