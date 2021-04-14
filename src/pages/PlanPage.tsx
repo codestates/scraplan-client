@@ -16,7 +16,7 @@ declare global {
 
 const PlanPage = () => {
   const planState = useSelector((state: RootState) => state.planReducer);
-  const { themeList } = planState;
+  const { planCards, themeList } = planState;
   const dispatch = useDispatch();
 
   const [LatLng, setLatLng] = useState<number[]>([
@@ -83,6 +83,8 @@ const PlanPage = () => {
   const [modalType, setModalType] = useState<string>("");
   const [modalComment, setModalComment] = useState<string>("");
   const [openAddRequest, setOpenAddRequest] = useState<boolean>(false);
+  const [viewOnlyMine, setViewOnlyMine] = useState<boolean>(false);
+  const [selectTheme, setSelectTheme] = useState<number>(-1);
 
   const handleOpenAddRequest = () => {
     setOpenAddRequest(true);
@@ -99,13 +101,24 @@ const PlanPage = () => {
     setOpenModal(false);
   };
 
+  // v3 스크립트를 동적으로 로드하기위해 사용한다.
+  // 스크립트의 로딩이 끝나기 전에 v3의 객체에 접근하려고 하면 에러가 발생하기 때문에
+  // 로딩이 끝나는 시점에 콜백을 통해 객체에 접근할 수 있도록 해 준다.
+  // 비동기 통신으로 페이지에 v3를 동적으로 삽입할 경우에 주로 사용된다.
+  // v3 로딩 스크립트 주소에 파라메터로 autoload=false 를 지정해 주어야 한다.
+
+  // 주석처리해도 된다..?!
   useEffect(() => {
     window.kakao.maps.load(() => {
       loadKakaoMap();
     });
-  }, []);
+  }, [viewOnlyMine, planCards]);
 
   // marker request
+  // 1. 지도가 이동할 때 (mapBounds의 값이 변할 때)
+  // 2. 서버에 mapBounds를 보낸다.
+  // 3. 응답을 받는다. => setMarkerList를 통해 마커리스트 저장
+  // 4. 해당 bounds안에 마커들이 표기
   useEffect(() => {
     fetch(
       `${process.env.REACT_APP_SERVER_URL}/curations?coordinates=${mapBounds}`,
@@ -160,30 +173,143 @@ const PlanPage = () => {
     [inputKeyword],
   );
 
+  // 맵의 변화 (drag, zoom)가 있을 때 마다
+  // 중심좌표, 경계값을 구한다.
+  // 위에서 useEffect로 경계값이 변할때마다 marker리스트를 계속요청하고 저장
+  // -> map을 돌려 바로 리스트들을 보여줄 수 있다?
   const loadKakaoMap = () => {
     let container = document.getElementById("planpage__map");
     let options = {
       center: new window.kakao.maps.LatLng(LatLng[0], LatLng[1]),
       level: mapLevel,
     };
+    // 여기서 map은 useState로 선언했었는데 또 이렇게 하신이유가 있으신가요?!
     let map = new window.kakao.maps.Map(container, options);
     setMap(map);
+    // 여기까지
     let bounds = map.getBounds();
     setMapBounds([
       [bounds.qa, bounds.pa],
       [bounds.ha, bounds.oa],
     ]);
 
-    // drag event controller
-    window.kakao.maps.event.addListener(map, "dragend", () => {
-      let latlng = map.getCenter();
-      setLatLng([latlng.getLat(), latlng.getLng()]);
-      let bounds = map.getBounds();
-      setMapBounds([
-        [bounds.qa, bounds.pa],
-        [bounds.ha, bounds.oa],
-      ]);
+    // 내 일정만 보기인 경우
+    if (viewOnlyMine) {
+      //리덕스 값
+      for (let i = 0; i < planCards.planCards.length; i++) {
+        // 마커 만들기 (시작)
+        const position = new window.kakao.maps.LatLng(
+          planCards.planCards[i].coordinates[0],
+          planCards.planCards[i].coordinates[1],
+        );
+        const marker = new window.kakao.maps.Marker({
+          map,
+          position,
+          title: planCards.planCards[i].address,
+        });
+        const customOverlayContent = document.createElement("div");
+        const innerOverlayContent = document.createElement("div");
+        customOverlayContent.className = "customOverlay";
+        innerOverlayContent.textContent = `${i + 1}`;
+        customOverlayContent.append(innerOverlayContent);
 
+        const customOverlay = new window.kakao.maps.CustomOverlay({
+          position,
+          content: customOverlayContent,
+        });
+        // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다.
+        // const iwContent = `<div style="padding:5px;">${planCards.planCards[i].comment}</div>`;
+        const iwContent =
+          "<div class='infoWindow'>" +
+          `<div class='time'>${planCards.planCards[i].startTime} ~ ${planCards.planCards[i].endTime}</div>` +
+          `<div class='title'>${planCards.planCards[i].comment}</div>` +
+          `<div class='address'>${planCards.planCards[i].address}</div>` +
+          "</div>";
+        // 마커에 표시할 인포윈도우를 생성합니다
+        const infowindow = new window.kakao.maps.InfoWindow({
+          content: iwContent, // 인포윈도우에 표시할 내용
+        });
+
+        customOverlayContent.addEventListener("mouseover", function () {
+          infowindow.open(map, marker);
+        });
+        customOverlayContent.addEventListener("mouseout", function () {
+          infowindow.close();
+        });
+
+        marker.setMap(map);
+        customOverlay.setMap(map);
+        // 마커 만들기 (끝)
+
+        // 선 만들기 (시작)
+        let linePath: any = [];
+        for (let i = 0; i < planCards.planCards.length; i++) {
+          linePath.push(
+            new window.kakao.maps.LatLng(
+              planCards.planCards[i].coordinates[0],
+              planCards.planCards[i].coordinates[1],
+            ),
+          );
+        }
+        const polyline = new window.kakao.maps.Polyline({
+          endArrow: true,
+          path: linePath, // 선을 구성하는 좌표배열 입니다
+          strokeWeight: 5, // 선의 두께 입니다
+          strokeColor: "red", // 선의 색깔입니다
+          strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+          strokeStyle: "solid", // 선의 스타일입니다
+        });
+        polyline.setMap(map);
+        // 선 만들기 (끝)
+      }
+    } else {
+      // 전체 큐레이션 보기인 경우
+      // drag event controller
+      window.kakao.maps.event.addListener(map, "dragend", () => {
+        let latlng = map.getCenter();
+        setLatLng([latlng.getLat(), latlng.getLng()]);
+        let bounds = map.getBounds();
+        setMapBounds([
+          [bounds.qa, bounds.pa],
+          [bounds.ha, bounds.oa],
+        ]);
+        for (var i = 0; i < markerList.length; i++) {
+          let markerImage = new window.kakao.maps.MarkerImage(
+            `/images/marker/theme${markerList[i].theme}.png`,
+            new window.kakao.maps.Size(54, 58),
+            { offset: new window.kakao.maps.Point(20, 58) },
+          );
+          let position = new window.kakao.maps.LatLng(
+            markerList[i].coordinates[0],
+            markerList[i].coordinates[1],
+          );
+          var marker = new window.kakao.maps.Marker({
+            map,
+            position,
+            title: markerList[i].address,
+            image: markerImage,
+          });
+          window.kakao.maps.event.addListener(
+            marker,
+            "click",
+            handleClickMarker,
+          );
+        }
+        marker.setMap(map);
+      });
+      // level(zoom) event controller
+      let zoomControl = new window.kakao.maps.ZoomControl();
+      map.addControl(zoomControl, window.kakao.maps.ControlPosition.RIGHT);
+      window.kakao.maps.event.addListener(map, "zoom_changed", () => {
+        let level = map.getLevel();
+        setMapLevel(level);
+        let bounds = map.getBounds();
+        setMapBounds([
+          [bounds.qa, bounds.pa],
+          [bounds.ha, bounds.oa],
+        ]);
+        //format => ga {ha: 126.56714657186055, qa: 33.40906146511531, oa: 126.59384131033772, pa: 33.42485772749098}
+      });
       for (var i = 0; i < markerList.length; i++) {
         let markerImage = new window.kakao.maps.MarkerImage(
           `/images/marker/theme${markerList[i].theme}.png`,
@@ -209,55 +335,31 @@ const PlanPage = () => {
         })(marker, markerList[i].id, markerList[i].address);
         marker.setMap(map);
       }
-    });
-
-    // level(zoom) event controller
-    let zoomControl = new window.kakao.maps.ZoomControl();
-    map.addControl(zoomControl, window.kakao.maps.ControlPosition.RIGHT);
-    window.kakao.maps.event.addListener(map, "zoom_changed", () => {
-      let level = map.getLevel();
-      setMapLevel(level);
-      let bounds = map.getBounds();
-      setMapBounds([
-        [bounds.qa, bounds.pa],
-        [bounds.ha, bounds.oa],
-      ]);
-      //format => ga {ha: 126.56714657186055, qa: 33.40906146511531, oa: 126.59384131033772, pa: 33.42485772749098}
-    });
-
-    for (var i = 0; i < markerList.length; i++) {
-      let markerImage = new window.kakao.maps.MarkerImage(
-        `/images/marker/theme${markerList[i].theme}.png`,
-        new window.kakao.maps.Size(54, 58),
-        { offset: new window.kakao.maps.Point(20, 58) },
-      );
-      let position = new window.kakao.maps.LatLng(
-        markerList[i].coordinates[0],
-        markerList[i].coordinates[1],
-      );
-      let marker = new window.kakao.maps.Marker({
-        map,
-        position,
-        title: markerList[i].address,
-        image: markerImage,
-      });
-      ((marker, curationId, curationAddr) => {
-        window.kakao.maps.event.addListener(marker, "click", () => {
-          console.log(curationId);
-          handleClickMarker(curationId, curationAddr);
-        });
-      })(marker, markerList[i].id, markerList[i].address);
-      marker.setMap(map);
     }
   };
 
+  // 지도 이동시키기
   const moveKakaoMap = (lat: number, lng: number) => {
     var moveLatLon = new window.kakao.maps.LatLng(lat, lng);
     map.panTo(moveLatLon);
     setLatLng([lat, lng]);
   };
 
-  const handleFilterByTheme = (): void => {};
+  // 옵션과 관련된 함수들
+  const handleViewOnlyMine = () => {
+    alert("내 일정만 보기");
+  };
+
+  const handleFilterByTheme = (idx: number): void => {
+    setSelectTheme(idx);
+  };
+
+  const handleViewState = () => {
+    if (!viewOnlyMine) {
+      handleViewOnlyMine();
+    }
+    setViewOnlyMine(!viewOnlyMine);
+  };
 
   const handleSearchByKeyword = (): void => {
     moveKakaoMap(searchLatLng[0], searchLatLng[1]);
@@ -348,9 +450,14 @@ const PlanPage = () => {
       />
       <div className="planpage__layout">
         <div className="planpage__layout__options">
-          <button className="planpage__layout__options__option">👀</button>
+          <button
+            className="planpage__layout__options__option"
+            onClick={handleViewState}
+          >
+            {viewOnlyMine ? "👀" : "🗺"}
+          </button>
           <span className="planpage__layout__options__option-desc">
-            내일정만 보기
+            {viewOnlyMine ? "내 일정만 보기" : "전체 보기"}
           </span>
           <button
             className="planpage__layout__options__option"
@@ -358,6 +465,9 @@ const PlanPage = () => {
           >
             ✚
           </button>
+          <span className="planpage__layout__options__option-desc-second">
+            큐레이션 추가신청
+          </span>
           <AddPlan
             open={openAddRequest}
             close={handleCloseAddRequest}
@@ -366,17 +476,19 @@ const PlanPage = () => {
             setSearchLatLng={setSearchLatLng}
             moveKakaoMap={moveKakaoMap}
           />
-          <span className="planpage__layout__options__option-desc-second">
-            큐레이션 추가신청
-          </span>
-          <button className="planpage__layout__options__theme">테마</button>
+          <button className="planpage__layout__options__theme">
+            {selectTheme === -1
+              ? "테마"
+              : ["🍽", "☕️", "🕹", "🚴🏻", "🚗", "🤔"][selectTheme]}
+          </button>
           <div className="planpage__layout__options__theme-list">
             <div className={`planpage__layout__options__theme-list__inner`}>
-              {["🍽", "☕️", "🕹", "🚴🏻", "🚗", "🤔"].map((theme) => {
+              {["All", "🍽", "☕️", "🕹", "🚴🏻", "🚗", "🤔"].map((theme, idx) => {
                 return (
                   <button
+                    key={idx}
                     className="planpage__layout__options__theme-list__inner__item"
-                    onClick={handleFilterByTheme}
+                    onClick={() => handleFilterByTheme(idx - 1)}
                   >
                     {theme}
                   </button>
