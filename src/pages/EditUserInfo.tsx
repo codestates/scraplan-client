@@ -200,7 +200,7 @@ const EditUserInfo = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar currentPage="/edituserinfo" />
       <Modal
         modalType={"yesNoModal"}
         open={openModal}

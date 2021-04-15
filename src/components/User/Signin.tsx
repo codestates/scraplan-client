@@ -1,15 +1,20 @@
+/* eslint-disable react/react-in-jsx-scope */
 import { useState, useEffect, useCallback, useRef, KeyboardEvent } from "react";
 import { useDispatch } from "react-redux";
+import { useHistory } from "react-router";
 import { signIn } from "../../actions";
 import "./User.scss";
 
 type SigninProps = {
   open: boolean;
   close: () => void;
+  handleGoogleSign: (reqPage: string, state: string) => void;
+  currentPage?: string;
 };
 
 const Signin = (props: SigninProps) => {
-  const { open, close } = props;
+  const { open, close, handleGoogleSign, currentPage } = props;
+  const history = useHistory();
   const dispatch = useDispatch();
   const refEmail = useRef<HTMLInputElement | null>(null);
   const refPassword = useRef<HTMLInputElement | null>(null);
@@ -17,6 +22,41 @@ const Signin = (props: SigninProps) => {
   const [inputEmail, setInputEmail] = useState<string>("");
   const [inputPassword, setInputPassword] = useState<string>("");
   const [denyMessage, setDenyMessage] = useState<string>("");
+
+  useEffect(() => {
+    if (window.location.hash !== "") {
+      const state = window.location.hash.slice(7, 13);
+      console.log("state를 보자", state);
+      if (state === "signin") {
+        fetch(`${process.env.REACT_APP_SERVER_URL}/google-sign/in`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            credentials: "include",
+          },
+          body: JSON.stringify({ data: window.location.hash }),
+        })
+          .then((res) => res.json())
+          .then((body) => {
+            if (body.accessToken) {
+              dispatch(signIn(body.accessToken, body.email, body.nickname));
+              history.push(`${currentPage}`);
+              return;
+            } else {
+              history.push(`${currentPage}`);
+              return;
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+            history.push(`${currentPage}`);
+          });
+      } else {
+        history.push(`${currentPage}`);
+        return;
+      }
+    }
+  });
 
   useEffect(() => {
     refEmail.current?.focus();
@@ -87,31 +127,6 @@ const Signin = (props: SigninProps) => {
       .catch((err) => console.error(err));
   };
 
-  const handleGoogleSignin = (reqPage: string = ""): void => {
-    // var oauth2Endpoint = "";
-    // var form = document.createElement("form");
-    // form.setAttribute("method", "GET");
-    // form.setAttribute("action", oauth2Endpoint);
-    // var params = {
-    //   client_id: process.env.REACT_APP_CLIENT_ID,
-    //   redirect_uri: `${process.env.REACT_APP_CLIENT_URL}`,
-    //   response_type: "token",
-    //   scope:
-    //     "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
-    //   include_granted_scopes: "true",
-    //   state: reqPage,
-    // };
-    // for (var p in params) {
-    //   var input = document.createElement("input");
-    //   input.setAttribute("type", "hidden");
-    //   input.setAttribute("name", p);
-    //   input.setAttribute("value", params[p]);
-    //   form.appendChild(input);
-    // }
-    // document.body.appendChild(form);
-    // form.submit();
-  };
-
   const handleFindEmail = (): void => {
     setDenyMessage("개발중인 기능입니다");
   };
@@ -168,7 +183,7 @@ const Signin = (props: SigninProps) => {
               </button>
               <button
                 className="signin__form__google-btn"
-                onClick={() => handleGoogleSignin("signIn")}
+                onClick={() => handleGoogleSign(`${currentPage}`, "signin")}
               >
                 Google
               </button>
