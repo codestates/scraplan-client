@@ -4,9 +4,15 @@ interface TimeProps {
   startTime?: string;
   endTime?: string;
   giveTimeToParent?: (period: string) => void;
+  readonly?: boolean;
 }
 
-const SetTime = ({ startTime, endTime, giveTimeToParent }: TimeProps) => {
+const SetTime = ({
+  startTime,
+  endTime,
+  giveTimeToParent,
+  readonly,
+}: TimeProps) => {
   const [currentTime, setCurrentTime] = useState<string>("1:00");
   const [isSelectTime, setIsSelectTime] = useState<boolean>(false);
 
@@ -14,7 +20,7 @@ const SetTime = ({ startTime, endTime, giveTimeToParent }: TimeProps) => {
     if (startTime && endTime) {
       setCurrentTime(getTimeFromProps(startTime, endTime));
     }
-  }, []);
+  });
 
   useEffect(() => {
     window.addEventListener("keydown", (e) => {
@@ -35,9 +41,9 @@ const SetTime = ({ startTime, endTime, giveTimeToParent }: TimeProps) => {
       const hour = Math.floor(period / 100);
       const minute = period - hour * 100;
       if (hour > 0) {
-        return `${hour}:${minute}`;
+        return `${hour}:${minute === 0 ? "00" : minute}`;
       } else {
-        return `0:${minute}`;
+        return `0:${minute === 0 ? "00" : minute}`;
       }
     },
     [startTime, endTime],
@@ -78,28 +84,32 @@ const SetTime = ({ startTime, endTime, giveTimeToParent }: TimeProps) => {
         <div className="set-time__text__currentTime">{currentTime}</div>
         <div className="set-time__text__unit">H</div>
       </div>
-      <div
-        className={`${isSelectTime ? "" : "hidden"} set-time__input-wrapper `}
-      >
-        {isSelectTime ? (
-          <ul className={`${isSelectTime ? "" : "hidden"}`}>
-            {selectTimeList().map((time, idx) => {
-              return (
-                <li
-                  className={`${isSelectTime ? "" : "hidden"}`}
-                  key={idx}
-                  value={time}
-                  onClick={() => handleInputTime(time)}
-                >
-                  {time}
-                </li>
-              );
-            })}
-          </ul>
-        ) : (
-          <></>
-        )}
-      </div>
+      {readonly ? (
+        <></>
+      ) : (
+        <div
+          className={`${isSelectTime ? "" : "hidden"} set-time__input-wrapper `}
+        >
+          {isSelectTime ? (
+            <ul className={`${isSelectTime ? "" : "hidden"}`}>
+              {selectTimeList().map((time, idx) => {
+                return (
+                  <li
+                    className={`${isSelectTime ? "" : "hidden"}`}
+                    key={idx}
+                    value={time}
+                    onClick={() => handleInputTime(time)}
+                  >
+                    {time}
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <></>
+          )}
+        </div>
+      )}
     </div>
   );
 };

@@ -41,6 +41,33 @@ const PlanTimeline = ({
     }
   }, [saveBtnClicked]);
 
+  useEffect(() => {
+    if (planCardsList) {
+      let newPlanCardsList = planCardsList.map((plan, idx) => {
+        let startHour = Math.floor(layoutState[idx].y / 4);
+        let startMin =
+          (layoutState[idx].y % 4) * 15 === 0
+            ? "00"
+            : (layoutState[idx].y % 4) * 15;
+
+        let endHour = Math.floor((layoutState[idx].y + layoutState[idx].h) / 4);
+        let endMin =
+          ((layoutState[idx].y + layoutState[idx].h) % 4) * 15 === 0
+            ? "00"
+            : ((layoutState[idx].y + layoutState[idx].h) % 4) * 15;
+
+        let newPlan = Object.assign({}, plan, {
+          startTime: startHour + ":" + startMin,
+          endTime: endHour + ":" + endMin,
+        });
+        return newPlan;
+      });
+      if (newPlanCardsList.length !== 0) {
+        setPlanCardsList(newPlanCardsList);
+      }
+    }
+  }, [layoutState]);
+
   const generateLayout = () => {
     return (planCards || []).map((plancard, idx) => {
       const { startTime, endTime } = plancard;
@@ -65,38 +92,40 @@ const PlanTimeline = ({
   };
 
   const handleSaveBtn = () => {
-    // 변경된 layout을 -> 새 일정으로 등록! (setPlanCardsList)
-    let newPlanCardsList = planCardsList.map((plan, idx) => {
-      // console.log("plan", plan);
-      // console.log("layout", layoutState[idx]);
+    if (planCardsList) {
+      // 변경된 layout을 -> 새 일정으로 등록! (setPlanCardsList)
+      let newPlanCardsList = planCardsList.map((plan, idx) => {
+        // console.log("plan", plan);
+        // console.log("layout", layoutState[idx]);
 
-      // y,h -> startTime, endTime 변환
-      let startHour = Math.floor(layoutState[idx].y / 4);
-      let startMin =
-        (layoutState[idx].y % 4) * 15 === 0
-          ? "00"
-          : (layoutState[idx].y % 4) * 15;
+        // y,h -> startTime, endTime 변환
+        let startHour = Math.floor(layoutState[idx].y / 4);
+        let startMin =
+          (layoutState[idx].y % 4) * 15 === 0
+            ? "00"
+            : (layoutState[idx].y % 4) * 15;
 
-      let endHour = Math.floor((layoutState[idx].y + layoutState[idx].h) / 4);
-      let endMin =
-        ((layoutState[idx].y + layoutState[idx].h) % 4) * 15 === 0
-          ? "00"
-          : ((layoutState[idx].y + layoutState[idx].h) % 4) * 15;
+        let endHour = Math.floor((layoutState[idx].y + layoutState[idx].h) / 4);
+        let endMin =
+          ((layoutState[idx].y + layoutState[idx].h) % 4) * 15 === 0
+            ? "00"
+            : ((layoutState[idx].y + layoutState[idx].h) % 4) * 15;
 
-      let newPlan = Object.assign({}, plan, {
-        startTime: startHour + ":" + startMin,
-        endTime: endHour + ":" + endMin,
+        let newPlan = Object.assign({}, plan, {
+          startTime: startHour + ":" + startMin,
+          endTime: endHour + ":" + endMin,
+        });
+        return newPlan;
+        // console.log("new", newPlan);
       });
-      return newPlan;
-      // console.log("new", newPlan);
-    });
-    setPlanCardsList(newPlanCardsList);
-    handleSavePlanBtn(newPlanCardsList);
-    dispatch(getPlanCards(newPlanCardsList));
-    console.log(newPlanCardsList);
+      setPlanCardsList(newPlanCardsList);
+      handleSavePlanBtn(newPlanCardsList);
+      dispatch(getPlanCards(newPlanCardsList));
+    }
   };
 
   // console.log("layoutState", layoutState);
+  console.log("newPlanCardsList", planCardsList);
 
   return (
     <ReactGridLayout
@@ -106,7 +135,7 @@ const PlanTimeline = ({
       {...{
         isDraggable: true,
         isResizable: true,
-        items: planCardsList.length,
+        items: (planCardsList || []).length,
         rowHeight: 28,
         cols: 1,
         rows: 96,
@@ -116,25 +145,40 @@ const PlanTimeline = ({
         width: 240,
       }}
     >
-      {planCardsList.map((plancard, idx) => {
-        const {
-          day,
-          startTime,
-          endTime,
-          comment,
-          theme,
-          coordinates,
-          address,
-        } = plancard;
-        return (
-          <div className="plancard" key={idx}>
-            <SetTheme />
-            <SetTime />
-            <div className="plancard__title">{comment}</div>
-            <button className="plancard__delete-btn">ⓧ</button>
-          </div>
-        );
-      })}
+      {planCardsList &&
+        planCardsList.map((plancard, idx) => {
+          const {
+            day,
+            startTime,
+            endTime,
+            comment,
+            theme,
+            coordinates,
+            address,
+          } = plancard;
+
+          const handleGetRequestTheme = (themeIndex, cardIdx) => {
+            // setTheme에서 받아온 index를 plancard 데이터에 반영해
+            planCardsList[cardIdx].theme = themeIndex;
+          };
+          return (
+            <div className="plancard" key={idx}>
+              <SetTheme
+                themeIndex={theme}
+                giveThemeIndexToParent={(themeIndex) =>
+                  handleGetRequestTheme(themeIndex, idx)
+                }
+              />
+              <SetTime
+                startTime={startTime}
+                endTime={endTime}
+                readonly={true}
+              />
+              <div className="plancard__title">{comment}</div>
+              <button className="plancard__delete-btn">ⓧ</button>
+            </div>
+          );
+        })}
     </ReactGridLayout>
   );
 };
