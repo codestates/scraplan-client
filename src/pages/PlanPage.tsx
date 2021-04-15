@@ -448,7 +448,7 @@ const PlanPage = () => {
 
   return (
     <div className="planpage">
-      <Navbar />
+      <Navbar currentPage="/planpage/newpage" />
       <CurationList addEventFunc={handleAddToPlan} />
       <PlanList
         LatLng={LatLng}

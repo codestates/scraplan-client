@@ -5,12 +5,14 @@
   transition: height 200ms ease;
   height: 40rem;
   width: 240px;
+  pointer-events: none;
 }
 .react-grid-item {
   transition: all 200ms ease;
   transition-property: left, top;
   cursor: pointer;
   width: 220px;
+  pointer-events: auto;
 }
 .react-grid-item img {
   pointer-events: none;

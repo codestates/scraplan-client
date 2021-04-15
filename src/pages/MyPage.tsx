@@ -232,7 +232,7 @@ const MyPage = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar currentPage="/mypage" />
       <Modal
         modalType={"alertModal"}
         open={openModal}

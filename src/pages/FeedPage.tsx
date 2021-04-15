@@ -161,23 +161,18 @@ const FeedPage = () => {
   };
 
   const handleCreateMyPlan = () => {
-    if (token.length > 0) {
-      history.push("/planpage/newpage");
-    } else {
-      setSignInModalOpen(true);
-    }
+    history.push("/planpage/newpage");
   };
 
   return (
     <>
-      <Navbar />
+      <Navbar currentPage="/feedpage" />
       <Modal
         modalType={"alertModal"}
         open={openModal}
         close={handleModalClose}
         comment={modalComment}
       />
-      <Signin open={SignInModalOpen} close={closeSignInModal} />
       <div className="feedpage">
         <div className="feedpage__banner">
           <div className="feedpage__banner__wrapper"></div>
