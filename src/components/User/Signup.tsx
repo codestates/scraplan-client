@@ -1,12 +1,19 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router";
+import { signIn } from "../../actions";
 
 type SignupProps = {
   open: boolean;
   close: () => void;
+  handleGoogleSign: (reqPage: string, state: string) => void;
+  currentPage?: string;
 };
 
 const Signup = (props: SignupProps) => {
-  const { open, close } = props;
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const { open, close, handleGoogleSign, currentPage } = props;
   const refEmail = useRef<HTMLInputElement | null>(null);
   const refEmailCert = useRef<HTMLInputElement | null>(null);
   const refNickname = useRef<HTMLInputElement | null>(null);
@@ -19,6 +26,65 @@ const Signup = (props: SignupProps) => {
   const [inputPassword, setInputPassword] = useState<string>("");
   const [inputPasswordCheck, setInputPasswordCheck] = useState<string>("");
   const [denyMessage, setDenyMessage] = useState<string>("");
+
+  useEffect(() => {
+    if (window.location.hash !== "") {
+      const state = window.location.hash.slice(7, 13);
+      if (state === "signup") {
+        fetch(`${process.env.REACT_APP_SERVER_URL}/google-sign/up`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            credentials: "include",
+          },
+          body: JSON.stringify({
+            nickname: inputNickname,
+            hashData: window.location.hash,
+          }),
+        })
+          .then((res) => res.json())
+          .then((body) => {
+            if (body.message === "Successfully signedup") {
+              return "success";
+            } else {
+              return "fail";
+            }
+          })
+          .then((data) => {
+            if (data === "success") {
+              fetch(`${process.env.REACT_APP_SERVER_URL}/google-sign/in`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  credentials: "include",
+                },
+                body: JSON.stringify({ data: window.location.hash }),
+              })
+                .then((res) => res.json())
+                .then((body) => {
+                  if (body.accessToken) {
+                    dispatch(
+                      signIn(body.accessToken, body.email, body.nickname),
+                    );
+                    history.push(`${currentPage}`);
+                    return;
+                  } else {
+                    history.push(`${currentPage}`);
+                    return;
+                  }
+                })
+                .catch((err) => {
+                  console.error(err);
+                  history.push(`${currentPage}`);
+                });
+            } else {
+              history.push(`${currentPage}`);
+              return;
+            }
+          });
+      }
+    }
+  }, []);
 
   useEffect(() => {
     refEmail.current?.focus();
@@ -266,7 +332,7 @@ const Signup = (props: SignupProps) => {
               </button>
               <button
                 className="signup__form__google-btn"
-                // onClick={() => handleGoogleSignUp("signIn")}
+                onClick={() => handleGoogleSign(`${currentPage}`, "signup")}
               >
                 Google
               </button>

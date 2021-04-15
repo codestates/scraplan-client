@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const MainPage = () => {
   return (
     <>
-      <Navbar />
+      <Navbar currentPage="/" />
       <div className="mainpage">
         <Link to="planpage/0">
           <button>내 일정 만들기</button>
