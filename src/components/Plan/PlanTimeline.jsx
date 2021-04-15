@@ -67,6 +67,12 @@ const PlanTimeline = ({
       }
     }
   }, [layoutState]);
+  console.log(planCards);
+
+  useEffect(() => {
+    setLayoutState(generateLayout());
+    setPlanCardsList(planCards);
+  }, [planCards]);
 
   const generateLayout = () => {
     return (planCards || []).map((plancard, idx) => {
@@ -78,7 +84,7 @@ const PlanTimeline = ({
       return {
         w: 1,
         x: 0,
-        h: endHour * 4 + endMin / 15 - startHour * 4 + startMin / 15, // 높이
+        h: endHour * 4 + endMin / 15 - startHour * 4 - startMin / 15, // 높이
         y: startHour * 4 + startMin / 15, // 위치
         i: idx.toString(),
         moved: false,
