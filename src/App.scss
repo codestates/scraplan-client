@@ -889,9 +889,18 @@ body {
             border-radius: 3px;
             box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.1);
             margin-left: 0.5rem;
+            .set-time,
+            .set-theme {
+              position: relative;
+            }
+            .set-time {
+              position: relative;
+              top: -1.4rem;
+              margin-bottom: -1.2rem;
+            }
             input {
-              width: 70%;
-              padding: 0 1rem;
+              width: 80%;
+              padding: 0 0.5rem;
               font-size: 0.8rem;
             }
             button {
@@ -913,13 +922,13 @@ body {
           display: flex;
           align-content: flex-start;
           flex-wrap: wrap;
-          flex-flow: column wrap;
+          flex-flow: row wrap;
           height: 30vh;
+          width: 23vw;
           overflow-y: scroll;
-          // grid-template-columns: repeat(3, 126px);
-          // grid: auto-flow dense 1px;
-          // column-gap: 0.5rem;
-          // row-gap: 0.5rem;
+          .feedback {
+            height: 6.2rem;
+          }
         }
       }
     }

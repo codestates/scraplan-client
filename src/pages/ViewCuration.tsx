@@ -79,6 +79,27 @@ const ViewCuration = (props: ViewCurationProps) => {
       comment: "편안하고 조용한 곳!!!!!!!!! 재방문할 예정",
       rate: 2,
     },
+    {
+      curationFeedbackId: 0,
+      writer: "tester",
+      times: 1.15,
+      comment: "편안하고 조용한 곳!!!!!!!!! 재방문할 예정",
+      rate: 2,
+    },
+    {
+      curationFeedbackId: 0,
+      writer: "tester",
+      times: 1.15,
+      comment: "편안하고 조용한 곳!!!!!!!!! 재방문할 예정",
+      rate: 2,
+    },
+    {
+      curationFeedbackId: 0,
+      writer: "tester",
+      times: 1.15,
+      comment: "편안하고 조용한 곳!!!!!!!!! 재방문할 예정",
+      rate: 2,
+    },
   ]);
 
   useEffect(() => {
@@ -113,13 +134,6 @@ const ViewCuration = (props: ViewCurationProps) => {
   );
 
   const handleCreateCurationFeedback = () => {
-    console.log({
-      email,
-      curationCardId,
-      times: inputFeedbackTimes,
-      comment: inputFeedbackComment,
-      rate: inputFeedbackRate,
-    });
     fetch(`${process.env.REACT_APP_SERVER_URL}/curation-card-feedback`, {
       method: "GET",
       headers: {
@@ -136,17 +150,21 @@ const ViewCuration = (props: ViewCurationProps) => {
       }),
     })
       .then((res) => res.json())
-      .then((body) => {
-        setFeedbackList(body);
-      })
       .catch((err) => console.error(err));
+  };
+
+  const handleClickCloseBtn = () => {
+    close();
   };
 
   return (
     <div className={`viewcuration ${open ? "show" : ""}`}>
       {open ? (
         <div>
-          <div className="viewcuration__outsider" onClick={close}></div>
+          <div
+            className="viewcuration__outsider"
+            onClick={handleClickCloseBtn}
+          ></div>
           <div className="viewcuration__wrapper">
             <div className="viewcuration__wrapper__top-bar">
               <div className="viewcuration__wrapper__top-bar__wrapper">
@@ -156,7 +174,10 @@ const ViewCuration = (props: ViewCurationProps) => {
                 <h1>{title || "제목"}</h1>
                 <h4>{avgTime || "1"} hour</h4>
               </div>
-              <button className="viewcuration__close-btn" onClick={close}>
+              <button
+                className="viewcuration__close-btn"
+                onClick={handleClickCloseBtn}
+              >
                 &times;
               </button>
             </div>
@@ -169,10 +190,6 @@ const ViewCuration = (props: ViewCurationProps) => {
                   <div className="viewcuration__contents__desc__items__item">
                     <img src="/images/pin.png" alt="" />
                     <p>서울시 종로구</p>
-                  </div>
-                  <div className="viewcuration__contents__desc__items__item">
-                    <img src="/images/clock.png" alt="" />
-                    <p>매일 09:00 - 17:00</p>
                   </div>
                   <div className="viewcuration__contents__desc__items__item">
                     <img src="/images/document.png" alt="" />

@@ -98,6 +98,7 @@ const PlanPage = () => {
     setOpenModal(true);
   };
   const handleModalClose = () => {
+    alert("clicked");
     setOpenModal(false);
   };
 
