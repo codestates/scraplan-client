@@ -4,7 +4,7 @@ import { RootState } from "../reducers";
 import Navbar from "../components/UI/Navbar";
 import CurationList from "../components/Curation/CurationList";
 import PlanList from "../components/Plan/PlanList";
-import { getCurationCards } from "../actions";
+import { getCurationCards, getPlanCards } from "../actions";
 import Modal from "../components/UI/Modal";
 import AddPlan from "../components/Plan/AddPlan";
 
@@ -341,7 +341,6 @@ const PlanPage = () => {
 
         ((marker, curationId, curationAddr) => {
           window.kakao.maps.event.addListener(marker, "click", () => {
-            console.log(curationId);
             handleClickMarker(curationId, curationAddr);
           });
         })(marker, markerList[i].id, markerList[i].address);
@@ -444,6 +443,42 @@ const PlanPage = () => {
       avgTime,
       feedbackCnt,
     } = props;
+
+    let max = planCards.reduce((plan: any, cur: any) => {
+      return Number(plan.endTime.split(":")[0]) * 60 +
+        Number(plan.endTime.split(":")[1]) >
+        Number(cur.endTime.split(":")[0]) * 60 +
+          Number(cur.endTime.split(":")[1])
+        ? plan
+        : cur;
+    });
+    // console.log(Number((avgTime % 1).toFixed(2)) * 100);
+    let endMin =
+      (Number(max.endTime.split(":")[1]) +
+        Number((avgTime % 1).toFixed(2)) * 100) %
+      60;
+    // console.log(endMin);
+    let endHour =
+      Number(max.endTime.split(":")[0]) +
+      Math.floor(avgTime) +
+      Math.floor(
+        (Number(max.endTime.split(":")[1]) +
+          Number((avgTime % 1).toFixed(2)) * 100) /
+          60,
+      );
+    dispatch(
+      getPlanCards({
+        isValid,
+        isMember,
+        planCards: planCards.concat({
+          day: 1,
+          startTime: max.endTime,
+          endTime: endHour + ":" + endMin,
+          comment: title,
+          theme,
+        }),
+      }),
+    );
   };
 
   return (
