@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../reducers";
+import { getPlanCards } from "../../actions";
 import Modal from "../UI/Modal";
 import SetTheme from "../UI/SetTheme";
 import SetTime from "../UI/SetTime";
@@ -29,21 +30,30 @@ const AddPlan = ({
   setSearchLatLng,
   moveKakaoMap,
 }: AddPlanProps) => {
-  const userState = useSelector((state: RootState) => state.userReducer);
+  const state = useSelector((state: RootState) => state);
   const {
-    user: { token, email, nickname },
-  } = userState;
+    userReducer: {
+      user: { token, email, nickname },
+    },
+    planReducer: {
+      planCards: { isValid, isMember, planCards },
+    },
+  } = state;
+  const dispatch = useDispatch();
+
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [modalComment, setModalComment] = useState<string>("");
   const [inputTitle, setInputTitle] = useState<string>("");
   const [inputKeyword, setInputKeyword] = useState<string>("");
   const [inputDesc, setInputDesc] = useState<string>("");
   const [keywordList, setKeywordList] = useState<any>([]);
+
   const refTitle = useRef<HTMLInputElement>(null);
   const refDesc = useRef<HTMLTextAreaElement>(null);
   const refAddress = useRef<HTMLInputElement>(null);
+
   const [requestTheme, setRequestTheme] = useState<number>(0);
-  const [requestTime, setRequestTime] = useState<string>("0:15");
+  const [requestTime, setRequestTime] = useState<string>("1:00");
   const [completeSearch, setCompleteSearch] = useState<boolean>(false);
   const [forRequestLatLng, setForRequestLatLng] = useState<number[]>([]);
   const [forRequestAddress, setForRequestAddress] = useState<string>("");
@@ -166,8 +176,42 @@ const AddPlan = ({
       return;
     }
     if (type === "addPlan") {
-      // List 공부 하고..!
-      alert("추가하기!!");
+      let max = planCards.reduce((plan: any, cur: any) => {
+        return Number(plan.endTime.split(":")[0]) * 60 +
+          Number(plan.endTime.split(":")[1]) >
+          Number(cur.endTime.split(":")[0]) * 60 +
+            Number(cur.endTime.split(":")[1])
+          ? plan
+          : cur;
+      });
+
+      let endMin =
+        (Number(max.endTime.split(":")[1]) +
+          Number(requestTime.split(":")[1])) %
+        60;
+
+      let endHour =
+        Number(max.endTime.split(":")[0]) +
+        Number(requestTime.split(":")[0]) +
+        Math.floor(
+          (Number(max.endTime.split(":")[1]) +
+            Number(requestTime.split(":")[1])) /
+            60,
+        );
+
+      dispatch(
+        getPlanCards({
+          isValid,
+          isMember,
+          planCards: planCards.concat({
+            day: 1,
+            startTime: max.endTime,
+            endTime: endHour + ":" + endMin,
+            comment: inputTitle,
+            theme: requestTheme,
+          }),
+        }),
+      );
       return;
     }
     if (type === "requestCuration" && inputDesc === "") {
@@ -226,7 +270,11 @@ const AddPlan = ({
           <div className="addPlan__wrapper">
             <div className="addPlan__select-box">
               <SetTheme giveThemeIndexToParent={handleGetRequestTheme} />
-              {type === "requestCuration" ? <></> : <SetTime />}
+              {type === "requestCuration" ? (
+                <></>
+              ) : (
+                <SetTime giveTimeToParent={handleGetRequestTime} />
+              )}
             </div>
             <input
               type="text"

@@ -67,6 +67,12 @@ const PlanTimeline = ({
       }
     }
   }, [layoutState]);
+  console.log(planCards);
+
+  useEffect(() => {
+    setLayoutState(generateLayout());
+    setPlanCardsList(planCards);
+  }, [planCards]);
 
   // 리덕스의 값을 Timeline(grid)으로 변환
   const generateLayout = () => {
@@ -79,7 +85,7 @@ const PlanTimeline = ({
       return {
         w: 1,
         x: 0,
-        h: endHour * 4 + endMin / 15 - startHour * 4 + startMin / 15, // 높이
+        h: endHour * 4 + endMin / 15 - startHour * 4 - startMin / 15, // 높이
         y: startHour * 4 + startMin / 15, // 위치
         i: idx.toString(),
         moved: false,
@@ -118,11 +124,10 @@ const PlanTimeline = ({
           endTime: endHour + ":" + endMin,
         });
         return newPlan;
-        // console.log("new", newPlan);
       });
       setPlanCardsList(newPlanCardsList);
       handleSavePlanBtn(newPlanCardsList);
-      dispatch(getPlanCards(newPlanCardsList));
+      dispatch(getPlanCards({ planCards: newPlanCardsList }));
     }
   };
 
@@ -159,16 +164,29 @@ const PlanTimeline = ({
             address,
           } = plancard;
 
-          const handleGetRequestTheme = (themeIndex, cardIdx) => {
-            // setTheme에서 받아온 index를 plancard 데이터에 반영해
+          const handleChangeTheme = (themeIndex, cardIdx) => {
             planCardsList[cardIdx].theme = themeIndex;
           };
+
+          const handleDeletePlancard = (e, cardIdx) => {
+            setPlanCardsList(
+              planCardsList.filter((card, idx) => {
+                return idx !== cardIdx;
+              }),
+            );
+            setLayoutState(
+              layoutState.filter((_, idx) => {
+                return idx !== cardIdx;
+              }),
+            );
+          };
+
           return (
             <div className="plancard" key={idx}>
               <SetTheme
                 themeIndex={theme}
                 giveThemeIndexToParent={(themeIndex) =>
-                  handleGetRequestTheme(themeIndex, idx)
+                  handleChangeTheme(themeIndex, idx)
                 }
               />
               <SetTime
@@ -177,7 +195,12 @@ const PlanTimeline = ({
                 readonly={true}
               />
               <div className="plancard__title">{comment}</div>
-              <button className="plancard__delete-btn">ⓧ</button>
+              <button
+                className="plancard__delete-btn"
+                onClick={(e) => handleDeletePlancard(e, idx)}
+              >
+                ⓧ
+              </button>
             </div>
           );
         })}
