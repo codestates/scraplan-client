@@ -173,3 +173,89 @@ $light: #f7f7f9;
     }
   }
 }
+
+// Curation Request
+.curation-request {
+  &__menu {
+    button {
+      width: 6rem;
+      height: 2.2rem;
+      margin-right: 1rem;
+      background-color: #eee;
+      border-radius: 5px;
+      font-weight: 500;
+    }
+    .selected {
+      background-color: #f36671;
+      color: #fff;
+    }
+  }
+  &__title {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin: 2rem 0;
+  }
+  &__table {
+    &__top-bar {
+      display: flex;
+      padding: 1rem;
+      border-bottom: 3px solid #ccc;
+      p {
+        width: 10rem;
+        font-weight: 500;
+      }
+      :nth-child(4) {
+        width: 20rem;
+      }
+    }
+    &__contents__item {
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+      border-bottom: 2px solid #ccc;
+      cursor: pointer;
+      &-desc {
+        display: flex;
+        p {
+          width: 10rem;
+          font-weight: 300;
+        }
+        :nth-child(4) {
+          width: 20rem;
+        }
+      }
+      &:hover {
+        background-color: #e8e8e854;
+      }
+      &-showmore {
+        display: flex;
+        flex-direction: column;
+        font-weight: 300;
+        margin-top: 1rem;
+        p {
+          margin-left: 20rem;
+        }
+        .showmore-btns {
+          display: flex;
+          position: absolute;
+          right: 10rem;
+          button {
+            margin-top: 1rem;
+            margin-left: 0.8rem;
+            border: 3px solid #ccc;
+            border-radius: 4px;
+            width: 6rem;
+            height: 2.3rem;
+            color: #aaa;
+            font-weight: 500;
+            &:hover {
+              background-color: $main;
+              border: 3px solid $main;
+              color: #fff;
+            }
+          }
+        }
+      }
+    }
+  }
+}
