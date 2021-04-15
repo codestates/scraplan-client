@@ -37,47 +37,55 @@ const PlanList = ({
   );
   const [openAddRequest, setOpenAddRequest] = useState<boolean>(false);
   const [saveBtnClicked, setSaveBtnClicked] = useState<boolean>(false);
+  const [dayCount, setDayCount] = useState<number[]>([1, 2, 3, 4]);
+  const [currentDay, setCurrentDay] = useState<number>(1);
+  const [showDayList, setShowDayList] = useState<boolean>(false);
 
+  // planpage가 기존에 있던건지, 새로 만든건지 파악 후 렌더링해주는 것
   useEffect(() => {
     // [] 으로 수정 예정
-    dispatch(
-      getPlanCards({
-        planCards: [
-          {
-            day: 1,
-            startTime: "10:00",
-            endTime: "10:45",
-            comment: "분위기 있는 카페1",
-            theme: 2,
-            coordinates: [10, 10],
-            address: "서울시 강서구 ...",
-          },
-          {
-            day: 1,
-            startTime: "11:00",
-            endTime: "12:45",
-            comment: "분위기 있는 카페2",
-            theme: 3,
-            coordinates: [10, 10],
-            address: "서울시 강서구 ...",
-          },
-        ],
-      }),
-    );
-    // 수정 예정
-    // fetch(`${process.env.REACT_APP_SERVER_URL}/plan-card/${planId}`, {
-    //   method: "GET",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     credentials: "include",
-    //     authorization: `bearer ${token}`,
-    //   },
-    // })
-    //   .then((res) => res.json())
-    //   .then((body) => {
-    //     dispatch(getPlanCards(body.planCards));
-    //   })
-    //   .catch((err) => console.error(err));
+    if (planId) {
+      // 수정 예정
+      // fetch(`${process.env.REACT_APP_SERVER_URL}/plan-card/${planId}`, {
+      //   method: "GET",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     credentials: "include",
+      //     authorization: `bearer ${token}`,
+      //   },
+      // })
+      //   .then((res) => res.json())
+      //   .then((body) => {
+      //     dispatch(getPlanCards(body.planCards));
+      //   })
+      //   .catch((err) => console.error(err));
+    } else {
+      // planId가 없다 = newpage에 기본값들
+      dispatch(
+        getPlanCards({
+          planCards: [
+            {
+              day: 1,
+              startTime: "10:00",
+              endTime: "10:45",
+              comment: "분위기 있는 카페1",
+              theme: 2,
+              coordinates: [10, 10],
+              address: "서울시 강서구 ...",
+            },
+            {
+              day: 1,
+              startTime: "11:00",
+              endTime: "12:45",
+              comment: "분위기 있는 카페2",
+              theme: 3,
+              coordinates: [10, 10],
+              address: "서울시 강서구 ...",
+            },
+          ],
+        }),
+      );
+    }
   }, []);
 
   const handleOpenAddRequset = useCallback(() => {
@@ -104,7 +112,6 @@ const PlanList = ({
   };
 
   const handleSavePlanBtn = (plan: any) => {
-    console.log("제대로됨", plan);
     if (!isMember) {
       // isMember === false -> 로그인창
     } else {
@@ -177,6 +184,43 @@ const PlanList = ({
     }
   };
 
+  const handleMovePrevDay = useCallback(() => {
+    if (currentDay !== 1) {
+      setCurrentDay(currentDay - 1);
+    }
+  }, [currentDay]);
+
+  const handleMoveNestDay = () => {
+    if (currentDay === dayCount.length) {
+      alert("추가 할래용?");
+      let addDayCount = [...dayCount].concat(dayCount.length + 1);
+      setDayCount(addDayCount);
+      setCurrentDay(currentDay + 1);
+    } else {
+      setCurrentDay(currentDay + 1);
+    }
+  };
+
+  const handleDayList = () => {
+    setShowDayList(true);
+    alert("리스트 업!");
+  };
+
+  const handleSelectDay = (day: number) => {
+    // alert("날짜 선택!");
+    setCurrentDay(day + 1);
+    setShowDayList(false);
+  };
+
+  // Day 별로 나누기
+  // const filterPlanlistByDay = () => {
+  //   console.log("확인하려는 카드들의 현재 상태", planCards);
+  //   if (planCards) {
+  //   }
+  // };
+  // filterPlanlistByDay();
+  console.log("확인하려는 카드들의 현재 상태", planCards);
+
   // 지역 정하기 => input list 사용
   return (
     <div className="planlist">
@@ -211,7 +255,6 @@ const PlanList = ({
                 onChange={handlePublicToggle}
                 id="switch-input"
               />
-
               <label
                 htmlFor="switch-input"
                 className="planlist__public-toggle__switch-label"
@@ -229,14 +272,36 @@ const PlanList = ({
           </span>
           <div className="planlist__dailyplan">
             <div className="planlist__dailyplan__top-bar">
-              <button className="planlist__dailyplan__top-bar__prev">
+              <button
+                className="planlist__dailyplan__top-bar__prev"
+                onClick={handleMovePrevDay}
+              >
                 {"<"}
               </button>
-              {/* <input>Day</input> */}
-              <div className="planlist__dailyplan__top-bar__select-day">
-                Day1
+              <div
+                className="planlist__dailyplan__top-bar__select-day"
+                onClick={handleDayList}
+              >
+                {`Day ${dayCount[currentDay - 1]}`}
               </div>
-              <button className="planlist__dailyplan__top-bar__next">
+              {showDayList ? (
+                <ul className="daylist">
+                  {dayCount.map((day, idx) => {
+                    return (
+                      <li
+                        onClick={() => handleSelectDay(idx)}
+                        key={idx}
+                      >{`Day ${day}`}</li>
+                    );
+                  })}
+                </ul>
+              ) : (
+                <></>
+              )}
+              <button
+                className="planlist__dailyplan__top-bar__next"
+                onClick={handleMoveNestDay}
+              >
                 {">"}
               </button>
             </div>

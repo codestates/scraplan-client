@@ -48,7 +48,7 @@ export const initialState: State = {
         address: "장소2",
       },
       {
-        day: 1,
+        day: 2,
         startTime: "12:00",
         endTime: "13:00",
         comment: "분위기 있는 밥집",
@@ -57,7 +57,7 @@ export const initialState: State = {
         address: "서울시 강서구 ...",
       },
       {
-        day: 1,
+        day: 3,
         startTime: "14:00",
         endTime: "16:00",
         comment: "비밀의 장소",

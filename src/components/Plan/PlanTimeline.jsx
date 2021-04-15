@@ -68,6 +68,7 @@ const PlanTimeline = ({
     }
   }, [layoutState]);
 
+  // 리덕스의 값을 Timeline(grid)으로 변환
   const generateLayout = () => {
     return (planCards || []).map((plancard, idx) => {
       const { startTime, endTime } = plancard;
@@ -91,6 +92,7 @@ const PlanTimeline = ({
     setLayoutState(layout);
   };
 
+  // Timeline에 있는 일정들을 PlanCards 데이터로 변환
   const handleSaveBtn = () => {
     if (planCardsList) {
       // 변경된 layout을 -> 새 일정으로 등록! (setPlanCardsList)
@@ -125,7 +127,7 @@ const PlanTimeline = ({
   };
 
   // console.log("layoutState", layoutState);
-  console.log("newPlanCardsList", planCardsList);
+  // console.log("newPlanCardsList", planCardsList);
 
   return (
     <ReactGridLayout

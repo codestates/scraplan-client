@@ -124,6 +124,7 @@ $light: #f7f7f9;
         flex-direction: column;
         overflow-x: visible;
         &__top-bar {
+          position: relative;
           display: flex;
           justify-content: center;
           margin-bottom: 1.4rem;
@@ -132,6 +133,16 @@ $light: #f7f7f9;
             margin: 0 1.7rem;
             font-size: 1.1rem;
             font-weight: 700;
+          }
+          ul {
+            top: 2rem;
+            font-size: 1rem;
+            position: absolute;
+            border: 1px solid $main;
+            z-index: 999;
+            li {
+              list-style: none;
+            }
           }
           &__prev,
           &__next {
