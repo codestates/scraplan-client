@@ -104,7 +104,7 @@ const PlanList = ({
   };
 
   const handleSavePlanBtn = (plan: any) => {
-    console.log("제대로됨", plan);
+    dispatch(getPlanCards({ planCards: plan, isMember, isValid }));
     if (!isMember) {
       // isMember === false -> 로그인창
     } else {

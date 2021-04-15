@@ -122,11 +122,10 @@ const PlanTimeline = ({
           endTime: endHour + ":" + endMin,
         });
         return newPlan;
-        // console.log("new", newPlan);
       });
       setPlanCardsList(newPlanCardsList);
       handleSavePlanBtn(newPlanCardsList);
-      dispatch(getPlanCards(newPlanCardsList));
+      dispatch(getPlanCards({ planCards: newPlanCardsList }));
     }
   };
 
