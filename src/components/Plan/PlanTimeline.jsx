@@ -125,7 +125,7 @@ const PlanTimeline = ({
   };
 
   // console.log("layoutState", layoutState);
-  console.log("newPlanCardsList", planCardsList);
+  // console.log("newPlanCardsList", planCardsList);
 
   return (
     <ReactGridLayout
@@ -157,16 +157,29 @@ const PlanTimeline = ({
             address,
           } = plancard;
 
-          const handleGetRequestTheme = (themeIndex, cardIdx) => {
-            // setTheme에서 받아온 index를 plancard 데이터에 반영해
+          const handleChangeTheme = (themeIndex, cardIdx) => {
             planCardsList[cardIdx].theme = themeIndex;
           };
+
+          const handleDeletePlancard = (e, cardIdx) => {
+            setPlanCardsList(
+              planCardsList.filter((card, idx) => {
+                return idx !== cardIdx;
+              }),
+            );
+            setLayoutState(
+              layoutState.filter((_, idx) => {
+                return idx !== cardIdx;
+              }),
+            );
+          };
+
           return (
             <div className="plancard" key={idx}>
               <SetTheme
                 themeIndex={theme}
                 giveThemeIndexToParent={(themeIndex) =>
-                  handleGetRequestTheme(themeIndex, idx)
+                  handleChangeTheme(themeIndex, idx)
                 }
               />
               <SetTime
@@ -175,7 +188,12 @@ const PlanTimeline = ({
                 readonly={true}
               />
               <div className="plancard__title">{comment}</div>
-              <button className="plancard__delete-btn">ⓧ</button>
+              <button
+                className="plancard__delete-btn"
+                onClick={(e) => handleDeletePlancard(e, idx)}
+              >
+                ⓧ
+              </button>
             </div>
           );
         })}
