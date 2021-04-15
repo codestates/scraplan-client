@@ -161,11 +161,7 @@ const FeedPage = () => {
   };
 
   const handleCreateMyPlan = () => {
-    if (token.length > 0) {
-       history.push("/planpage/newpage");
-    } else {
-      setSignInModalOpen(true);
-    }
+    history.push("/planpage/newpage");
   };
 
   return (
