@@ -26,8 +26,8 @@ export const initialState: State = {
   // Plan
   plans: {},
   planCards: {
-    isValid: true || false,
-    isMember: true || false,
+    isValid: false,
+    isMember: false,
     planCards: [
       {
         day: 1,
