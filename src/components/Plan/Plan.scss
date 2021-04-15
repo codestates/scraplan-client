@@ -16,8 +16,9 @@ $light: #f7f7f9;
   top: 64px;
   bottom: 0px;
   right: 0px;
-  z-index: 996;
+  z-index: 995;
   &__toggle {
+    z-index: 995;
     display: flex;
     align-items: center;
     justify-content: center;

@@ -18,7 +18,7 @@ button {
   display: flex;
   align-items: center;
   position: fixed;
-  z-index: 998;
+  z-index: 994;
   height: 64px;
   width: 100vw;
   min-width: 760px;
@@ -228,7 +228,7 @@ button {
   position: absolute;
   left: 2rem;
   top: 0.05rem;
-  z-index: 999;
+  z-index: 998;
   &__text {
     display: flex;
     justify-content: space-around;

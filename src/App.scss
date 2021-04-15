@@ -568,7 +568,7 @@ body {
   &__layout {
     position: absolute;
     display: flex;
-    z-index: 996;
+    z-index: 994;
     justify-content: space-between;
     align-items: flex-start;
     width: 100vw;
@@ -736,7 +736,7 @@ body {
 .viewcuration {
   display: none;
   position: fixed;
-  z-index: 998;
+  z-index: 997;
   top: 0;
   right: 0;
   bottom: 0;
