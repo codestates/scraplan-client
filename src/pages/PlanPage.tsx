@@ -452,12 +452,10 @@ const PlanPage = () => {
         ? plan
         : cur;
     });
-    // console.log(Number((avgTime % 1).toFixed(2)) * 100);
     let endMin =
       (Number(max.endTime.split(":")[1]) +
         Number((avgTime % 1).toFixed(2)) * 100) %
       60;
-    // console.log(endMin);
     let endHour =
       Number(max.endTime.split(":")[0]) +
       Math.floor(avgTime) +
