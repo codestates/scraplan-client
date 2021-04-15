@@ -7,7 +7,7 @@ const MainPage = () => {
     <>
       <Navbar currentPage="/" />
       <div className="mainpage">
-        <Link to="planpage/0">
+        <Link to="planpage/newpage">
           <button>내 일정 만들기</button>
         </Link>
         <Link to={"/feedpage"}>

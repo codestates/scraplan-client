@@ -15,8 +15,15 @@ declare global {
 }
 
 const PlanPage = () => {
-  const planState = useSelector((state: RootState) => state.planReducer);
-  const { planCards, themeList } = planState;
+  const state = useSelector((state: RootState) => state);
+  const {
+    userReducer: {
+      user: { token, email, nickname },
+    },
+    planReducer: {
+      planCards: { isValid, isMember, planCards },
+    },
+  } = state;
   const dispatch = useDispatch();
 
   const [LatLng, setLatLng] = useState<number[]>([
@@ -70,7 +77,8 @@ const PlanPage = () => {
       theme: 1,
     },
   ]);
-  const [curationId, setCurationId] = useState<number>();
+  const [curationId, setCurationId] = useState<number | undefined>();
+  const [planId, setPlanId] = useState<number | string | undefined>();
 
   const [inputKeyword, setInputKeyword] = useState<string>("");
   const [keywordList, setKeywordList] = useState<any>([]);
@@ -100,6 +108,10 @@ const PlanPage = () => {
   const handleModalClose = () => {
     setOpenModal(false);
   };
+
+  useEffect(() => {
+    setPlanId(Number(location.pathname.split("/")[2]));
+  }, []);
 
   // v3 스크립트를 동적으로 로드하기위해 사용한다.
   // 스크립트의 로딩이 끝나기 전에 v3의 객체에 접근하려고 하면 에러가 발생하기 때문에
@@ -419,6 +431,7 @@ const PlanPage = () => {
       })
       .catch((err) => console.error(err));
   };
+
   const handleAddToPlan = (props: any, e: Event) => {
     // curaton 에서 + 버튼 클릭시 plan으로 정보를 넘겨주는 함수
     e.stopPropagation();
@@ -441,6 +454,7 @@ const PlanPage = () => {
         LatLng={LatLng}
         setSearchLatLng={setSearchLatLng}
         moveKakaoMap={moveKakaoMap}
+        planId={planId}
       />
       <Modal
         open={openModal}
