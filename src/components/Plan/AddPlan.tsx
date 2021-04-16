@@ -162,7 +162,6 @@ const AddPlan = ({
       })
       .catch((err) => console.log(err));
   };
-
   // 제출 버튼
   const handleSubmitBtn = () => {
     // 1. plan 추가일 경우
