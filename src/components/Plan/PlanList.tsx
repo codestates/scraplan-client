@@ -47,141 +47,143 @@ const PlanList = ({
 
   const refDaySlide = useRef<HTMLUListElement>(null);
 
+  console.log(planId);
+  console.log("-----------------------", planCards);
   // planpage가 기존에 있던건지, 새로 만든건지 파악 후 렌더링해주는 것
   useEffect(() => {
     // [] 으로 수정 예정
     console.log("왜 처음에 planId 안들어옴?", planId);
-    // if (planId) {
-    //   // 수정 예정
-    //   // fetch(`${process.env.REACT_APP_SERVER_URL}/plan-card/${planId}`, {
-    //   //   method: "GET",
-    //   //   headers: {
-    //   //     "Content-Type": "application/json",
-    //   //     credentials: "include",
-    //   //     authorization: `bearer ${token}`,
-    //   //   },
-    //   // })
-    //   //   .then((res) => res.json())
-    //   //   .then((body) => {
-    //   //     dispatch(getPlanCards(body.planCards));
-    //   //   })
-    //   //   .catch((err) => console.error(err));
-    //   //실험용
-    //   dispatch(
-    //     getPlanCards({
-    //       planCards: [
-    //         {
-    //           day: 1,
-    //           startTime: "10:00",
-    //           endTime: "10:15",
-    //           comment: "기존페이지 1-1",
-    //           theme: 1,
-    //           coordinates: [37.55, 126.92],
-    //           address: "장소1",
-    //         },
-    //         {
-    //           day: 1,
-    //           startTime: "10:30",
-    //           endTime: "10:45",
-    //           comment: "기존페이지 1-2",
-    //           theme: 2,
-    //           coordinates: [37.53, 126.89],
-    //           address: "장소2",
-    //         },
-    //         {
-    //           day: 1,
-    //           startTime: "10:45",
-    //           endTime: "11:00",
-    //           comment: "기존페이지 1-3",
-    //           theme: 3,
-    //           coordinates: [37.53, 126.89],
-    //           address: "장소2",
-    //         },
-    //         {
-    //           day: 1,
-    //           startTime: "11:00",
-    //           endTime: "11:30",
-    //           comment: "기존페이지 1-4",
-    //           theme: 4,
-    //           coordinates: [37.53, 126.89],
-    //           address: "장소2",
-    //         },
-    //         {
-    //           day: 2,
-    //           startTime: "10:00",
-    //           endTime: "10:15",
-    //           comment: "기존페이지 2-1",
-    //           theme: 1,
-    //           coordinates: [37.55, 126.92],
-    //           address: "장소1",
-    //         },
-    //         {
-    //           day: 2,
-    //           startTime: "10:30",
-    //           endTime: "10:45",
-    //           comment: "기존페이지 2-2",
-    //           theme: 2,
-    //           coordinates: [37.53, 126.89],
-    //           address: "장소2",
-    //         },
-    //         {
-    //           day: 2,
-    //           startTime: "10:45",
-    //           endTime: "11:00",
-    //           comment: "기존페이지 2-3",
-    //           theme: 3,
-    //           coordinates: [37.53, 126.89],
-    //           address: "장소2",
-    //         },
-    //         {
-    //           day: 3,
-    //           startTime: "10:45",
-    //           endTime: "11:30",
-    //           comment: "기존페이지 3-1",
-    //           theme: 2,
-    //           coordinates: [37.53, 126.89],
-    //           address: "장소2",
-    //         },
-    //         {
-    //           day: 4,
-    //           startTime: "10:45",
-    //           endTime: "11:30",
-    //           comment: "기존페이지 4-1",
-    //           theme: 2,
-    //           coordinates: [37.53, 126.89],
-    //           address: "장소2",
-    //         },
-    //       ],
-    //     }),
-    //   );
-    // } else {
-    //   // planId가 없다 = newpage에 기본값들
-    //   dispatch(
-    //     getPlanCards({
-    //       planCards: [
-    //         {
-    //           day: 1,
-    //           startTime: "10:00",
-    //           endTime: "10:15",
-    //           comment: "1-1",
-    //           theme: 1,
-    //           coordinates: [37.55, 126.92],
-    //           address: "장소1",
-    //         },
-    //         {
-    //           day: 1,
-    //           startTime: "10:30",
-    //           endTime: "11:00",
-    //           comment: "1-2",
-    //           theme: 2,
-    //           coordinates: [37.53, 126.89],
-    //           address: "장소2",
-    //         },
-    //       ],
-    //     }),
-    //   );
-    // }
-  }, []);
+    if (planId) {
+      // 수정 예정
+      // fetch(`${process.env.REACT_APP_SERVER_URL}/plan-card/${planId}`, {
+      //   method: "GET",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     credentials: "include",
+      //     authorization: `bearer ${token}`,
+      //   },
+      // })
+      //   .then((res) => res.json())
+      //   .then((body) => {
+      //     dispatch(getPlanCards(body.planCards));
+      //   })
+      //   .catch((err) => console.error(err));
+      //실험용
+      dispatch(
+        getPlanCards({
+          planCards: [
+            {
+              day: 1,
+              startTime: "10:00",
+              endTime: "10:15",
+              comment: "기존페이지 1-1",
+              theme: 1,
+              coordinates: [37.55, 126.92],
+              address: "장소1",
+            },
+            {
+              day: 1,
+              startTime: "10:30",
+              endTime: "10:45",
+              comment: "기존페이지 1-2",
+              theme: 2,
+              coordinates: [37.53, 126.89],
+              address: "장소2",
+            },
+            {
+              day: 1,
+              startTime: "10:45",
+              endTime: "11:00",
+              comment: "기존페이지 1-3",
+              theme: 3,
+              coordinates: [37.53, 126.89],
+              address: "장소2",
+            },
+            {
+              day: 1,
+              startTime: "11:00",
+              endTime: "11:30",
+              comment: "기존페이지 1-4",
+              theme: 4,
+              coordinates: [37.53, 126.89],
+              address: "장소2",
+            },
+            {
+              day: 2,
+              startTime: "10:00",
+              endTime: "10:15",
+              comment: "기존페이지 2-1",
+              theme: 1,
+              coordinates: [37.55, 126.92],
+              address: "장소1",
+            },
+            {
+              day: 2,
+              startTime: "10:30",
+              endTime: "10:45",
+              comment: "기존페이지 2-2",
+              theme: 2,
+              coordinates: [37.53, 126.89],
+              address: "장소2",
+            },
+            {
+              day: 2,
+              startTime: "10:45",
+              endTime: "11:00",
+              comment: "기존페이지 2-3",
+              theme: 3,
+              coordinates: [37.53, 126.89],
+              address: "장소2",
+            },
+            {
+              day: 3,
+              startTime: "10:45",
+              endTime: "11:30",
+              comment: "기존페이지 3-1",
+              theme: 2,
+              coordinates: [37.53, 126.89],
+              address: "장소2",
+            },
+            {
+              day: 4,
+              startTime: "10:45",
+              endTime: "11:30",
+              comment: "기존페이지 4-1",
+              theme: 2,
+              coordinates: [37.53, 126.89],
+              address: "장소2",
+            },
+          ],
+        }),
+      );
+    } else {
+      // planId가 없다 = newpage에 기본값들
+      dispatch(
+        getPlanCards({
+          planCards: [
+            {
+              day: 1,
+              startTime: "10:00",
+              endTime: "10:15",
+              comment: "1-1",
+              theme: 1,
+              coordinates: [37.55, 126.92],
+              address: "장소1",
+            },
+            {
+              day: 1,
+              startTime: "10:30",
+              endTime: "11:00",
+              comment: "1-2",
+              theme: 2,
+              coordinates: [37.53, 126.89],
+              address: "장소2",
+            },
+          ],
+        }),
+      );
+    }
+  }, [planId]);
 
   useEffect(() => {
     const dayfilter = (arr: any) => {
