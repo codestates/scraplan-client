@@ -60,12 +60,9 @@ const PlanList = ({
 
   const refDaySlide = useRef<HTMLUListElement>(null);
 
-  console.log(planId);
-  console.log("-----------------------", planCards);
   // planpage가 기존에 있던건지, 새로 만든건지 파악 후 렌더링해주는 것
   useEffect(() => {
     // [] 으로 수정 예정
-    console.log("왜 처음에 planId 안들어옴?", planId);
     if (planId) {
       // 수정 예정
       // fetch(`${process.env.REACT_APP_SERVER_URL}/plan-card/${planId}`, {
@@ -226,7 +223,7 @@ const PlanList = ({
 
     setFilterByDay(filter);
     setDayCount(initialDayCount);
-  }, []);
+  }, [planCards]);
 
   useEffect(() => {
     setAddrList(mapdata);
@@ -423,7 +420,6 @@ const PlanList = ({
   };
 
   const handleSelectDay = (day: number) => {
-    // alert("날짜 선택!");
     setCurrentDay(day + 1);
     handleShowPlanlistThatDay(day + 1);
     setShowDayList(false);
@@ -439,6 +435,7 @@ const PlanList = ({
         LatLng={LatLng}
         setSearchLatLng={setSearchLatLng}
         moveKakaoMap={moveKakaoMap}
+        currentDay={currentDay}
       />
       <div className="planlist__toggle" onClick={handleListState}>
         <img src="/images/prev-pink.png"></img>

@@ -13,6 +13,7 @@ interface AddPlanProps {
   LatLng: any;
   setSearchLatLng?: any;
   moveKakaoMap?: any;
+  currentDay?: number;
 }
 
 // SetTime으로 부터 startTime, endTime 추가로 계산한 기간까지 가져오는 용도
@@ -29,6 +30,7 @@ const AddPlan = ({
   LatLng,
   setSearchLatLng,
   moveKakaoMap,
+  currentDay,
 }: AddPlanProps) => {
   const state = useSelector((state: RootState) => state);
   const {
@@ -198,13 +200,12 @@ const AddPlan = ({
             Number(requestTime.split(":")[1])) /
             60,
         );
-
       dispatch(
         getPlanCards({
           isValid,
           isMember,
           planCards: planCards.concat({
-            day: 1,
+            day: currentDay,
             startTime: max.endTime,
             endTime: endHour + ":" + endMin,
             comment: inputTitle,
@@ -212,6 +213,7 @@ const AddPlan = ({
           }),
         }),
       );
+      close();
       return;
     }
     if (type === "requestCuration" && inputDesc === "") {
