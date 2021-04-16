@@ -30,21 +30,14 @@ const SetTime = ({
   // 추가할때가 아닌 서버로 부터 받은 startTime, endTime이 존재할 경우 사이 시간을 구하는 함수
   const getTimeFromProps = useCallback(
     (startTime: string, endTime: string) => {
-      const numStartTime = startTime.replace(":", "");
-      const numEndTime = endTime.replace(":", "");
-      let period;
-      if (Number(numEndTime[2]) - Number(numStartTime[2]) < 0) {
-        period = Number(numEndTime) - 40 - Number(numStartTime);
-      } else {
-        period = Number(numEndTime) - Number(numStartTime);
-      }
-      const hour = Math.floor(period / 100);
-      const minute = period - hour * 100;
-      if (hour > 0) {
-        return `${hour}:${minute === 0 ? "00" : minute}`;
-      } else {
-        return `0:${minute === 0 ? "00" : minute}`;
-      }
+      let period =
+        Number(endTime.split(":")[0]) * 60 +
+        Number(endTime.split(":")[1]) -
+        (Number(startTime.split(":")[0]) * 60 +
+          Number(startTime.split(":")[1]));
+      let periodMin = period % 60;
+      let periodHour = Math.floor(period / 60);
+      return `${periodHour}:${periodMin === 0 ? "00" : periodMin}`;
     },
     [startTime, endTime],
   );
