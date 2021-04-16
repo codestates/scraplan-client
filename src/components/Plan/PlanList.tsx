@@ -84,7 +84,7 @@ const PlanList = ({
     //   headers: {
     //     "Content-Type": "application/json",
     //     credentials: "include",
-    //     authorization: `bearer ${token}`,
+    //     authorization: `Bearer ${token}`,
     //   },
     // })
     //   .then((res) => res.json())
@@ -153,7 +153,7 @@ const PlanList = ({
           headers: {
             "Content-Type": "application/json",
             credentials: "include",
-            authorization: `bearer ${token}`,
+            authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             email,
@@ -180,7 +180,7 @@ const PlanList = ({
             headers: {
               "Content-Type": "application/json",
               credentials: "include",
-              authorization: `bearer ${token}`,
+              authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
               email,
@@ -201,7 +201,7 @@ const PlanList = ({
             headers: {
               "Content-Type": "application/json",
               credentials: "include",
-              authorization: `bearer ${token}`,
+              authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
               email,

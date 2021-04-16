@@ -45,7 +45,7 @@ const CurationRequest = ({ setMenu }: any) => {
   const [filteredRequests, setFilteredRequests] = useState(curationRequests);
 
   useEffect(() => {
-    getAllCurationRequests();
+    // getAllCurationRequests();
   }, [curationRequests]);
 
   // 0, 1, 2, 3, 4 -> pending, processing, resolved, rejected, deleted

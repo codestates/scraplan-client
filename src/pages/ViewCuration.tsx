@@ -137,7 +137,7 @@ const ViewCuration = (props: ViewCurationProps) => {
     fetch(`${process.env.REACT_APP_SERVER_URL}/curation-card-feedback`, {
       method: "GET",
       headers: {
-        authorization: `bearer ${token}`,
+        authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
         credentials: "include",
       },

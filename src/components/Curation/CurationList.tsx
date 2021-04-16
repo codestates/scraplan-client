@@ -4,78 +4,78 @@ import "./Curation.scss";
 import { useSelector } from "react-redux";
 import { RootState } from "../../reducers";
 
-const CurationList = ({ addEventFunc }: any) => {
-  const [openList, setOpenList] = useState<boolean>(false);
+const CurationList = ({ addEventFunc, openList, setOpenList }: any) => {
   const [sortByTime, setSortByTime] = useState<boolean>(false);
 
   const curationState = useSelector(
     (state: RootState) => state.curationReducer,
   );
-  // const { origin, sortByAvgTime } = curationState.curationCards ;
-  const { origin, sortByAvgTime } = {
-    origin: [
-      {
-        curationCardId: 0,
-        theme: 1,
-        title: "코딩하기 좋은 카페",
-        detail: "이 카페는 ~~~~",
-        photo: "https://~~~",
-        avgTime: 1.45,
-        feedbackCnt: 243,
-      },
-      {
-        curationCardId: 1,
-        theme: 4,
-        title: "카페 명소",
-        detail: "이 카페는 ~~~~",
-        photo: "https://~~~",
-        avgTime: 1,
-        feedbackCnt: 10,
-      },
-      {
-        curationCardId: 2,
-        theme: 5,
-        title: "마장동 축산물 시장",
-        detail: "이 카페는 ~~~~",
-        photo: "https://~~~",
-        avgTime: 1,
-        feedbackCnt: 10,
-      },
-    ],
-    sortByAvgTime: [
-      {
-        curationCardId: 1,
-        theme: 4,
-        title: "카페 명소",
-        detail: "이 카페는 ~~~~",
-        photo: "https://~~~",
-        avgTime: 1,
-        feedbackCnt: 10,
-      },
-      {
-        curationCardId: 2,
-        theme: 5,
-        title: "마장동 축산물 시장",
-        detail: "이 카페는 ~~~~",
-        photo: "https://~~~",
-        avgTime: 1,
-        feedbackCnt: 10,
-      },
-      {
-        curationCardId: 0,
-        theme: 1,
-        title: "코딩하기 좋은 카페",
-        detail: "이 카페는 ~~~~",
-        photo: "https://~~~",
-        avgTime: 1.45,
-        feedbackCnt: 243,
-      },
-    ],
-  };
+  const { origin, sortByAvgTime } = curationState.curationCards;
+  // const { origin, sortByAvgTime } = {
+  //   origin: [
+  //     {
+  //       curationCardId: 0,
+  //       theme: 1,
+  //       title: "코딩하기 좋은 카페",
+  //       detail: "이 카페는 ~~~~",
+  //       photo: "https://~~~",
+  //       avgTime: 1.45,
+  //       feedbackCnt: 243,
+  //     },
+  //     {
+  //       curationCardId: 1,
+  //       theme: 4,
+  //       title: "카페 명소",
+  //       detail: "이 카페는 ~~~~",
+  //       photo: "https://~~~",
+  //       avgTime: 1,
+  //       feedbackCnt: 10,
+  //     },
+  //     {
+  //       curationCardId: 2,
+  //       theme: 5,
+  //       title: "마장동 축산물 시장",
+  //       detail: "이 카페는 ~~~~",
+  //       photo: "https://~~~",
+  //       avgTime: 1,
+  //       feedbackCnt: 10,
+  //     },
+  //   ],
+  //   sortByAvgTime: [
+  //     {
+  //       curationCardId: 1,
+  //       theme: 4,
+  //       title: "카페 명소",
+  //       detail: "이 카페는 ~~~~",
+  //       photo: "https://~~~",
+  //       avgTime: 1,
+  //       feedbackCnt: 10,
+  //     },
+  //     {
+  //       curationCardId: 2,
+  //       theme: 5,
+  //       title: "마장동 축산물 시장",
+  //       detail: "이 카페는 ~~~~",
+  //       photo: "https://~~~",
+  //       avgTime: 1,
+  //       feedbackCnt: 10,
+  //     },
+  //     {
+  //       curationCardId: 0,
+  //       theme: 1,
+  //       title: "코딩하기 좋은 카페",
+  //       detail: "이 카페는 ~~~~",
+  //       photo: "https://~~~",
+  //       avgTime: 1.45,
+  //       feedbackCnt: 243,
+  //     },
+  //   ],
+  // };
 
   const handleListState = useCallback(() => {
     setOpenList(!openList);
   }, [openList]);
+
   return (
     <div className="curationlist">
       <div className={`curationlist__wrapper ${openList ? "" : "disappear"}`}>

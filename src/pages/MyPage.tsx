@@ -126,7 +126,7 @@ const MyPage = () => {
     fetch(`${process.env.REACT_APP_SERVER_URL}/curation-requests/${email}`, {
       method: "GET",
       headers: {
-        authorization: `bearer ${token}`,
+        authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
         credentials: "include",
       },
