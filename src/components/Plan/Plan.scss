@@ -160,13 +160,25 @@ $light: #f7f7f9;
           }
         }
         &__plancards {
+          width: 300px;
           height: 34rem;
           overflow-x: visible;
           overflow-y: scroll;
+          .plancards-by-day {
+            position: relative;
+            display: flex;
+            pointer-events: none;
+            width: 100%;
+            .oneday {
+              position: relative;
+              list-style: none;
+              margin-right: 60px;
+            }
+          }
           &__grid {
             position: relative;
             top: 1rem;
-            left: 0.2rem;
+            // left: 0.2rem;
             width: 270px;
             div {
               border-bottom: 1px solid #eee;
