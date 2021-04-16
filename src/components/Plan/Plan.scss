@@ -114,11 +114,76 @@ $light: #f7f7f9;
         }
       }
       .planlist__represent-address {
-        height: 2.3rem;
-        border: 1px solid #ccc;
-        padding: 0.2rem 0.7rem;
-        border-radius: 3px;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
+        font-weight: 500;
+        .planlist__contents__search-bar {
+          &-address {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+            &-all {
+              border: 2px solid #ddd;
+              display: flex;
+              align-items: center;
+              border-radius: 4px;
+              background-color: $light;
+              height: 2.2rem;
+              min-width: 3rem;
+              padding: 0.2rem 1rem;
+              margin-top: 0.5rem;
+              * {
+                color: #777;
+              }
+              span {
+                font-size: 0.75rem;
+                height: 1.2rem;
+                width: 4rem;
+                ul {
+                  box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.1);
+                  background-color: #fff;
+                  height: 8rem;
+                  overflow-y: scroll;
+                  z-index: 900;
+                  position: relative;
+                  list-style: none;
+                  margin-top: 1.2rem;
+                  width: 150%;
+                  li {
+                    font-size: 0.75rem;
+                    padding: 0.3rem 1rem;
+                    &:hover {
+                      background-color: #eee;
+                    }
+                  }
+                }
+              }
+            }
+            &-si,
+            &-gun,
+            &-gu {
+              font-size: 0.9rem;
+              min-width: 3rem;
+              cursor: pointer;
+              width: auto;
+              text-align: center;
+              background-color: $light;
+              height: 2rem;
+              border-radius: 3px;
+              margin-right: 1rem;
+            }
+            &__reset-btn {
+              font-size: 0.7rem;
+              font-weight: 500;
+              background-color: rgba(0, 0, 0, 0);
+              color: #aaa;
+              margin-left: 0.8rem;
+              &:hover {
+                color: $main;
+              }
+            }
+          }
+        }
       }
       .planlist__dailyplan {
         display: flex;

@@ -5,6 +5,7 @@ import { getPlanCards } from "../../actions";
 import AddPlan from "./AddPlan";
 import PlanTimeline from "./PlanTimeline";
 import planReducer from "../../reducers/planReducer";
+import mapdata from "../../data/mapdata.json";
 
 interface ForAddPlanProps {
   LatLng?: number[];
@@ -37,6 +38,19 @@ const PlanList = ({
   );
   const [openAddRequest, setOpenAddRequest] = useState<boolean>(false);
   const [saveBtnClicked, setSaveBtnClicked] = useState<boolean>(false);
+
+  const [inputAddrSi, setInputAddrSi] = useState<string>("선택");
+  const [inputAddrGun, setInputAddrGun] = useState<string>("선택");
+  const [inputAddrGu, setInputAddrGu] = useState<string>("선택");
+
+  const [toggleSi, setToggleSi] = useState<boolean>(false);
+  const [toggleGun, setToggleGun] = useState<boolean>(false);
+  const [toggleGu, setToggleGu] = useState<boolean>(false);
+
+  const [addrList, setAddrList] = useState<any>(mapdata || {});
+  const [addrListSi, setAddrListSi] = useState<string[] | undefined>();
+  const [addrListGun, setAddrListGun] = useState<string[] | undefined>();
+  const [addrListGu, setAddrListGu] = useState<string[] | undefined>();
 
   useEffect(() => {
     // [] 으로 수정 예정
@@ -80,6 +94,29 @@ const PlanList = ({
     //   .catch((err) => console.error(err));
   }, []);
 
+  useEffect(() => {
+    setAddrList(mapdata);
+    setAddrListSi(Object.keys(mapdata));
+  }, []);
+
+  useEffect(() => {
+    if (inputAddrSi !== "선택" && addrList[inputAddrSi]) {
+      setAddrListGun(Object.keys(addrList[inputAddrSi]));
+    }
+  }, [inputAddrSi]);
+
+  useEffect(() => {
+    if (
+      inputAddrSi !== "선택" &&
+      addrList[inputAddrSi] &&
+      inputAddrGun !== "선택" &&
+      addrList[inputAddrSi][inputAddrGun] &&
+      Object.keys(addrList[inputAddrSi][inputAddrGun]).length !== 0
+    ) {
+      setAddrListGu(addrList[inputAddrSi][inputAddrGun]);
+    }
+  }, [inputAddrGun]);
+
   const handleOpenAddRequset = useCallback(() => {
     setOpenAddRequest(true);
   }, [openAddRequest]);
@@ -122,7 +159,12 @@ const PlanList = ({
             email,
             title: inputTitle,
             public: isShare,
-            // represnetAddr:
+            represnetAddr:
+              (inputAddrSi === "선택" ? "" : inputAddrSi) +
+              " " +
+              (inputAddrGun === "선택" ? "" : inputAddrGun) +
+              " " +
+              (inputAddrGu === "선택" ? "" : inputAddrGu),
             planCards,
           }),
         })
@@ -177,6 +219,30 @@ const PlanList = ({
     }
   };
 
+  const handleInputAddrSi = (si: string): void => {
+    setToggleSi(false);
+    setInputAddrSi(si);
+    setInputAddrGun("선택");
+    setInputAddrGu("선택");
+  };
+
+  const handleInputAddrGun = (gun: string): void => {
+    setToggleGun(false);
+    setInputAddrGun(gun);
+    setInputAddrGu("선택");
+  };
+
+  const handleInputAddrGu = (gu: string): void => {
+    setToggleGu(false);
+    setInputAddrGu(gu);
+  };
+
+  const handleAddrReset = (): void => {
+    setInputAddrSi("선택");
+    setInputAddrGun("선택");
+    setInputAddrGu("선택");
+  };
+
   // 지역 정하기 => input list 사용
   return (
     <div className="planlist">
@@ -225,7 +291,101 @@ const PlanList = ({
             </div>
           </div>
           <span className="planlist__represent-address">
-            {"시 > 군구 > 동"}
+            <div className="planlist__contents__search-bar-address">
+              <p>대표지역</p>
+              <div className="planlist__contents__search-bar-address-all">
+                <span className="planlist__contents__search-bar-address-si">
+                  <p onClick={() => setToggleSi(!toggleSi)}>{inputAddrSi}</p>
+                  {toggleSi ? (
+                    <ul>
+                      {addrListSi &&
+                        addrListSi.map((si, idx) => {
+                          return (
+                            <li
+                              key={idx}
+                              value={si}
+                              onClick={() => handleInputAddrSi(si)}
+                            >
+                              {si}
+                            </li>
+                          );
+                        })}
+                    </ul>
+                  ) : (
+                    <></>
+                  )}
+                </span>
+                {inputAddrSi === "선택" ? (
+                  <></>
+                ) : (
+                  <>
+                    <h6>{">"}</h6>
+                    <span className="planlist__contents__search-bar-address-gun">
+                      <span onClick={() => setToggleGun(!toggleGun)}>
+                        {inputAddrGun}
+                      </span>
+                      {toggleGun ? (
+                        <ul>
+                          {addrListGun &&
+                            addrListGun.map((gun, idx) => {
+                              return (
+                                <li
+                                  key={idx}
+                                  value={gun}
+                                  onClick={() => handleInputAddrGun(gun)}
+                                >
+                                  {gun}
+                                </li>
+                              );
+                            })}
+                        </ul>
+                      ) : (
+                        <></>
+                      )}
+                    </span>
+                  </>
+                )}
+
+                {inputAddrGun === "선택" ? (
+                  <></>
+                ) : (
+                  <>
+                    <h6>{">"}</h6>
+                    <span
+                      className={`planlist__contents__search-bar-address-gu`}
+                    >
+                      <span onClick={() => setToggleGu(!toggleGu)}>
+                        {inputAddrGu}
+                      </span>
+                      {toggleGu ? (
+                        <ul>
+                          {addrListGu &&
+                            addrListGu.map((gu, idx) => {
+                              return (
+                                <li
+                                  key={idx}
+                                  value={gu}
+                                  onClick={() => handleInputAddrGu(gu)}
+                                >
+                                  {gu}
+                                </li>
+                              );
+                            })}
+                        </ul>
+                      ) : (
+                        <></>
+                      )}
+                    </span>
+                  </>
+                )}
+                {/* <button
+                  className="planlist__contents__search-bar-address__reset-btn"
+                  onClick={handleAddrReset}
+                >
+                  초기화
+                </button> */}
+              </div>
+            </div>
           </span>
           <div className="planlist__dailyplan">
             <div className="planlist__dailyplan__top-bar">

@@ -74,15 +74,13 @@ const MyPage = () => {
   const [inputDaycountMax, setInputDaycountMax] = useState<string>("1");
 
   const [addrList, setAddrList] = useState<any>(mapdata || {});
-  const [addrListSi, setAddrListSi] = useState<string[]>([""]);
-  const [addrListGun, setAddrListGun] = useState<string[]>([""]);
-  const [addrListGu, setAddrListGu] = useState<string[]>([""]);
+  const [addrListSi, setAddrListSi] = useState<string[] | undefined>();
+  const [addrListGun, setAddrListGun] = useState<string[] | undefined>();
+  const [addrListGu, setAddrListGu] = useState<string[] | undefined>();
 
   const {
     user: { token, email, nickname },
   } = userState;
-
-  console.log(token, email);
 
   useEffect(() => {
     setAddrList(mapdata);
@@ -142,16 +140,18 @@ const MyPage = () => {
   }, []);
 
   useEffect(() => {
-    if (inputAddrSi !== "" && addrList[inputAddrSi]) {
+    if (inputAddrSi !== "선택" && addrList[inputAddrSi]) {
       setAddrListGun(Object.keys(addrList[inputAddrSi]));
     }
   }, [inputAddrSi]);
 
   useEffect(() => {
     if (
-      inputAddrSi !== "" &&
+      inputAddrSi !== "선택" &&
       addrList[inputAddrSi] &&
-      addrList[inputAddrSi][inputAddrGun]
+      inputAddrGun !== "선택" &&
+      addrList[inputAddrSi][inputAddrGun] &&
+      Object.keys(addrList[inputAddrSi][inputAddrGun]).length !== 0
     ) {
       setAddrListGu(addrList[inputAddrSi][inputAddrGun]);
     }
@@ -184,11 +184,14 @@ const MyPage = () => {
   const handleInputAddrSi = (si: string): void => {
     setToggleSi(false);
     setInputAddrSi(si);
+    setInputAddrGun("선택");
+    setInputAddrGu("선택");
   };
 
   const handleInputAddrGun = (gun: string): void => {
     setToggleGun(false);
     setInputAddrGun(gun);
+    setInputAddrGu("선택");
   };
 
   const handleInputAddrGu = (gu: string): void => {
@@ -208,9 +211,11 @@ const MyPage = () => {
       handleModalOpen();
     } else {
       const addr =
-        inputAddrSi +
-        (inputAddrGun === "-" ? "" : inputAddrGun) +
-        (inputAddrGu === "-" ? "" : inputAddrGu);
+        (inputAddrSi === "선택" ? "" : inputAddrSi) +
+        " " +
+        (inputAddrGun === "선택" ? "" : inputAddrGun) +
+        " " +
+        (inputAddrGu === "선택" ? "" : inputAddrGu);
       fetch(
         `${process.env.REACT_APP_SERVER_URL}/plans?writer-email=${email}&min-day=${inputDaycountMin}&max-day=${inputDaycountMax}&addr=${addr}`,
         {
@@ -278,77 +283,91 @@ const MyPage = () => {
             </div>
             <div className="mypage__contents__search-bar">
               <div className="mypage__contents__search-bar-address">
-                <p>지역</p>
-                <h6>선택</h6>
+                <p>대표지역</p>
                 <div className="mypage__contents__search-bar-address-all">
                   <span className="mypage__contents__search-bar-address-si">
-                    <span onClick={() => setToggleSi(!toggleSi)}>
-                      {inputAddrSi}
-                    </span>
+                    <p onClick={() => setToggleSi(!toggleSi)}>{inputAddrSi}</p>
                     {toggleSi ? (
                       <ul>
-                        {addrListSi.map((si, idx) => {
-                          return (
-                            <li
-                              key={idx}
-                              value={si}
-                              onClick={() => handleInputAddrSi(si)}
-                            >
-                              {si}
-                            </li>
-                          );
-                        })}
+                        {addrListSi &&
+                          addrListSi.map((si, idx) => {
+                            return (
+                              <li
+                                key={idx}
+                                value={si}
+                                onClick={() => handleInputAddrSi(si)}
+                              >
+                                {si}
+                              </li>
+                            );
+                          })}
                       </ul>
                     ) : (
                       <></>
                     )}
                   </span>
-                  <h6>{">"}</h6>
-                  <span className="mypage__contents__search-bar-address-gun">
-                    <span onClick={() => setToggleGun(!toggleGun)}>
-                      {inputAddrGun}
-                    </span>
-                    {toggleGun ? (
-                      <ul>
-                        {addrListGun.map((gun, idx) => {
-                          return (
-                            <li
-                              key={idx}
-                              value={gun}
-                              onClick={() => handleInputAddrGun(gun)}
-                            >
-                              {gun}
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    ) : (
-                      <></>
-                    )}
-                  </span>
-                  <h6>{">"}</h6>
-                  <span className="mypage__contents__search-bar-address-gu">
-                    <span onClick={() => setToggleGu(!toggleGu)}>
-                      {inputAddrGu}
-                    </span>
-                    {toggleGu ? (
-                      <ul>
-                        {addrListGu.map((gu, idx) => {
-                          return (
-                            <li
-                              key={idx}
-                              value={gu}
-                              onClick={() => handleInputAddrGu(gu)}
-                            >
-                              {gu}
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    ) : (
-                      <></>
-                    )}
-                  </span>
+                  {inputAddrSi === "선택" ? (
+                    <></>
+                  ) : (
+                    <>
+                      <h6>{">"}</h6>
+                      <span className="mypage__contents__search-bar-address-gun">
+                        <span onClick={() => setToggleGun(!toggleGun)}>
+                          {inputAddrGun}
+                        </span>
+                        {toggleGun ? (
+                          <ul>
+                            {addrListGun &&
+                              addrListGun.map((gun, idx) => {
+                                return (
+                                  <li
+                                    key={idx}
+                                    value={gun}
+                                    onClick={() => handleInputAddrGun(gun)}
+                                  >
+                                    {gun}
+                                  </li>
+                                );
+                              })}
+                          </ul>
+                        ) : (
+                          <></>
+                        )}
+                      </span>
+                    </>
+                  )}
+                  {inputAddrGun === "선택" ? (
+                    <></>
+                  ) : (
+                    <>
+                      <h6>{">"}</h6>
+                      <span
+                        className={`mypage__contents__search-bar-address-gu`}
+                      >
+                        <span onClick={() => setToggleGu(!toggleGu)}>
+                          {inputAddrGu}
+                        </span>
+                        {toggleGu ? (
+                          <ul>
+                            {addrListGu &&
+                              addrListGu.map((gu, idx) => {
+                                return (
+                                  <li
+                                    key={idx}
+                                    value={gu}
+                                    onClick={() => handleInputAddrGu(gu)}
+                                  >
+                                    {gu}
+                                  </li>
+                                );
+                              })}
+                          </ul>
+                        ) : (
+                          <></>
+                        )}
+                      </span>
+                    </>
+                  )}
                 </div>
                 <button
                   className="mypage__contents__search-bar-address__reset-btn"

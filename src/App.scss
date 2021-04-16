@@ -337,23 +337,28 @@ body {
         flex-wrap: wrap;
         margin-bottom: 1rem;
         &-all {
+          p {
+            margin: 0;
+            font-weight: 400;
+          }
           display: flex;
-          justify-content: center;
           border-radius: 3px;
           background-color: $light;
-          min-width: 19.1rem;
+          min-width: 3rem;
           padding: 0.2rem 1rem;
           span {
-            padding: 0.4rem 0rem;
+            width: 6rem;
+            padding: 0.3rem 0rem;
             ul {
               box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.1);
               background-color: #fff;
-              height: 10rem;
+              height: 6rem;
               overflow-y: scroll;
               z-index: 900;
               position: relative;
               list-style: none;
               margin-top: 1.2rem;
+              width: 150%;
               li {
                 padding: 0.4rem 2rem;
                 &:hover {
@@ -1068,23 +1073,28 @@ body {
         flex-wrap: wrap;
         margin-bottom: 1rem;
         &-all {
+          p {
+            margin: 0;
+            font-weight: 400;
+          }
           display: flex;
-          justify-content: center;
           border-radius: 3px;
           background-color: $light;
-          min-width: 19.1rem;
+          min-width: 3rem;
           padding: 0.2rem 1rem;
           span {
-            padding: 0.4rem 0rem;
+            width: 6rem;
+            padding: 0.3rem 0rem;
             ul {
               box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.1);
               background-color: #fff;
-              height: 10rem;
+              height: 6rem;
               overflow-y: scroll;
               z-index: 900;
               position: relative;
               list-style: none;
               margin-top: 1.2rem;
+              width: 150%;
               li {
                 padding: 0.4rem 2rem;
                 &:hover {
