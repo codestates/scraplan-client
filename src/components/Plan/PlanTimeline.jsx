@@ -67,7 +67,6 @@ const PlanTimeline = ({
       }
     }
   }, [layoutState]);
-  console.log(planCards);
 
   useEffect(() => {
     setLayoutState(generateLayout());

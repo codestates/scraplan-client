@@ -41,7 +41,7 @@ const CurationRequestItem = ({ props }: any) => {
     fetch(`${process.env.REACT_APP_SERVER_URL}/curation-request`, {
       method: "PUT",
       headers: {
-        authorization: `bearer ${token}`,
+        authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
         credentials: "include",
       },

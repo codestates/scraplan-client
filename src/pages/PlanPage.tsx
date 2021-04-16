@@ -33,50 +33,7 @@ const PlanPage = () => {
   const [map, setMap] = useState<any>({});
   const [mapLevel, setMapLevel] = useState<number>(5);
   const [mapBounds, setMapBounds] = useState<object>();
-  const [markerList, setMarkerList] = useState<any>([
-    {
-      id: 0,
-      coordinates: [37.550874837441, 126.925554591431],
-      address: "홍대 1",
-      theme: 2,
-    },
-    {
-      id: 1,
-      coordinates: [37.54929794575741, 126.92823135760973],
-      address: "홍대 2",
-      theme: 0,
-    },
-    {
-      id: 2,
-      coordinates: [33.450879, 126.56994],
-      address: "제주도 1",
-      theme: 0,
-    },
-    {
-      id: 3,
-      coordinates: [33.451393, 126.56073],
-      address: "제주도 2",
-      theme: 5,
-    },
-    {
-      id: 4,
-      coordinates: [33.45, 126.56023],
-      address: "제주도 3",
-      theme: 3,
-    },
-    {
-      id: 5,
-      coordinates: [33.440093, 126.559],
-      address: "제주도 4",
-      theme: 4,
-    },
-    {
-      id: 6,
-      coordinates: [33.441393, 126.56073],
-      address: "제주도 5",
-      theme: 1,
-    },
-  ]);
+  const [markerList, setMarkerList] = useState<any>([]);
   const [curationId, setCurationId] = useState<number | undefined>();
   const [planId, setPlanId] = useState<number | string | undefined>();
 
@@ -87,6 +44,7 @@ const PlanPage = () => {
     37.5139795454969,
     127.048963363388,
   ]);
+  const [openList, setOpenList] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [modalType, setModalType] = useState<string>("");
   const [modalComment, setModalComment] = useState<string>("");
@@ -126,6 +84,10 @@ const PlanPage = () => {
     });
   }, [viewOnlyMine, planCards]);
 
+  useEffect(() => {
+    makeMarker();
+  }, [markerList]);
+
   // marker request
   // 1. 지도가 이동할 때 (mapBounds의 값이 변할 때)
   // 2. 서버에 mapBounds를 보낸다.
@@ -133,7 +95,9 @@ const PlanPage = () => {
   // 4. 해당 bounds안에 마커들이 표기
   useEffect(() => {
     fetch(
-      `${process.env.REACT_APP_SERVER_URL}/curations?coordinates=${mapBounds}`,
+      `${
+        process.env.REACT_APP_SERVER_URL
+      }/curations?coordinates=${encodeURIComponent(JSON.stringify(mapBounds))}`,
       {
         method: "GET",
         headers: {
@@ -184,6 +148,33 @@ const PlanPage = () => {
     },
     [inputKeyword],
   );
+
+  const makeMarker = () => {
+    for (var i = 0; i < markerList.length; i++) {
+      let markerImage = new window.kakao.maps.MarkerImage(
+        `/images/marker/theme0.png`,
+        new window.kakao.maps.Size(54, 58),
+        { offset: new window.kakao.maps.Point(20, 58) },
+      );
+      let position = new window.kakao.maps.LatLng(
+        markerList[i].coordinates.coordinates[0],
+        markerList[i].coordinates.coordinates[1],
+      );
+      let marker = new window.kakao.maps.Marker({
+        map,
+        position,
+        title: markerList[i].address,
+        image: markerImage,
+      });
+
+      ((marker, curationId, curationAddr) => {
+        window.kakao.maps.event.addListener(marker, "click", () => {
+          handleClickMarker(curationId, curationAddr);
+        });
+      })(marker, markerList[i].id, markerList[i].address);
+      marker.setMap(map);
+    }
+  };
 
   // 맵의 변화 (drag, zoom)가 있을 때 마다
   // 중심좌표, 경계값을 구한다.
@@ -285,29 +276,7 @@ const PlanPage = () => {
           [bounds.qa, bounds.pa],
           [bounds.ha, bounds.oa],
         ]);
-        for (var i = 0; i < markerList.length; i++) {
-          let markerImage = new window.kakao.maps.MarkerImage(
-            `/images/marker/theme${markerList[i].theme}.png`,
-            new window.kakao.maps.Size(54, 58),
-            { offset: new window.kakao.maps.Point(20, 58) },
-          );
-          let position = new window.kakao.maps.LatLng(
-            markerList[i].coordinates[0],
-            markerList[i].coordinates[1],
-          );
-          var marker = new window.kakao.maps.Marker({
-            map,
-            position,
-            title: markerList[i].address,
-            image: markerImage,
-          });
-          window.kakao.maps.event.addListener(
-            marker,
-            "click",
-            handleClickMarker,
-          );
-        }
-        marker.setMap(map);
+        makeMarker();
       });
       // level(zoom) event controller
       let zoomControl = new window.kakao.maps.ZoomControl();
@@ -322,30 +291,7 @@ const PlanPage = () => {
         ]);
         //format => ga {ha: 126.56714657186055, qa: 33.40906146511531, oa: 126.59384131033772, pa: 33.42485772749098}
       });
-      for (var i = 0; i < markerList.length; i++) {
-        let markerImage = new window.kakao.maps.MarkerImage(
-          `/images/marker/theme${markerList[i].theme}.png`,
-          new window.kakao.maps.Size(54, 58),
-          { offset: new window.kakao.maps.Point(20, 58) },
-        );
-        let position = new window.kakao.maps.LatLng(
-          markerList[i].coordinates[0],
-          markerList[i].coordinates[1],
-        );
-        let marker = new window.kakao.maps.Marker({
-          map,
-          position,
-          title: markerList[i].address,
-          image: markerImage,
-        });
-
-        ((marker, curationId, curationAddr) => {
-          window.kakao.maps.event.addListener(marker, "click", () => {
-            handleClickMarker(curationId, curationAddr);
-          });
-        })(marker, markerList[i].id, markerList[i].address);
-        marker.setMap(map);
-      }
+      makeMarker();
     }
   };
 
@@ -414,6 +360,7 @@ const PlanPage = () => {
   };
 
   const handleClickMarker = (curationId: number, curationAddr: string) => {
+    setOpenList(true);
     fetch(`${process.env.REACT_APP_SERVER_URL}/curation-cards/${curationId}`, {
       method: "GET",
       headers: {
@@ -482,7 +429,11 @@ const PlanPage = () => {
   return (
     <div className="planpage">
       <Navbar currentPage="/planpage/newpage" />
-      <CurationList addEventFunc={handleAddToPlan} />
+      <CurationList
+        addEventFunc={handleAddToPlan}
+        openList={openList}
+        setOpenList={setOpenList}
+      />
       <PlanList
         LatLng={LatLng}
         setSearchLatLng={setSearchLatLng}

@@ -22,10 +22,14 @@ const CurationManagement = () => {
     userReducer: {
       user: { token, email, nickname },
     },
+    planReducer: {
+      planCards: { isValid, isMember, planCards },
+    },
     curationReducer,
   } = state;
 
   const [mode, setMode] = useState<string>("create");
+  const [openList, setOpenList] = useState<boolean>(false);
 
   const [LatLng, setLatLng] = useState<number[]>([
     37.5139795454969,
@@ -33,51 +37,8 @@ const CurationManagement = () => {
   ]);
   const [map, setMap] = useState<any>({});
   const [mapLevel, setMapLevel] = useState<number>(5);
-  const [mapBounds, setMapBounds] = useState<object>();
-  const [markerList, setMarkerList] = useState<any>([
-    {
-      id: 0,
-      coordinates: [37.550874837441, 126.925554591431],
-      address: "홍대 1",
-      theme: 2,
-    },
-    {
-      id: 1,
-      coordinates: [37.54929794575741, 126.92823135760973],
-      address: "홍대 2",
-      theme: 0,
-    },
-    {
-      id: 2,
-      coordinates: [33.450879, 126.56994],
-      address: "제주도 1",
-      theme: 0,
-    },
-    {
-      id: 3,
-      coordinates: [33.451393, 126.56073],
-      address: "제주도 2",
-      theme: 5,
-    },
-    {
-      id: 4,
-      coordinates: [33.45, 126.56023],
-      address: "제주도 3",
-      theme: 3,
-    },
-    {
-      id: 5,
-      coordinates: [33.440093, 126.559],
-      address: "제주도 4",
-      theme: 4,
-    },
-    {
-      id: 6,
-      coordinates: [33.441393, 126.56073],
-      address: "제주도 5",
-      theme: 1,
-    },
-  ]);
+  const [mapBounds, setMapBounds] = useState<any>();
+  const [markerList, setMarkerList] = useState<any>([]);
 
   const [keywordList, setKeywordList] = useState<any>([]);
   const [searchMode, setSearchMode] = useState<boolean>(false);
@@ -130,9 +91,60 @@ const CurationManagement = () => {
   }, []);
 
   useEffect(() => {
+    makeMarker();
+  }, [markerList]);
+
+  useEffect(() => {
+    fetch(
+      `${
+        process.env.REACT_APP_SERVER_URL
+      }/curations?coordinates=${encodeURIComponent(JSON.stringify(mapBounds))}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          credentials: "include",
+        },
+      },
+    )
+      .then((res) => res.json())
+      .then((body) => {
+        setMarkerList(body);
+      })
+      .catch((err) => console.error(err));
+  }, [mapBounds]);
+
+  useEffect(() => {
     setSearchMode(true);
     handleSearchKeywordKaKao();
   }, [inputKeyword]);
+
+  const makeMarker = () => {
+    for (var i = 0; i < markerList.length; i++) {
+      let markerImage = new window.kakao.maps.MarkerImage(
+        `/images/marker/theme0.png`,
+        new window.kakao.maps.Size(54, 58),
+        { offset: new window.kakao.maps.Point(20, 58) },
+      );
+      let position = new window.kakao.maps.LatLng(
+        markerList[i].coordinates.coordinates[0],
+        markerList[i].coordinates.coordinates[1],
+      );
+      let marker = new window.kakao.maps.Marker({
+        map,
+        position,
+        title: markerList[i].address,
+        image: markerImage,
+      });
+
+      ((marker, curationId, curationAddr) => {
+        window.kakao.maps.event.addListener(marker, "click", () => {
+          handleClickMarker(curationId, curationAddr);
+        });
+      })(marker, markerList[i].id, markerList[i].address);
+      marker.setMap(map);
+    }
+  };
 
   const loadKakaoMap = () => {
     let container = document.getElementById("curation-management__map");
@@ -151,37 +163,13 @@ const CurationManagement = () => {
     // drag event controller
     window.kakao.maps.event.addListener(map, "dragend", () => {
       let latlng = map.getCenter();
-      setLatLng([latlng.getLat(), latlng.getLng()]);
+      setLatLng([Number(latlng.getLat()), Number(latlng.getLng())]);
       let bounds = map.getBounds();
       setMapBounds([
         [bounds.qa, bounds.pa],
         [bounds.ha, bounds.oa],
       ]);
-
-      for (var i = 0; i < markerList.length; i++) {
-        let markerImage = new window.kakao.maps.MarkerImage(
-          `/images/marker/theme${markerList[i].theme}.png`,
-          new window.kakao.maps.Size(54, 58),
-          { offset: new window.kakao.maps.Point(20, 58) },
-        );
-        let position = new window.kakao.maps.LatLng(
-          markerList[i].coordinates[0],
-          markerList[i].coordinates[1],
-        );
-        let marker = new window.kakao.maps.Marker({
-          map,
-          position,
-          title: markerList[i].address,
-          image: markerImage,
-        });
-
-        ((marker, curationId, curationAddr) => {
-          window.kakao.maps.event.addListener(marker, "click", () => {
-            handleClickMarker(curationId, curationAddr);
-          });
-        })(marker, markerList[i].id, markerList[i].address);
-        marker.setMap(map);
-      }
+      makeMarker();
     });
 
     // level(zoom) event controller
@@ -197,41 +185,19 @@ const CurationManagement = () => {
       ]);
       //format => ga {ha: 126.56714657186055, qa: 33.40906146511531, oa: 126.59384131033772, pa: 33.42485772749098}
     });
-
-    for (var i = 0; i < markerList.length; i++) {
-      let markerImage = new window.kakao.maps.MarkerImage(
-        `/images/marker/theme${markerList[i].theme}.png`,
-        new window.kakao.maps.Size(54, 58),
-        { offset: new window.kakao.maps.Point(20, 58) },
-      );
-      let position = new window.kakao.maps.LatLng(
-        markerList[i].coordinates[0],
-        markerList[i].coordinates[1],
-      );
-      let marker = new window.kakao.maps.Marker({
-        map,
-        position,
-        title: markerList[i].address,
-        image: markerImage,
-      });
-      ((marker, curationId, curationAddr) => {
-        window.kakao.maps.event.addListener(marker, "click", () => {
-          handleClickMarker(curationId, curationAddr);
-        });
-      })(marker, markerList[i].id, markerList[i].address);
-      marker.setMap(map);
-    }
+    makeMarker();
   };
 
   const moveKakaoMap = (lat: number, lng: number) => {
     var moveLatLon = new window.kakao.maps.LatLng(lat, lng);
     map.panTo(moveLatLon);
-    setLatLng([lat, lng]);
+    setLatLng([Number(lat), Number(lng)]);
   };
 
   const handleClickMarker = (curationId: number, curationAddr: string) => {
     setInputCurationId(curationId);
     setInputKeyword(curationAddr);
+    setOpenList(true);
     fetch(`${process.env.REACT_APP_SERVER_URL}/curation-cards/${curationId}`, {
       method: "GET",
       headers: {
@@ -277,7 +243,10 @@ const CurationManagement = () => {
             });
           });
           setKeywordList(newKeywordList);
-          setSearchLatLng([body.documents[0].y, body.documents[0].x]);
+          setSearchLatLng([
+            Number(body.documents[0].y),
+            Number(body.documents[0].x),
+          ]);
         })
         .catch((err) => console.log(err));
     }
@@ -345,7 +314,7 @@ const CurationManagement = () => {
 
   const handleChangeCurationId = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setInputTitle(e.target?.value);
+      setInputCurationId(Number(e.target?.value));
     },
     [inputCurationId],
   );
@@ -390,17 +359,16 @@ const CurationManagement = () => {
 
   const handleCreateCurationCard = async () => {
     let curationId = inputCurationId;
-
     await fetch(`${process.env.REACT_APP_SERVER_URL}/curation`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         credentials: "include",
-        authorization: `bearer ${token}`,
+        authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         email,
-        coordinates: LatLng,
+        coordinates: encodeURIComponent(JSON.stringify(LatLng)),
         address: inputKeyword,
       }),
     })
@@ -420,7 +388,7 @@ const CurationManagement = () => {
       headers: {
         "Content-Type": "application/json",
         credentials: "include",
-        authorization: `bearer ${token}`,
+        authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         email,
@@ -428,7 +396,7 @@ const CurationManagement = () => {
         theme: inputTheme,
         title: inputTitle,
         detail: inputDesc,
-        photo: inputPhoto,
+        photo: "ㅁㄴㅇㄹ",
       }),
     })
       .then((res) => res.json())
@@ -473,11 +441,11 @@ const CurationManagement = () => {
       headers: {
         "Content-Type": "application/json",
         credentials: "include",
-        authorization: `bearer ${token}`,
+        authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         email,
-        curatioinId: inputCurationCardId,
+        curationCardId: inputCurationCardId,
         theme: inputTheme,
         title: inputTitle,
         detail: inputDesc,
@@ -501,11 +469,11 @@ const CurationManagement = () => {
       headers: {
         "Content-Type": "application/json",
         credentials: "include",
-        authorization: `bearer ${token}`,
+        authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         email,
-        curatioinId: inputCurationCardId,
+        curationCardId: inputCurationCardId,
       }),
     })
       .then((res) => res.json())
@@ -526,7 +494,7 @@ const CurationManagement = () => {
       headers: {
         "Content-Type": "application/json",
         credentials: "include",
-        authorization: `bearer ${token}`,
+        authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         email,
@@ -548,7 +516,11 @@ const CurationManagement = () => {
     <div className="curation-management">
       <div id="curation-management__map"></div>
       {mode === "edit" ? (
-        <CurationList addEventFunc={handleAddToEdit} />
+        <CurationList
+          addEventFunc={handleAddToEdit}
+          openList={openList}
+          setOpenList={setOpenList}
+        />
       ) : (
         <></>
       )}

@@ -229,7 +229,7 @@ const AddPlan = ({
         body: JSON.stringify({
           requestTitle: inputTitle,
           email,
-          coordinates: forRequestLatLng,
+          coordinates: encodeURIComponent(JSON.stringify(forRequestLatLng)),
           address: forRequestAddress,
           requestComment: inputDesc,
           // 수정
