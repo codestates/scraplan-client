@@ -99,25 +99,6 @@ const PlanTimeline = ({
     });
   };
 
-  // const generateLayout = () => {
-  //   return (planCards || []).map((plancard, idx) => {
-  //     const { startTime, endTime } = plancard;
-  //     const startHour = Number(startTime.split(":")[0]);
-  //     const startMin = Number(startTime.split(":")[1]);
-  //     const endHour = Number(endTime.split(":")[0]);
-  //     const endMin = Number(endTime.split(":")[1]);
-  //     return {
-  //       w: 1,
-  //       x: 0,
-  //       h: endHour * 4 + endMin / 15 - startHour * 4 - startMin / 15, // 높이
-  //       y: startHour * 4 + startMin / 15, // 위치
-  //       i: idx.toString(),
-  //       moved: false,
-  //       static: false,
-  //     };
-  //   });
-  // };
-
   const onLayoutChange = (layout) => {
     setLayoutState(layout);
   };
@@ -161,40 +142,6 @@ const PlanTimeline = ({
       // dispatch(getPlanCards({ planCards: newPlanCardsList }));
     }
   };
-  // const handleSaveBtn = () => {
-  //   if (planCardsList) {
-  //     // 변경된 layout을 -> 새 일정으로 등록! (setPlanCardsList)
-  //     let newPlanCardsList = planCardsList.map((plan, idx) => {
-  //       // console.log("plan", plan);
-  //       // console.log("layout", layoutState[idx]);
-
-  //       // y,h -> startTime, endTime 변환
-  //       let startHour = Math.floor(layoutState[idx].y / 4);
-  //       let startMin =
-  //         (layoutState[idx].y % 4) * 15 === 0
-  //           ? "00"
-  //           : (layoutState[idx].y % 4) * 15;
-
-  //       let endHour = Math.floor((layoutState[idx].y + layoutState[idx].h) / 4);
-  //       let endMin =
-  //         ((layoutState[idx].y + layoutState[idx].h) % 4) * 15 === 0
-  //           ? "00"
-  //           : ((layoutState[idx].y + layoutState[idx].h) % 4) * 15;
-
-  //       let newPlan = Object.assign({}, plan, {
-  //         startTime: startHour + ":" + startMin,
-  //         endTime: endHour + ":" + endMin,
-  //       });
-  //       return newPlan;
-  //     });
-  //     setPlanCardsList(newPlanCardsList);
-  //     handleSavePlanBtn(newPlanCardsList);
-  //     dispatch(getPlanCards({ planCards: newPlanCardsList }));
-  //   }
-  // };
-
-  // console.log("layoutState", layoutState);
-  // console.log("newPlanCardsList", planCardsList);
 
   return (
     <ReactGridLayout
