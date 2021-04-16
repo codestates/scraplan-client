@@ -60,6 +60,8 @@ const PlanList = ({
 
   const refDaySlide = useRef<HTMLUListElement>(null);
 
+  // console.log(planId);
+  // console.log("-----------------------", planCards);
   // planpage가 기존에 있던건지, 새로 만든건지 파악 후 렌더링해주는 것
   useEffect(() => {
     // [] 으로 수정 예정

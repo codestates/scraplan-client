@@ -34,21 +34,15 @@ const PlanTimeline = ({
   const [layoutState, setLayoutState] = useState({ layout: [] });
   const [planCardsList, setPlanCardsList] = useState([]);
 
-  console.log("값의 변화들 1 planCardsList", planCardsList);
-  console.log("값의 변화들 2 planCards", planCards);
-  console.log("값의 변화들 3 oneDayPlanList", oneDayPlanList);
-
   useEffect(() => {
-    console.log("첫번째 useEffect");
     setLayoutState(generateLayout());
     setPlanCardsList(oneDayPlanList);
   }, []);
 
   useEffect(() => {
-    console.log("두번째 useEffect");
     setLayoutState(generateLayout());
     setPlanCardsList(oneDayPlanList);
-  }, [oneDayPlanList, filterByDay, planCards]);
+  }, [filterByDay]);
 
   // Day별로 필터링 하는 용도
   // Timeline에서 드래그앤드랍으로 수정할때마다 변경하는걸 알아야할듯?!
@@ -61,10 +55,12 @@ const PlanTimeline = ({
   }, [saveBtnClicked]);
   // 저장버튼 클릭 시 변경 된 startTime, endTime이 저장된다.
   useEffect(() => {
-    console.log("순서 2 planCardsList", planCardsList);
-    console.log("순서 3 layoutState", layoutState);
-    if (planCardsList) {
-      let newPlanCardsList = planCardsList.map((plan, idx) => {
+    // console.log("layout", layoutState);
+    // console.log("planCards", planCards);
+    // console.log("planCardsList", planCardsList);
+    // console.log("oneDay", oneDayPlanList);
+    if (planCardsList && planCardsList.length !== 0 && !layoutState.layout) {
+      let newPlanCardsList = oneDayPlanList.map((plan, idx) => {
         let startHour = Math.floor(layoutState[idx].y / 4);
         let startMin =
           (layoutState[idx].y % 4) * 15 === 0
@@ -88,8 +84,12 @@ const PlanTimeline = ({
     }
   }, [layoutState]);
 
+  // useEffect(() => {
+  //   setLayoutState(generateLayout());
+  //   setPlanCardsList(planCards);
+  // }, [planCards]);
+
   const generateLayout = () => {
-    console.log("순서 1 oneDayPlanList", oneDayPlanList);
     return (oneDayPlanList || []).map((plancard, idx) => {
       const { startTime, endTime } = plancard;
       const startHour = Number(startTime.split(":")[0]);
