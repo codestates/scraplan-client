@@ -190,6 +190,7 @@ $light: #f7f7f9;
         flex-direction: column;
         overflow-x: visible;
         &__top-bar {
+          position: relative;
           display: flex;
           justify-content: center;
           margin-bottom: 1.4rem;
@@ -198,6 +199,16 @@ $light: #f7f7f9;
             margin: 0 1.7rem;
             font-size: 1.1rem;
             font-weight: 700;
+          }
+          ul {
+            top: 2rem;
+            font-size: 1rem;
+            position: absolute;
+            border: 1px solid $main;
+            z-index: 999;
+            li {
+              list-style: none;
+            }
           }
           &__prev,
           &__next {
@@ -215,13 +226,25 @@ $light: #f7f7f9;
           }
         }
         &__plancards {
+          width: 300px;
           height: 34rem;
           overflow-x: visible;
           overflow-y: scroll;
+          .plancards-by-day {
+            position: relative;
+            display: flex;
+            pointer-events: none;
+            width: 100%;
+            .oneday {
+              position: relative;
+              list-style: none;
+              margin-right: 60px;
+            }
+          }
           &__grid {
             position: relative;
             top: 1rem;
-            left: 0.2rem;
+            // left: 0.2rem;
             width: 270px;
             div {
               border-bottom: 1px solid #eee;

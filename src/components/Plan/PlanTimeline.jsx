@@ -7,13 +7,18 @@ import SetTime from "../UI/SetTime";
 import SetTheme from "../UI/SetTheme";
 import "./PlanTimeline.scss";
 import "./Plan.scss";
+import { filter } from "lodash";
 
 const ReactGridLayout = WidthProvider(RGL);
 
 const PlanTimeline = ({
+  day,
   saveBtnClicked,
   setSaveBtnClicked,
   handleSavePlanBtn,
+  filterByDay,
+  setFilterByDay,
+  oneDayPlanList,
 }) => {
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
@@ -29,18 +34,16 @@ const PlanTimeline = ({
   const [layoutState, setLayoutState] = useState({ layout: [] });
   const [planCardsList, setPlanCardsList] = useState([]);
 
-  useEffect(() => {
-    setLayoutState(generateLayout());
-    setPlanCardsList(planCards);
-  }, []);
-
+  // Day별로 필터링 하는 용도
+  // Timeline에서 드래그앤드랍으로 수정할때마다 변경하는걸 알아야할듯?!
+  // 그래야 다시 필터링해서 정렬이 가능..!
   useEffect(() => {
     if (saveBtnClicked) {
       handleSaveBtn();
       setSaveBtnClicked(false);
     }
   }, [saveBtnClicked]);
-
+  // 저장버튼 클릭 시 변경 된 startTime, endTime이 저장된다.
   useEffect(() => {
     if (planCardsList) {
       let newPlanCardsList = planCardsList.map((plan, idx) => {
@@ -55,7 +58,6 @@ const PlanTimeline = ({
           ((layoutState[idx].y + layoutState[idx].h) % 4) * 15 === 0
             ? "00"
             : ((layoutState[idx].y + layoutState[idx].h) % 4) * 15;
-
         let newPlan = Object.assign({}, plan, {
           startTime: startHour + ":" + startMin,
           endTime: endHour + ":" + endMin,
@@ -70,11 +72,16 @@ const PlanTimeline = ({
 
   useEffect(() => {
     setLayoutState(generateLayout());
-    setPlanCardsList(planCards);
-  }, [planCards]);
+    setPlanCardsList(oneDayPlanList);
+  }, [oneDayPlanList]);
+
+  // useEffect(() => {
+  //   setLayoutState(generateLayout());
+  //   setPlanCardsList(planCards);
+  // }, [planCards]);
 
   const generateLayout = () => {
-    return (planCards || []).map((plancard, idx) => {
+    return (oneDayPlanList || []).map((plancard, idx) => {
       const { startTime, endTime } = plancard;
       const startHour = Number(startTime.split(":")[0]);
       const startMin = Number(startTime.split(":")[1]);
@@ -96,7 +103,9 @@ const PlanTimeline = ({
     setLayoutState(layout);
   };
 
+  // Timeline에 있는 일정들을 PlanCards 데이터로 변환
   const handleSaveBtn = () => {
+    // 드래그앤 드랍할때마다 planCardsList에 저장된다.
     if (planCardsList) {
       // 변경된 layout을 -> 새 일정으로 등록! (setPlanCardsList)
       let newPlanCardsList = planCardsList.map((plan, idx) => {
@@ -120,16 +129,19 @@ const PlanTimeline = ({
           startTime: startHour + ":" + startMin,
           endTime: endHour + ":" + endMin,
         });
+        console.log("저장 시 day 및 값들", day, newPlan);
         return newPlan;
       });
+      console.log("저장 시 filterByDay = 동일해야한다..!", filterByDay);
+      // console.log("이 값을", newPlanCardsList);
+      // console.log("여기서 갈아끼워야 함", filterByDay[day - 1]);
+      filterByDay[day - 1] = newPlanCardsList;
+      // console.log("이렇게 바꾸면 되나?", filterByDay[day - 1]);
       setPlanCardsList(newPlanCardsList);
-      handleSavePlanBtn(newPlanCardsList);
-      dispatch(getPlanCards({ planCards: newPlanCardsList }));
+      handleSavePlanBtn();
+      // dispatch(getPlanCards({ planCards: newPlanCardsList }));
     }
   };
-
-  // console.log("layoutState", layoutState);
-  // console.log("newPlanCardsList", planCardsList);
 
   return (
     <ReactGridLayout
