@@ -199,16 +199,16 @@ const PlanPage = () => {
     // 내 일정만 보기인 경우
     if (viewOnlyMine) {
       //리덕스 값
-      for (let i = 0; i < planCards.planCards.length; i++) {
+      for (let i = 0; i < planCards.length; i++) {
         // 마커 만들기 (시작)
         const position = new window.kakao.maps.LatLng(
-          planCards.planCards[i].coordinates[0],
-          planCards.planCards[i].coordinates[1],
+          planCards[i].coordinates[0],
+          planCards[i].coordinates[1],
         );
         const marker = new window.kakao.maps.Marker({
           map,
           position,
-          title: planCards.planCards[i].address,
+          title: planCards[i].address,
         });
         const customOverlayContent = document.createElement("div");
         const innerOverlayContent = document.createElement("div");
@@ -224,9 +224,9 @@ const PlanPage = () => {
         // const iwContent = `<div style="padding:5px;">${planCards.planCards[i].comment}</div>`;
         const iwContent =
           "<div class='infoWindow'>" +
-          `<div class='time'>${planCards.planCards[i].startTime} ~ ${planCards.planCards[i].endTime}</div>` +
-          `<div class='title'>${planCards.planCards[i].comment}</div>` +
-          `<div class='address'>${planCards.planCards[i].address}</div>` +
+          `<div class='time'>${planCards[i].startTime} ~ ${planCards[i].endTime}</div>` +
+          `<div class='title'>${planCards[i].comment}</div>` +
+          `<div class='address'>${planCards[i].address}</div>` +
           "</div>";
         // 마커에 표시할 인포윈도우를 생성합니다
         const infowindow = new window.kakao.maps.InfoWindow({
@@ -246,11 +246,11 @@ const PlanPage = () => {
 
         // 선 만들기 (시작)
         let linePath: any = [];
-        for (let i = 0; i < planCards.planCards.length; i++) {
+        for (let i = 0; i < planCards.length; i++) {
           linePath.push(
             new window.kakao.maps.LatLng(
-              planCards.planCards[i].coordinates[0],
-              planCards.planCards[i].coordinates[1],
+              planCards[i].coordinates[0],
+              planCards[i].coordinates[1],
             ),
           );
         }

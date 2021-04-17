@@ -178,10 +178,11 @@ const AddPlan = ({
     }
     if (type === "addPlan") {
       let max = planCards.reduce((plan: any, cur: any) => {
-        return Number(plan.endTime.split(":")[0]) * 60 +
-          Number(plan.endTime.split(":")[1]) >
-          Number(cur.endTime.split(":")[0]) * 60 +
-            Number(cur.endTime.split(":")[1])
+        return plan.day !== currentDay ||
+          Number(plan.endTime.split(":")[0]) * 60 +
+            Number(plan.endTime.split(":")[1]) >
+            Number(cur.endTime.split(":")[0]) * 60 +
+              Number(cur.endTime.split(":")[1])
           ? plan
           : cur;
       });
@@ -212,9 +213,9 @@ const AddPlan = ({
           }),
         }),
       );
-      close();
-      return;
     }
+    // 임시처리 - 지우기
+    handleCloseBtn();
     if (type === "requestCuration" && inputDesc === "") {
       refDesc.current?.focus();
       return;
@@ -265,7 +266,7 @@ const AddPlan = ({
         <div
           className={`addPlan ${type === "requestCuration" ? "addDesc" : ""}`}
         >
-          <button className="addPlan__cancle-btn" onClick={close}>
+          <button className="addPlan__cancle-btn" onClick={handleCloseBtn}>
             &times;
           </button>
           <div className="addPlan__wrapper">
