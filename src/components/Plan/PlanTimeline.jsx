@@ -31,7 +31,7 @@ const PlanTimeline = ({
     },
   } = state;
 
-  const [layoutState, setLayoutState] = useState({ layout: [] });
+  const [layoutState, setLayoutState] = useState([]);
   const [planCardsList, setPlanCardsList] = useState([]);
 
   useEffect(() => {
@@ -44,21 +44,14 @@ const PlanTimeline = ({
     setPlanCardsList(oneDayPlanList);
   }, [filterByDay]);
 
-  // Day별로 필터링 하는 용도
-  // Timeline에서 드래그앤드랍으로 수정할때마다 변경하는걸 알아야할듯?!
-  // 그래야 다시 필터링해서 정렬이 가능..!
   useEffect(() => {
     if (saveBtnClicked) {
       handleSaveBtn();
       setSaveBtnClicked(false);
     }
   }, [saveBtnClicked]);
-  // 저장버튼 클릭 시 변경 된 startTime, endTime이 저장된다.
+
   useEffect(() => {
-    // console.log("layout", layoutState);
-    // console.log("planCards", planCards);
-    // console.log("planCardsList", planCardsList);
-    // console.log("oneDay", oneDayPlanList);
     if (planCardsList && planCardsList.length !== 0 && !layoutState.layout) {
       let newPlanCardsList = oneDayPlanList.map((plan, idx) => {
         let startHour = Math.floor(layoutState[idx].y / 4);
@@ -83,11 +76,6 @@ const PlanTimeline = ({
       }
     }
   }, [layoutState]);
-
-  // useEffect(() => {
-  //   setLayoutState(generateLayout());
-  //   setPlanCardsList(planCards);
-  // }, [planCards]);
 
   const generateLayout = () => {
     return (oneDayPlanList || []).map((plancard, idx) => {
@@ -114,14 +102,8 @@ const PlanTimeline = ({
 
   // Timeline에 있는 일정들을 PlanCards 데이터로 변환
   const handleSaveBtn = () => {
-    // 드래그앤 드랍할때마다 planCardsList에 저장된다.
     if (planCardsList) {
-      // 변경된 layout을 -> 새 일정으로 등록! (setPlanCardsList)
       let newPlanCardsList = planCardsList.map((plan, idx) => {
-        // console.log("plan", plan);
-        // console.log("layout", layoutState[idx]);
-
-        // y,h -> startTime, endTime 변환
         let startHour = Math.floor(layoutState[idx].y / 4);
         let startMin =
           (layoutState[idx].y % 4) * 15 === 0
@@ -142,10 +124,7 @@ const PlanTimeline = ({
         return newPlan;
       });
       console.log("저장 시 filterByDay = 동일해야한다..!", filterByDay);
-      // console.log("이 값을", newPlanCardsList);
-      // console.log("여기서 갈아끼워야 함", filterByDay[day - 1]);
       filterByDay[day - 1] = newPlanCardsList;
-      // console.log("이렇게 바꾸면 되나?", filterByDay[day - 1]);
       setPlanCardsList(newPlanCardsList);
       handleSavePlanBtn();
       // dispatch(getPlanCards({ planCards: newPlanCardsList }));
