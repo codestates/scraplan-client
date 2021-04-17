@@ -13,6 +13,7 @@ interface AddPlanProps {
   LatLng: any;
   setSearchLatLng?: any;
   moveKakaoMap?: any;
+  currentDay?: number;
 }
 
 // SetTime으로 부터 startTime, endTime 추가로 계산한 기간까지 가져오는 용도
@@ -29,6 +30,7 @@ const AddPlan = ({
   LatLng,
   setSearchLatLng,
   moveKakaoMap,
+  currentDay,
 }: AddPlanProps) => {
   const state = useSelector((state: RootState) => state);
   const {
@@ -176,10 +178,11 @@ const AddPlan = ({
     }
     if (type === "addPlan") {
       let max = planCards.reduce((plan: any, cur: any) => {
-        return Number(plan.endTime.split(":")[0]) * 60 +
-          Number(plan.endTime.split(":")[1]) >
-          Number(cur.endTime.split(":")[0]) * 60 +
-            Number(cur.endTime.split(":")[1])
+        return plan.day !== currentDay ||
+          Number(plan.endTime.split(":")[0]) * 60 +
+            Number(plan.endTime.split(":")[1]) >
+            Number(cur.endTime.split(":")[0]) * 60 +
+              Number(cur.endTime.split(":")[1])
           ? plan
           : cur;
       });
@@ -203,7 +206,7 @@ const AddPlan = ({
           isValid,
           isMember,
           planCards: planCards.concat({
-            day: 1,
+            day: currentDay,
             startTime: max.endTime,
             endTime: endHour + ":" + endMin,
             comment: inputTitle,
@@ -211,8 +214,9 @@ const AddPlan = ({
           }),
         }),
       );
-      return;
     }
+    // 임시처리 - 지우기
+    handleCloseBtn();
     if (type === "requestCuration" && inputDesc === "") {
       refDesc.current?.focus();
       return;
@@ -263,7 +267,7 @@ const AddPlan = ({
         <div
           className={`addPlan ${type === "requestCuration" ? "addDesc" : ""}`}
         >
-          <button className="addPlan__cancle-btn" onClick={close}>
+          <button className="addPlan__cancle-btn" onClick={handleCloseBtn}>
             &times;
           </button>
           <div className="addPlan__wrapper">

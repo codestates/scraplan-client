@@ -60,9 +60,6 @@ const PlanList = ({
 
   const refDaySlide = useRef<HTMLUListElement>(null);
 
-  // console.log(planId);
-  // console.log("-----------------------", planCards);
-  // planpage가 기존에 있던건지, 새로 만든건지 파악 후 렌더링해주는 것
   useEffect(() => {
     // [] 으로 수정 예정
     console.log("왜 처음에 planId 안들어옴?", planId);
@@ -373,11 +370,12 @@ const PlanList = ({
     setInputAddrGu(gu);
   };
 
-  const handleAddrReset = (): void => {
-    setInputAddrSi("선택");
-    setInputAddrGun("선택");
-    setInputAddrGu("선택");
-  };
+  // const handleAddrReset = (): void => {
+  //   setInputAddrSi("선택");
+  //   setInputAddrGun("선택");
+  //   setInputAddrGu("선택");
+  // };
+
   useEffect(() => {
     refDaySlide.current?.style.setProperty(
       "transition",
@@ -389,8 +387,6 @@ const PlanList = ({
       `translateX(-${currentDay - 1}00%)`,
       "important",
     );
-    console.log("현재 날짜", currentDay);
-    console.log("이동중");
   }, [currentDay]);
 
   const handleMovePrevDay = useCallback(() => {
@@ -399,9 +395,9 @@ const PlanList = ({
     }
   }, [currentDay]);
 
-  const handleMoveNestDay = () => {
+  const handleMoveNextDay = () => {
     if (currentDay === dayCount.length) {
-      alert("추가 할래용?");
+      // Modal로 물어보기
       let addDayCount = [...dayCount].concat(dayCount.length + 1);
       setDayCount(addDayCount);
       setFilterByDay([...filterByDay].concat([[]]));
@@ -423,7 +419,6 @@ const PlanList = ({
   };
 
   const handleSelectDay = (day: number) => {
-    // alert("날짜 선택!");
     setCurrentDay(day + 1);
     handleShowPlanlistThatDay(day + 1);
     setShowDayList(false);
@@ -439,6 +434,7 @@ const PlanList = ({
         LatLng={LatLng}
         setSearchLatLng={setSearchLatLng}
         moveKakaoMap={moveKakaoMap}
+        currentDay={currentDay}
       />
       <div className="planlist__toggle" onClick={handleListState}>
         <img src="/images/prev-pink.png"></img>
@@ -602,7 +598,7 @@ const PlanList = ({
               )}
               <button
                 className="planlist__dailyplan__top-bar__next"
-                onClick={handleMoveNestDay}
+                onClick={handleMoveNextDay}
               >
                 {">"}
               </button>
