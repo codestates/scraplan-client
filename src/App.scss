@@ -22,13 +22,19 @@ body {
 
 .mainpage {
   position: absolute;
+  &__path {
+    z-index: -3;
+    width: 80vw;
+    position: absolute;
+    margin-left: 15vw;
+    margin-top: 55vh;
+  }
   .move-to-top__btn {
     position: fixed;
     right: 2vw;
     bottom: 4vh;
     width: 4rem;
     height: 4rem;
-    // background-color: #ccc;
     img {
       width: 100%;
       transform: rotate(180deg);
