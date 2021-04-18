@@ -1,13 +1,91 @@
-import React from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Navbar from "../components/UI/Navbar";
+import scrollEventListener from "../hooks/scrollEventListener";
 import { Link } from "react-router-dom";
 
 const MainPage = () => {
+  const [page, setPage] = useState(0);
+  const [bottomBtn, setBottomBtn] = useState(false);
+
+  const mainRef = useRef();
+  const topRef = useRef();
+  const firstRef = useRef();
+  const secondRef = useRef();
+  const thirdRef = useRef();
+  const fourthRef = useRef();
+  const fifthRef = useRef();
+  const footerRef = useRef();
+
+  // const [target, setTarget] = useState(null);
+  // const [nextTarget, setNextTarget] = useState(null);
+
+  // useEffect(() => {
+  //   setTarget(firstRef.current);
+  //   setNextTarget(secondRef.current);
+  // }, []);
+
+  // useEffect(() => {
+  //   let observer;
+  //   if (target) {
+  //     observer = new IntersectionObserver(
+  //       ([entry]) => {
+  //         if (entry.isIntersecting) {
+  //           nextTarget.scrollIntoView({
+  //             behavior: "smooth",
+  //           });
+  //         }
+  //       },
+  //       { threshold: 0.5 },
+  //     );
+  //     observer.observe(target);
+  //     // setTarget(secondRef.current);
+  //   }
+  //   return () => observer && observer.disconnect();
+  // });
+
+  useEffect(() => {
+    let observer;
+    if (topRef.current) {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setBottomBtn(!bottomBtn);
+          }
+        },
+        { threshold: 0.6 },
+      );
+      observer.observe(topRef.current);
+    }
+    return () => observer && observer.disconnect();
+  });
+
   return (
     <>
       <Navbar currentPage="/" />
       <div className="mainpage">
-        <div className="mainpage__page">
+        <button className={`bottom-btn ${bottomBtn ? "fixToBottom" : ""}`}>
+          일정 만들러 가기
+        </button>
+        <button
+          className="move-to-top__btn"
+          onClick={() => {
+            topRef.current.scrollIntoView({
+              behavior: "smooth",
+            });
+          }}
+        >
+          <img src="/images/top.gif" alt="" />
+          <p>맨위로</p>
+        </button>
+        <div
+          className="mainpage__page"
+          ref={topRef}
+          onClick={() => {
+            firstRef.current.scrollIntoView({
+              behavior: "smooth",
+            });
+          }}
+        >
           <div className="mainpage__body">
             <div className="mainpage__texts">
               <div className="mainpage__title">
@@ -31,7 +109,15 @@ const MainPage = () => {
           <button>내일정 만들기</button>
           <button>구경하기</button>
         </div> */}
-        <div className="mainpage__page">
+        <div
+          className="mainpage__page"
+          ref={firstRef}
+          onClick={() => {
+            secondRef.current.scrollIntoView({
+              behavior: "smooth",
+            });
+          }}
+        >
           <div className="mainpage__body">
             <img className="left-img" src="/images/mainpage/step1.png" alt="" />
             <div className="mainpage__texts right-text">
@@ -51,8 +137,7 @@ const MainPage = () => {
             </div>
           </div>
         </div>
-
-        <div className="mainpage__page">
+        <div className="mainpage__page second-step" ref={secondRef}>
           <div className="mainpage__body">
             <div className="mainpage__texts">
               <div className="mainpage__step">Step 2</div>
@@ -67,7 +152,15 @@ const MainPage = () => {
                 다른 사람들의 의견은 어떨까요?
               </div>
               <div className="mainpage__next-btn">
-                <button>next</button>
+                <button
+                  onClick={() => {
+                    thirdRef.current.scrollIntoView({
+                      behavior: "smooth",
+                    });
+                  }}
+                >
+                  next
+                </button>
               </div>
             </div>
             <img
@@ -77,7 +170,7 @@ const MainPage = () => {
             />
           </div>
         </div>
-        <div className="mainpage__page">
+        <div className="mainpage__page third-step" ref={thirdRef}>
           <div className="mainpage__body">
             <img className="left-img" src="/images/mainpage/step3.png" alt="" />
             <div className="mainpage__texts right-text">
@@ -92,12 +185,20 @@ const MainPage = () => {
                 실시간으로 경로를 눈으로 확인할 수 있어요.
               </div>
               <div className="mainpage__next-btn">
-                <button>next</button>
+                <button
+                  onClick={() => {
+                    fourthRef.current.scrollIntoView({
+                      behavior: "smooth",
+                    });
+                  }}
+                >
+                  next
+                </button>
               </div>
             </div>
           </div>
         </div>
-        <div className="mainpage__page">
+        <div className="mainpage__page fourth-step" ref={fourthRef}>
           <div className="mainpage__body">
             <div className="mainpage__texts">
               <div className="mainpage__step">Step 4</div>
@@ -112,7 +213,15 @@ const MainPage = () => {
                 친구와 함께 일정표를 볼 수 있어요.
               </div>
               <div className="mainpage__next-btn">
-                <button>next</button>
+                <button
+                  onClick={() => {
+                    fifthRef.current.scrollIntoView({
+                      behavior: "smooth",
+                    });
+                  }}
+                >
+                  next
+                </button>
               </div>
             </div>
             <img
@@ -122,7 +231,15 @@ const MainPage = () => {
             />
           </div>
         </div>
-        <div className="mainpage__page">
+        <div
+          className="mainpage__page fifth-step"
+          onClick={() => {
+            footerRef.current.scrollIntoView({
+              behavior: "smooth",
+            });
+          }}
+          ref={fifthRef}
+        >
           <div className="mainpage__body">
             <div className="mainpage__texts left-text">
               <div className="mainpage__title">
@@ -142,7 +259,15 @@ const MainPage = () => {
             />
           </div>
         </div>
-        <div className="mainpage__footer">
+        <div
+          className="mainpage__footer"
+          onClick={() => {
+            topRef.current.scrollIntoView({
+              behavior: "smooth",
+            });
+          }}
+          ref={footerRef}
+        >
           {/* <img
             className="mainpage__bg-end"
             src="/images/mainpage/bg-end.jpg"

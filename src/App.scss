@@ -22,6 +22,26 @@ body {
 
 .mainpage {
   position: absolute;
+  .move-to-top__btn {
+    position: fixed;
+    right: 2vw;
+    bottom: 4vh;
+    width: 4rem;
+    height: 4rem;
+    // background-color: #ccc;
+    img {
+      width: 100%;
+      transform: rotate(180deg);
+    }
+    p {
+      margin-top: -0.8rem;
+      font-weight: 500;
+      color: #888;
+    }
+  }
+  .bottom-btn {
+    display: none;
+  }
   &__page {
     display: flex;
     flex-direction: column;
@@ -116,7 +136,34 @@ body {
 }
 
 @media (max-width: 768px) {
+  .navbar {
+    button {
+      display: none;
+    }
+  }
   .mainpage {
+    .move-to-top__btn {
+    }
+    .bottom-btn {
+      position: fixed;
+      display: block;
+      right: 2rem;
+      bottom: 2rem;
+      width: 90%;
+      height: 3.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #fff;
+      background-color: #f36672a6;
+    }
+    .fixToBottom {
+      transition: all ease 0.2s;
+      border-radius: 0;
+      width: 100%;
+      right: 0;
+      bottom: 0;
+    }
     &__body {
       display: flex;
       flex-direction: column;
