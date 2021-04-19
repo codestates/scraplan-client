@@ -12,6 +12,9 @@ interface ForAddPlanProps {
   setSearchLatLng?: any;
   moveKakaoMap?: any;
   planId: number | string | undefined;
+  currentDay: number;
+  moveToTheNextDay: () => void;
+  moveToThePrevDay: () => void;
 }
 
 const PlanList = ({
@@ -19,6 +22,9 @@ const PlanList = ({
   setSearchLatLng,
   moveKakaoMap,
   planId,
+  currentDay,
+  moveToTheNextDay,
+  moveToThePrevDay,
 }: ForAddPlanProps) => {
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state);
@@ -27,7 +33,7 @@ const PlanList = ({
       user: { token, email, nickname },
     },
     planReducer: {
-      planCards: { isValid, isMember, planCards },
+      planList: { isValid, isMember, planCards },
     },
   } = state;
   const [openList, setOpenList] = useState<boolean>(true);
@@ -52,13 +58,137 @@ const PlanList = ({
   const [addrListGun, setAddrListGun] = useState<string[] | undefined>();
   const [addrListGu, setAddrListGu] = useState<string[] | undefined>();
   const [dayCount, setDayCount] = useState<number[]>([1]);
-  const [currentDay, setCurrentDay] = useState<number>(1);
   const [showDayList, setShowDayList] = useState<boolean>(false);
   const [filterByDay, setFilterByDay] = useState<any>([]);
   // filterByDay = [[Day1의 일정], [Day2의 일정], [Day3의 일정], ...]
   // 초기값을 (데이터가 있을 경우) filterByDay.length = 총 Day count => setDayCount
 
   const refDaySlide = useRef<HTMLUListElement>(null);
+
+  // useEffect(() => {
+  //   // [] 으로 수정 예정
+  //   const initialPlanId = Number(location.pathname.split("/")[2]);
+  //   if (initialPlanId) {
+  //     let initialplanLists = {
+  //       isValid: false,
+  //       isMember: false,
+  //       planCards: [
+  //         {
+  //           day: 1,
+  //           startTime: "10:00",
+  //           endTime: "10:15",
+  //           comment: "기존페이지 1-1",
+  //           theme: 1,
+  //           coordinates: [37.55, 126.92],
+  //           address: "장소1",
+  //         },
+  //         {
+  //           day: 1,
+  //           startTime: "10:30",
+  //           endTime: "10:45",
+  //           comment: "기존페이지 1-2",
+  //           theme: 2,
+  //           coordinates: [37.53, 126.89],
+  //           address: "장소2",
+  //         },
+  //         {
+  //           day: 1,
+  //           startTime: "10:45",
+  //           endTime: "11:00",
+  //           comment: "기존페이지 1-3",
+  //           theme: 3,
+  //           coordinates: [37.53, 126.89],
+  //           address: "장소2",
+  //         },
+  //         {
+  //           day: 1,
+  //           startTime: "11:00",
+  //           endTime: "11:30",
+  //           comment: "기존페이지 1-4",
+  //           theme: 4,
+  //           coordinates: [37.53, 126.89],
+  //           address: "장소2",
+  //         },
+  //         {
+  //           day: 2,
+  //           startTime: "10:00",
+  //           endTime: "10:15",
+  //           comment: "기존페이지 2-1",
+  //           theme: 1,
+  //           coordinates: [37.55, 126.92],
+  //           address: "장소1",
+  //         },
+  //         {
+  //           day: 2,
+  //           startTime: "10:30",
+  //           endTime: "10:45",
+  //           comment: "기존페이지 2-2",
+  //           theme: 2,
+  //           coordinates: [37.53, 126.89],
+  //           address: "장소2",
+  //         },
+  //         {
+  //           day: 2,
+  //           startTime: "10:45",
+  //           endTime: "11:00",
+  //           comment: "기존페이지 2-3",
+  //           theme: 3,
+  //           coordinates: [37.53, 126.89],
+  //           address: "장소2",
+  //         },
+  //         {
+  //           day: 3,
+  //           startTime: "10:45",
+  //           endTime: "11:30",
+  //           comment: "기존페이지 3-1",
+  //           theme: 2,
+  //           coordinates: [37.53, 126.89],
+  //           address: "장소2",
+  //         },
+  //         {
+  //           day: 4,
+  //           startTime: "10:45",
+  //           endTime: "11:30",
+  //           comment: "기존페이지 4-1",
+  //           theme: 2,
+  //           coordinates: [37.53, 126.89],
+  //           address: "장소2",
+  //         },
+  //       ],
+  //     };
+  //     dispatch(getPlanCards(initialplanLists));
+  //     return;
+  //   } else {
+  //     // planId가 없다 = newpage에 기본값들
+  //     console.log("page가 number아닐 때 실행되나?");
+  //     let initialplanLists = {
+  //       isValid: false,
+  //       isMember: false,
+  //       planCards: [
+  //         {
+  //           day: 1,
+  //           startTime: "10:00",
+  //           endTime: "10:15",
+  //           comment: "1-1",
+  //           theme: 1,
+  //           coordinates: [37.55, 126.92],
+  //           address: "장소1",
+  //         },
+  //         {
+  //           day: 1,
+  //           startTime: "10:30",
+  //           endTime: "11:00",
+  //           comment: "1-2",
+  //           theme: 2,
+  //           coordinates: [37.53, 126.89],
+  //           address: "장소2",
+  //         },
+  //       ],
+  //     };
+  //     dispatch(getPlanCards(initialplanLists));
+  //     return;
+  //   }
+  // }, []);
 
   useEffect(() => {
     // [] 으로 수정 예정
@@ -216,12 +346,14 @@ const PlanList = ({
       return result;
     };
     // Day별로 분류된 Planlist
-    const filter = dayfilter(planCards);
-    // dayCount 초기값
-    const initialDayCount = makeDayCountArray(filter);
+    if (planCards) {
+      const filter = dayfilter(planCards);
+      // dayCount 초기값
+      const initialDayCount = makeDayCountArray(filter);
 
-    setFilterByDay(filter);
-    setDayCount(initialDayCount);
+      setFilterByDay(filter);
+      setDayCount(initialDayCount);
+    }
   }, [planCards]);
 
   useEffect(() => {
@@ -271,9 +403,9 @@ const PlanList = ({
   };
 
   const handleSavePlanBtn = () => {
-    let finalPlanlist = filterByDay.flat();
-    console.log(finalPlanlist);
-    dispatch(getPlanCards({ planCards: finalPlanlist, isMember, isValid }));
+    let finalPlanCards = filterByDay.flat();
+    console.log(finalPlanCards);
+    dispatch(getPlanCards({ planCards: finalPlanCards, isMember, isValid }));
     if (!isMember) {
       // isMember === false -> 로그인창
     } else {
@@ -297,7 +429,7 @@ const PlanList = ({
               (inputAddrGun === "선택" ? "" : inputAddrGun) +
               " " +
               (inputAddrGu === "선택" ? "" : inputAddrGu),
-            planCards,
+            finalPlanCards,
           }),
         })
           .then((res) => res.json())
@@ -320,7 +452,7 @@ const PlanList = ({
               title: inputTitle,
               public: isShare,
               // represnetAddr:
-              planCards,
+              finalPlanCards,
             }),
           })
             .then((res) => res.json())
@@ -340,7 +472,7 @@ const PlanList = ({
               title: inputTitle,
               public: isShare,
               // represnetAddr:
-              planCards,
+              finalPlanCards,
             }),
           })
             .then((res) => res.json())
@@ -390,19 +522,20 @@ const PlanList = ({
 
   const handleMovePrevDay = useCallback(() => {
     if (currentDay !== 1) {
-      setCurrentDay(currentDay - 1);
+      moveToThePrevDay();
     }
   }, [currentDay]);
 
   const handleMoveNextDay = () => {
     if (currentDay === dayCount.length) {
       // Modal로 물어보기
-      let addDayCount = [...dayCount].concat(dayCount.length + 1);
+      alert("일단 지우고, 뜨면 처음부터 안되는 것");
+      let addDayCount = dayCount.concat([dayCount.length + 1]);
       setDayCount(addDayCount);
       setFilterByDay([...filterByDay].concat([[]]));
-      setCurrentDay(currentDay + 1);
+      moveToTheNextDay();
     } else {
-      setCurrentDay(currentDay + 1);
+      moveToTheNextDay();
     }
   };
 
@@ -418,7 +551,6 @@ const PlanList = ({
   };
 
   const handleSelectDay = (day: number) => {
-    setCurrentDay(day + 1);
     handleShowPlanlistThatDay(day + 1);
     setShowDayList(false);
   };
@@ -621,7 +753,7 @@ const PlanList = ({
                   })}
               </div>
               <ul className="plancards-by-day" ref={refDaySlide}>
-                {dayCount.map((day, idx) => {
+                {dayCount.map((_, idx) => {
                   return (
                     <li className="oneday" key={idx + 1}>
                       <PlanTimeline
