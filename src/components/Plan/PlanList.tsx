@@ -226,8 +226,11 @@ const PlanList = ({
       // dayCount 초기값
       const initialDayCount = makeDayCountArray(filter);
 
-      setFilterByDay(filter);
-      setDayCount(initialDayCount);
+      if (initialDayCount.length >= dayCount.length) {
+        console.log("초기화 한당!");
+        setFilterByDay(filter);
+        setDayCount(initialDayCount);
+      }
     }
   }, [planCards]);
 
