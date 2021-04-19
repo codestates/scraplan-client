@@ -80,7 +80,7 @@ const ViewCuration = (props: ViewCurationProps) => {
     )
       .then((res) => res.json())
       .then((body) => {
-        // setFeedbackList(body);
+        setFeedbackList(body);
       })
       .catch((err) => console.error(err));
   }, []);
@@ -99,8 +99,17 @@ const ViewCuration = (props: ViewCurationProps) => {
   );
 
   const handleCreateCurationFeedback = () => {
+    console.log(
+      JSON.stringify({
+        email,
+        curationCardId,
+        times: Number(inputFeedbackTimes),
+        comment: inputFeedbackComment,
+        rate: inputFeedbackRate,
+      }),
+    );
     fetch(`${process.env.REACT_APP_SERVER_URL}/curation-card-feedback`, {
-      method: "GET",
+      method: "POST",
       headers: {
         authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -115,7 +124,34 @@ const ViewCuration = (props: ViewCurationProps) => {
       }),
     })
       .then((res) => res.json())
+      .then(() => {
+        fetch(
+          `${process.env.REACT_APP_SERVER_URL}/curation-card-feedbacks/${curationCardId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              credentials: "include",
+            },
+          },
+        )
+          .then((res) => res.json())
+          .then((body) => {
+            setFeedbackList(body);
+          })
+          .catch((err) => console.error(err));
+      })
       .catch((err) => console.error(err));
+  };
+
+  const handleGetRequestTheme = (themeIndex: number) => {
+    setInputFeedbackRate(themeIndex);
+  };
+
+  const handleGetRequestTime = (period: string) => {
+    setInputFeedbackTimes(
+      Number(period.split(":")[0]) + Number(period.split(":")[1]) / 60,
+    );
   };
 
   const handleClickCloseBtn = (e: any) => {
@@ -172,8 +208,11 @@ const ViewCuration = (props: ViewCurationProps) => {
                     생각하시나요?
                   </p>
                   <div className="viewcuration__contents__feedback__top-bar__form">
-                    <SetTheme />
-                    <SetTime />
+                    <SetTheme
+                      type="feedback"
+                      giveThemeIndexToParent={handleGetRequestTheme}
+                    />
+                    <SetTime giveTimeToParent={handleGetRequestTime} />
                     <input
                       type="text"
                       placeholder="피드백을 입력해주세요"

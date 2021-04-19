@@ -225,6 +225,7 @@ const AddPlan = ({
       return;
     }
     if (type === "requestCuration") {
+      console.log([Number(forRequestLatLng[0]), Number(forRequestLatLng[1])]);
       return fetch(`${process.env.REACT_APP_SERVER_URL}/curation-request`, {
         method: "POST",
         headers: {
@@ -235,7 +236,10 @@ const AddPlan = ({
         body: JSON.stringify({
           requestTitle: inputTitle,
           email,
-          coordinates: encodeURIComponent(JSON.stringify(forRequestLatLng)),
+          coordinates: [
+            Number(forRequestLatLng[0]),
+            Number(forRequestLatLng[1]),
+          ],
           address: forRequestAddress,
           requestComment: inputDesc,
           // 수정

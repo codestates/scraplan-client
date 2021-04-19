@@ -421,8 +421,6 @@ const PlanPage = () => {
       },
       { day: currentDay, endTime: "10:00" },
     );
-    console.log("maxxxxx", max);
-
     let endMin =
       (Number(max.endTime.split(":")[1]) +
         Number((avgTime % 1).toFixed(2)) * 100) %
@@ -464,6 +462,7 @@ const PlanPage = () => {
         moveKakaoMap={moveKakaoMap}
         planId={planId}
         currentDay={currentDay}
+        setCurrentDay={setCurrentDay}
         moveToTheNextDay={moveToTheNextDay}
         moveToThePrevDay={moveToThePrevDay}
       />

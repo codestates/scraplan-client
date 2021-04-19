@@ -10,7 +10,7 @@ interface ThemeProps {
 const SetTheme = ({ themeIndex, type, giveThemeIndexToParent }: ThemeProps) => {
   const themeList =
     type === "feedback"
-      ? ["😃", "🤔", "😡"]
+      ? ["😡", "🤔", "😃"]
       : ["🍽", "☕️", "🕹", "🚴🏻", "🚗", "🤔"];
   const [currentThemeIndex, setCurrentThemeIndex] = useState<number>(
     themeIndex || 0,

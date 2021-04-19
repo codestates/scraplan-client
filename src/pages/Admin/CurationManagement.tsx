@@ -403,6 +403,29 @@ const CurationManagement = () => {
       .then((body) => {
         if (body.message === "successfully added") {
           // Modal로 성공했다고 표시
+          if (Object.keys(curationResolved).length !== 0) {
+            const { id } = curationResolved;
+            fetch(`${process.env.REACT_APP_SERVER_URL}/curation-request`, {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+                credentials: "include",
+                authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({
+                email,
+                id,
+                status: 2,
+              }),
+            })
+              .then((res) => res.json())
+              .then((body) => {
+                if (body.message === "Successfully updated status") {
+                  // Modal - 승인 완료
+                }
+              })
+              .catch((err) => console.error(err));
+          }
         } else {
           // Modal로 실패했다고 표시
         }
@@ -410,29 +433,6 @@ const CurationManagement = () => {
       .catch((err) => console.error(err));
 
     // 요청으로 들어온 경우 승인처리
-    if (Object.keys(curationResolved).length !== 0) {
-      const { id } = curationResolved;
-      await fetch(`${process.env.REACT_APP_SERVER_URL}/curation-requests`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          credentials: "include",
-          authorization: token,
-        },
-        body: JSON.stringify({
-          email,
-          id,
-          status: 2,
-        }),
-      })
-        .then((res) => res.json())
-        .then((body) => {
-          if (body.message === "Successfully updated status") {
-            // Modal - 승인 완료
-          }
-        })
-        .catch((err) => console.error(err));
-    }
   };
 
   const handleEditCurationCard = () => {

@@ -13,6 +13,7 @@ interface ForAddPlanProps {
   moveKakaoMap?: any;
   planId: number | string | undefined;
   currentDay: number;
+  setCurrentDay: any;
   moveToTheNextDay: () => void;
   moveToThePrevDay: () => void;
 }
@@ -23,6 +24,7 @@ const PlanList = ({
   moveKakaoMap,
   planId,
   currentDay,
+  setCurrentDay,
   moveToTheNextDay,
   moveToThePrevDay,
 }: ForAddPlanProps) => {
@@ -86,6 +88,8 @@ const PlanList = ({
       //실험용
       dispatch(
         getPlanCards({
+          isMember: false,
+          isValid: false,
           planCards: [
             {
               day: 1,
@@ -175,6 +179,8 @@ const PlanList = ({
       // planId가 없다 = newpage에 기본값들
       dispatch(
         getPlanCards({
+          isMember: false,
+          isValid: false,
           planCards: [
             {
               day: 1,
@@ -204,14 +210,22 @@ const PlanList = ({
   useEffect(() => {
     const dayfilter = (arr: any) => {
       let result: any = [];
-      for (let i = 0; i < arr.length; i++) {
-        if (result.length < arr[i].day) {
-          result.push([]);
+      let maxDay = arr.reduce(
+        (acc: any, cur: any) => {
+          return acc.day > cur.day ? acc : cur;
+        },
+        { day: 1 },
+      );
+      for (let i = 0; i < maxDay.day; i++) {
+        result.push([]);
+      }
+      console.log("기본 세팅", result);
+      for (let j = 0; j < arr.length; j++) {
+        if (arr[j]) {
+          result[arr[j].day - 1].push(arr[j]);
         }
       }
-      for (let j = 0; j < arr.length; j++) {
-        result[arr[j].day - 1].push(arr[j]);
-      }
+      console.log("값 대입", result);
       return result;
     };
 
@@ -229,6 +243,9 @@ const PlanList = ({
       const initialDayCount = makeDayCountArray(filter);
       setFilterByDay(filter);
       setDayCount(initialDayCount);
+      if (currentDay > initialDayCount.length) {
+        setCurrentDay(initialDayCount.length);
+      }
     }
   }, [planCards]);
 

@@ -9,63 +9,40 @@ import "./Admin.scss";
 
 const CurationRequest = ({ setMenu }: any) => {
   const dispatch = useDispatch();
-  const statusCode = ["대기중", "처리중", "승인", "미승인"];
+  const statusCode = ["대기중", "처리중", "승인완료", "미승인"];
   //0, 1, 2, 3 -> pending, processing, resolved, rejected
   const state = useSelector((state: RootState) => state);
   const {
     userReducer: {
       user: { token, email, nickname },
     },
-    curationReducer,
+    curationReducer: { curationRequests },
   } = state;
 
   const [selectedMenu, setSelectedMenu] = useState<number | null>(null);
-  const [curationRequests, setCurationRequests] = useState<any>([
-    {
-      id: 0,
-      requester: "tester",
-      coordinates: [10, 10],
-      address: "서울시 강남구 ~~",
-      requestTitle: "신청제목1",
-      requestComment: "신청이유1",
-      requestTheme: 2,
-      status: 2,
-    },
-    {
-      id: 1,
-      requester: "tester",
-      coordinates: [10, 10],
-      address: "서울시 성동구 마장동",
-      requestTitle: "신청제목2",
-      requestComment: "신청이유2",
-      requestTheme: 3,
-      status: 1,
-    },
-  ]);
   const [filteredRequests, setFilteredRequests] = useState(curationRequests);
 
   useEffect(() => {
-    // getAllCurationRequests();
-  }, [curationRequests]);
-
-  // 0, 1, 2, 3, 4 -> pending, processing, resolved, rejected, deleted
-  // status : 0
+    getAllCurationRequests();
+  }, []);
 
   const getAllCurationRequests = () => {
-    fetch(`${process.env.REACT_APP_SERVER_URL}/curation-requests`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        credentials: "include",
+    fetch(
+      `${
+        process.env.REACT_APP_SERVER_URL
+      }/curation-requests/${email}/?isAdmin=${true}&pagenation=${1}`,
+      {
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          credentials: "include",
+        },
       },
-    })
+    )
       .then((res) => res.json())
       .then((body) => {
-        if (body) {
-          dispatch(getCurationsRequests(body.curationRequests));
-          setCurationRequests(body.curationRequests);
-        } else {
-        }
+        dispatch(getCurationsRequests(body.curationRequests));
       })
       .catch((err) => console.error(err));
   };
@@ -79,12 +56,12 @@ const CurationRequest = ({ setMenu }: any) => {
 
   // status : 0, 1, 3
   const handleRequestUpdate = (id: number, status: number) => {
-    fetch(`${process.env.REACT_APP_SERVER_URL}/curation-requests`, {
-      method: "PUT",
+    fetch(`${process.env.REACT_APP_SERVER_URL}/curation-request`, {
+      method: "PATCH",
       headers: {
+        authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
         credentials: "include",
-        authorization: token,
       },
       body: JSON.stringify({
         email,
@@ -152,11 +129,11 @@ const CurationRequest = ({ setMenu }: any) => {
           <p>요청번호</p>
           <p>요청자</p>
           <p>제목</p>
-          <p>상태</p>
+          <p>상태변경</p>
         </div>
         <ul className="curation-request__table__contents">
-          {filteredRequests.length > 0 &&
-            filteredRequests.map((item: any) => {
+          {curationRequests.length > 0 &&
+            curationRequests.map((item: any) => {
               const [showmore, setShowmore] = useState<boolean>(false);
               const {
                 id,
@@ -174,7 +151,7 @@ const CurationRequest = ({ setMenu }: any) => {
                   onClick={() => setShowmore(!showmore)}
                 >
                   <div className="curation-request__table__contents__item-desc">
-                    <p>{status}</p>
+                    <p>{statusCode[status]}</p>
                     <p>{id}</p>
                     <p>{requester}</p>
                     <p>{requestTitle}</p>
@@ -183,8 +160,12 @@ const CurationRequest = ({ setMenu }: any) => {
                         handleRequestUpdate(id, Number(e.target.value));
                       }}
                     >
-                      <option value={0}>대기중</option>
-                      <option value={1}>확인중</option>
+                      <option value={0} selected={status === 0 ? true : false}>
+                        대기중
+                      </option>
+                      <option value={1} selected={status !== 0 ? true : false}>
+                        확인중
+                      </option>
                     </select>
                   </div>
                   {showmore ? (

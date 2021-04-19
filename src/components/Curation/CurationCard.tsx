@@ -49,7 +49,7 @@ const CurationCard = ({ props, addEventFunc }: CurationCardProps) => {
         <div className="curation-card__info__desc">
           <span className="curation-card__info__desc-title">{title}</span>
           <div className="curation-card__info__desc-summary">
-            <span>{`⏱ ${avgTime}H`}</span>
+            <span>{`⏱ ${avgTime === 0 ? 1 : avgTime}H`}</span>
             <span>{`피드백 ${feedbackCnt}개`}</span>
           </div>
         </div>
