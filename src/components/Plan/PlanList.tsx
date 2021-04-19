@@ -12,6 +12,9 @@ interface ForAddPlanProps {
   setSearchLatLng?: any;
   moveKakaoMap?: any;
   planId: number | string | undefined;
+  currentDay: number;
+  moveToTheNextDay: () => void;
+  moveToThePrevDay: () => void;
 }
 
 const PlanList = ({
@@ -19,6 +22,9 @@ const PlanList = ({
   setSearchLatLng,
   moveKakaoMap,
   planId,
+  currentDay,
+  moveToTheNextDay,
+  moveToThePrevDay,
 }: ForAddPlanProps) => {
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state);
@@ -27,7 +33,7 @@ const PlanList = ({
       user: { token, email, nickname },
     },
     planReducer: {
-      planCards: { isValid, isMember, planCards },
+      planList: { isValid, isMember, planCards },
     },
   } = state;
   const [openList, setOpenList] = useState<boolean>(true);
@@ -52,7 +58,6 @@ const PlanList = ({
   const [addrListGun, setAddrListGun] = useState<string[] | undefined>();
   const [addrListGu, setAddrListGu] = useState<string[] | undefined>();
   const [dayCount, setDayCount] = useState<number[]>([1]);
-  const [currentDay, setCurrentDay] = useState<number>(1);
   const [showDayList, setShowDayList] = useState<boolean>(false);
   const [filterByDay, setFilterByDay] = useState<any>([]);
   // filterByDay = [[Day1의 일정], [Day2의 일정], [Day3의 일정], ...]
@@ -216,12 +221,14 @@ const PlanList = ({
       return result;
     };
     // Day별로 분류된 Planlist
-    const filter = dayfilter(planCards);
-    // dayCount 초기값
-    const initialDayCount = makeDayCountArray(filter);
+    if (planCards) {
+      const filter = dayfilter(planCards);
+      // dayCount 초기값
+      const initialDayCount = makeDayCountArray(filter);
 
-    setFilterByDay(filter);
-    setDayCount(initialDayCount);
+      setFilterByDay(filter);
+      setDayCount(initialDayCount);
+    }
   }, [planCards]);
 
   useEffect(() => {
@@ -271,9 +278,9 @@ const PlanList = ({
   };
 
   const handleSavePlanBtn = () => {
-    let finalPlanlist = filterByDay.flat();
-    console.log(finalPlanlist);
-    dispatch(getPlanCards({ planCards: finalPlanlist, isMember, isValid }));
+    let finalPlanCards = filterByDay.flat();
+    console.log(finalPlanCards);
+    dispatch(getPlanCards({ planCards: finalPlanCards, isMember, isValid }));
     if (!isMember) {
       // isMember === false -> 로그인창
     } else {
@@ -297,7 +304,7 @@ const PlanList = ({
               (inputAddrGun === "선택" ? "" : inputAddrGun) +
               " " +
               (inputAddrGu === "선택" ? "" : inputAddrGu),
-            planCards,
+            finalPlanCards,
           }),
         })
           .then((res) => res.json())
@@ -320,7 +327,7 @@ const PlanList = ({
               title: inputTitle,
               public: isShare,
               // represnetAddr:
-              planCards,
+              finalPlanCards,
             }),
           })
             .then((res) => res.json())
@@ -340,7 +347,7 @@ const PlanList = ({
               title: inputTitle,
               public: isShare,
               // represnetAddr:
-              planCards,
+              finalPlanCards,
             }),
           })
             .then((res) => res.json())
@@ -390,19 +397,20 @@ const PlanList = ({
 
   const handleMovePrevDay = useCallback(() => {
     if (currentDay !== 1) {
-      setCurrentDay(currentDay - 1);
+      moveToThePrevDay();
     }
   }, [currentDay]);
 
   const handleMoveNextDay = () => {
     if (currentDay === dayCount.length) {
       // Modal로 물어보기
-      let addDayCount = [...dayCount].concat(dayCount.length + 1);
+      alert("일단 지우고, 뜨면 처음부터 안되는 것");
+      let addDayCount = dayCount.concat([dayCount.length + 1]);
       setDayCount(addDayCount);
       setFilterByDay([...filterByDay].concat([[]]));
-      setCurrentDay(currentDay + 1);
+      moveToTheNextDay();
     } else {
-      setCurrentDay(currentDay + 1);
+      moveToTheNextDay();
     }
   };
 
@@ -418,7 +426,6 @@ const PlanList = ({
   };
 
   const handleSelectDay = (day: number) => {
-    setCurrentDay(day + 1);
     handleShowPlanlistThatDay(day + 1);
     setShowDayList(false);
   };
@@ -621,7 +628,7 @@ const PlanList = ({
                   })}
               </div>
               <ul className="plancards-by-day" ref={refDaySlide}>
-                {dayCount.map((day, idx) => {
+                {dayCount.map((_, idx) => {
                   return (
                     <li className="oneday" key={idx + 1}>
                       <PlanTimeline

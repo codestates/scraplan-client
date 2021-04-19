@@ -12,17 +12,17 @@ $light: #e8e8e8;
   right: 0;
   bottom: 0;
   left: 0;
-}
-
-.signin__outsider {
-  background-color: $mediumdark;
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  background-color: rgba(0, 0, 0, 0);
+  &__outsider {
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
 }
 
 .show {
@@ -30,7 +30,6 @@ $light: #e8e8e8;
   align-items: center;
   justify-content: center;
   animation: show-modal 0.4s;
-  background-color: #fff;
 }
 
 .signin__wrapper {
@@ -77,7 +76,7 @@ $light: #e8e8e8;
           margin-bottom: 4px;
         }
         input {
-          height: 1rem;
+          height: 1.2rem;
           width: 14rem;
           padding: 1rem;
           border: 1px solid #9b9b9c;
@@ -108,7 +107,7 @@ $light: #e8e8e8;
       background-color: $main;
       color: #fff;
       font-size: 0.8rem;
-      font-weight: 400;
+      font-weight: 500;
       &:hover {
         background-color: #b3535b;
         transition: all ease 0.3s;

@@ -409,7 +409,7 @@ const MyPage = () => {
               <div
                 className="mypage__contents__plans__add-plan"
                 onClick={() => {
-                  history.push("/planpage");
+                  history.push("/planpage/newplan");
                 }}
               >
                 <img src="/images/add.png" alt="" />

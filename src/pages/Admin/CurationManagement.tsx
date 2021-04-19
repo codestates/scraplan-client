@@ -23,7 +23,7 @@ const CurationManagement = () => {
       user: { token, email, nickname },
     },
     planReducer: {
-      planCards: { isValid, isMember, planCards },
+      planList: { isValid, isMember, planCards },
     },
     curationReducer,
   } = state;

@@ -65,41 +65,6 @@ const ViewCuration = (props: ViewCurationProps) => {
       comment: "별로!",
       rate: 0,
     },
-    {
-      curationFeedbackId: 0,
-      writer: "tester",
-      times: 1.15,
-      comment: "그냥 그랬어요",
-      rate: 1,
-    },
-    {
-      curationFeedbackId: 0,
-      writer: "tester",
-      times: 1.15,
-      comment: "편안하고 조용한 곳!!!!!!!!! 재방문할 예정",
-      rate: 2,
-    },
-    {
-      curationFeedbackId: 0,
-      writer: "tester",
-      times: 1.15,
-      comment: "편안하고 조용한 곳!!!!!!!!! 재방문할 예정",
-      rate: 2,
-    },
-    {
-      curationFeedbackId: 0,
-      writer: "tester",
-      times: 1.15,
-      comment: "편안하고 조용한 곳!!!!!!!!! 재방문할 예정",
-      rate: 2,
-    },
-    {
-      curationFeedbackId: 0,
-      writer: "tester",
-      times: 1.15,
-      comment: "편안하고 조용한 곳!!!!!!!!! 재방문할 예정",
-      rate: 2,
-    },
   ]);
 
   useEffect(() => {
@@ -115,7 +80,7 @@ const ViewCuration = (props: ViewCurationProps) => {
     )
       .then((res) => res.json())
       .then((body) => {
-        setFeedbackList(body);
+        // setFeedbackList(body);
       })
       .catch((err) => console.error(err));
   }, []);
@@ -153,7 +118,7 @@ const ViewCuration = (props: ViewCurationProps) => {
       .catch((err) => console.error(err));
   };
 
-  const handleClickCloseBtn = () => {
+  const handleClickCloseBtn = (e: any) => {
     close();
   };
 
@@ -163,7 +128,7 @@ const ViewCuration = (props: ViewCurationProps) => {
         <div>
           <div
             className="viewcuration__outsider"
-            onClick={handleClickCloseBtn}
+            onClick={(e) => handleClickCloseBtn(e)}
           ></div>
           <div className="viewcuration__wrapper">
             <div className="viewcuration__wrapper__top-bar">
@@ -176,7 +141,7 @@ const ViewCuration = (props: ViewCurationProps) => {
               </div>
               <button
                 className="viewcuration__close-btn"
-                onClick={handleClickCloseBtn}
+                onClick={(e) => handleClickCloseBtn(e)}
               >
                 &times;
               </button>
@@ -220,9 +185,10 @@ const ViewCuration = (props: ViewCurationProps) => {
                   </div>
                 </div>
                 <div className="viewcuration__contents__feedback__lists">
-                  {feedbackList.map((feedback) => {
-                    return <Feedback detail={feedback} />;
-                  })}
+                  {feedbackList &&
+                    feedbackList.map((feedback, idx) => {
+                      return <Feedback key={idx} detail={feedback} />;
+                    })}
                 </div>
               </div>
             </div>
