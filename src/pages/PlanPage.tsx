@@ -21,7 +21,7 @@ const PlanPage = () => {
       user: { token, email, nickname },
     },
     planReducer: {
-      planList: { isValid, isMember, planCards },
+      planCards: { isValid, isMember, planCards },
     },
   } = state;
   const dispatch = useDispatch();
@@ -51,15 +51,6 @@ const PlanPage = () => {
   const [openAddRequest, setOpenAddRequest] = useState<boolean>(false);
   const [viewOnlyMine, setViewOnlyMine] = useState<boolean>(false);
   const [selectTheme, setSelectTheme] = useState<number>(-1);
-  const [currentDay, setCurrentDay] = useState<number>(1);
-
-  const moveToTheNextDay = () => {
-    setCurrentDay(currentDay + 1);
-  };
-
-  const moveToThePrevDay = () => {
-    setCurrentDay(currentDay - 1);
-  };
 
   const handleOpenAddRequest = () => {
     setOpenAddRequest(true);
@@ -400,27 +391,14 @@ const PlanPage = () => {
       feedbackCnt,
     } = props;
 
-    // let max = planCards.reduce((plan: any, cur: any) => {
-    //   return Number(plan.endTime.split(":")[0]) * 60 +
-    //     Number(plan.endTime.split(":")[1]) >
-    //     Number(cur.endTime.split(":")[0]) * 60 +
-    //       Number(cur.endTime.split(":")[1])
-    //     ? plan
-    //     : cur;
-    // });
-    let max = planCards.reduce(
-      (plan: any, cur: any) => {
-        return Number(cur.day) === Number(currentDay) &&
-          Number(cur.endTime.split(":")[0]) * 60 +
-            Number(cur.endTime.split(":")[1]) >
-            Number(plan.endTime.split(":")[0]) * 60 +
-              Number(plan.endTime.split(":")[1])
-          ? cur
-          : plan;
-      },
-      { day: currentDay, endTime: "10:00" },
-    );
-
+    let max = planCards.reduce((plan: any, cur: any) => {
+      return Number(plan.endTime.split(":")[0]) * 60 +
+        Number(plan.endTime.split(":")[1]) >
+        Number(cur.endTime.split(":")[0]) * 60 +
+          Number(cur.endTime.split(":")[1])
+        ? plan
+        : cur;
+    });
     let endMin =
       (Number(max.endTime.split(":")[1]) +
         Number((avgTime % 1).toFixed(2)) * 100) %
@@ -438,7 +416,7 @@ const PlanPage = () => {
         isValid,
         isMember,
         planCards: planCards.concat({
-          day: currentDay,
+          day: 1,
           startTime: max.endTime,
           endTime: endHour + ":" + endMin,
           comment: title,
@@ -461,9 +439,6 @@ const PlanPage = () => {
         setSearchLatLng={setSearchLatLng}
         moveKakaoMap={moveKakaoMap}
         planId={planId}
-        currentDay={currentDay}
-        moveToTheNextDay={moveToTheNextDay}
-        moveToThePrevDay={moveToThePrevDay}
       />
       <Modal
         open={openModal}

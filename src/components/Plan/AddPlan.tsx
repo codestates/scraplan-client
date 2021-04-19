@@ -38,7 +38,7 @@ const AddPlan = ({
       user: { token, email, nickname },
     },
     planReducer: {
-      planList: { isValid, isMember, planCards },
+      planCards: { isValid, isMember, planCards },
     },
   } = state;
   const dispatch = useDispatch();
@@ -176,19 +176,16 @@ const AddPlan = ({
       refAddress.current?.focus();
       return;
     }
-    if (type === "addPlan" && currentDay) {
-      let max = planCards.reduce(
-        (plan: any, cur: any) => {
-          return Number(cur.day) === Number(currentDay) &&
+    if (type === "addPlan") {
+      let max = planCards.reduce((plan: any, cur: any) => {
+        return plan.day !== currentDay ||
+          Number(plan.endTime.split(":")[0]) * 60 +
+            Number(plan.endTime.split(":")[1]) >
             Number(cur.endTime.split(":")[0]) * 60 +
-              Number(cur.endTime.split(":")[1]) >
-              Number(plan.endTime.split(":")[0]) * 60 +
-                Number(plan.endTime.split(":")[1])
-            ? cur
-            : plan;
-        },
-        { day: currentDay, endTime: "10:00" },
-      );
+              Number(cur.endTime.split(":")[1])
+          ? plan
+          : cur;
+      });
 
       let endMin =
         (Number(max.endTime.split(":")[1]) +
@@ -203,6 +200,7 @@ const AddPlan = ({
             Number(requestTime.split(":")[1])) /
             60,
         );
+
       dispatch(
         getPlanCards({
           isValid,
@@ -216,10 +214,9 @@ const AddPlan = ({
           }),
         }),
       );
-      handleCloseBtn();
-      return;
     }
     // 임시처리 - 지우기
+    handleCloseBtn();
     if (type === "requestCuration" && inputDesc === "") {
       refDesc.current?.focus();
       return;

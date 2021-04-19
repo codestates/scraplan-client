@@ -6,7 +6,7 @@ export type State = {
   };
   googleToken: string;
   plans: any;
-  planList: any;
+  planCards: any;
   curations: any;
   curationCards: any;
   curationRequests: any;
@@ -25,7 +25,7 @@ export const initialState: State = {
   googleToken: "",
   // Plan
   plans: {},
-  planList: {
+  planCards: {
     isValid: false,
     isMember: false,
     planCards: [],

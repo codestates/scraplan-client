@@ -27,7 +27,7 @@ const PlanTimeline = ({
       user: { token, email, nickname },
     },
     planReducer: {
-      planList: { isValid, isMember, planCards },
+      planCards: { isValid, isMember, planCards },
     },
   } = state;
 
@@ -36,10 +36,12 @@ const PlanTimeline = ({
 
   useEffect(() => {
     setLayoutState(generateLayout());
-  }, [planCardsList, filterByDay]);
+    setPlanCardsList(oneDayPlanList);
+  }, []);
 
   useEffect(() => {
-    setPlanCardsList(filterByDay[day - 1]);
+    setLayoutState(generateLayout());
+    setPlanCardsList(oneDayPlanList);
   }, [filterByDay]);
 
   useEffect(() => {
@@ -49,10 +51,9 @@ const PlanTimeline = ({
     }
   }, [saveBtnClicked]);
 
-  // 수정용
   useEffect(() => {
-    if (planCardsList && planCardsList.length !== 0 && !layoutState) {
-      let newPlanCardsList = planCardsList.map((plan, idx) => {
+    if (planCardsList && planCardsList.length !== 0 && !layoutState.layout) {
+      let newPlanCardsList = oneDayPlanList.map((plan, idx) => {
         let startHour = Math.floor(layoutState[idx].y / 4);
         let startMin =
           (layoutState[idx].y % 4) * 15 === 0
@@ -74,10 +75,10 @@ const PlanTimeline = ({
         setPlanCardsList(newPlanCardsList);
       }
     }
-  }, [layoutState, planCardsList]);
+  }, [layoutState]);
 
   const generateLayout = () => {
-    return (planCardsList || filterByDay[day - 1]).map((plancard, idx) => {
+    return (oneDayPlanList || []).map((plancard, idx) => {
       const { startTime, endTime } = plancard;
       const startHour = Number(startTime.split(":")[0]);
       const startMin = Number(startTime.split(":")[1]);
@@ -119,15 +120,12 @@ const PlanTimeline = ({
           startTime: startHour + ":" + startMin,
           endTime: endHour + ":" + endMin,
         });
+        console.log("저장 시 day 및 값들", day, newPlan);
         return newPlan;
       });
+      console.log("저장 시 filterByDay = 동일해야한다..!", filterByDay);
       filterByDay[day - 1] = newPlanCardsList;
       setPlanCardsList(newPlanCardsList);
-      setFilterByDay([
-        ...filterByDay.slice(0, day - 1),
-        newPlanCardsList,
-        ...filterByDay.slice(day),
-      ]);
       handleSavePlanBtn();
       // dispatch(getPlanCards({ planCards: newPlanCardsList }));
     }
