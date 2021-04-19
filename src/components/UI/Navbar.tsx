@@ -119,11 +119,13 @@ const Navbar = (props: NavbarProps) => {
         </div>
         <div className="navbar__btns">
           <button
+            className="navbar__btns__first"
             onClick={token.length === 0 ? handleSigninBtn : handleMyPageBtn}
           >
             {token.length === 0 ? "로그인" : "마이페이지"}
           </button>
           <button
+            className="navbar__btns__second"
             onClick={token.length === 0 ? handleSignupBtn : handleSignoutBtn}
           >
             {token.length === 0 ? "회원가입" : "로그아웃"}

@@ -1,4 +1,4 @@
-$main: #f36671;
+$main: #f73d5c;
 $dark: #191919;
 $mediumdark: rgba(0, 0, 0, 0.7);
 $light: #e8e8e8;
@@ -19,41 +19,60 @@ button {
   align-items: center;
   position: fixed;
   z-index: 994;
-  height: 64px;
+  height: 80px;
   width: 100vw;
   min-width: 760px;
   max-width: 1792px;
   justify-content: space-between;
-  background-color: #fff;
-  border-bottom: 1px solid $light;
+  background-color: rgba(0, 0, 0, 0);
   .navbar__logo {
+    padding: 0 10vw;
     img {
-      height: 24px;
-      padding: 0 10rem;
+      height: 2.3rem;
       cursor: pointer;
     }
   }
   .navbar__btns {
-    padding: 0px 80px;
-    button {
-      color: $dark;
+    padding: 0 80px;
+    display: flex;
+    &__first {
+      border: none;
+      color: $main;
       margin-left: 8px;
-      height: 36px;
-      width: 84px;
-      border-radius: 18px;
-      border: 1px solid $light;
-      font-weight: 400;
+      height: 2.3rem;
+      width: 6.5rem;
+      border-radius: 5px;
+      font-weight: 600;
       font-size: 14px;
       &:hover {
-        background-color: $main;
         color: #fff;
+        border: none;
+        transition: all ease 0.3s;
+        background-color: $main;
+      }
+    }
+    &__second {
+      margin-left: 8px;
+      height: 2.3rem;
+      width: 6.5rem;
+      border-radius: 8px;
+      // border: 0.1rem solid $light;
+      font-weight: 500;
+      font-size: 14px;
+      background-color: $main;
+      color: #fff;
+      &:hover {
         border: none;
         transition: all ease 0.3s;
       }
     }
   }
 }
-
+@media (min-width: 480px) and (max-width: 768px) {
+  .navbar__btns {
+    display: 0;
+  }
+}
 // Modal
 .modal {
   display: none;
