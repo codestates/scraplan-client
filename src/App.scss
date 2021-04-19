@@ -30,6 +30,7 @@ body {
     margin-top: 55vh;
   }
   .move-to-top__btn {
+    background-color: rgba(0, 0, 0, 0);
     position: fixed;
     right: 2vw;
     bottom: 4vh;
@@ -47,6 +48,24 @@ body {
   }
   .bottom-btn {
     display: none;
+  }
+  &__btns {
+    button {
+      margin-top: 1.5rem;
+      margin-right: 1rem;
+      width: 12rem;
+      height: 3rem;
+      border-radius: 5px;
+      // background-color: $main;
+      color: $main;
+      font-weight: 500;
+      font-size: 1rem;
+      border: 2.5px dashed $main;
+      &:hover {
+        background-color: $main;
+        color: #fff;
+      }
+    }
   }
   &__page {
     display: flex;
@@ -92,6 +111,16 @@ body {
       font-size: 1rem;
       font-weight: 500;
     }
+  }
+  .fifth-step button {
+    margin-top: 2rem;
+    width: 15rem;
+    height: 3.5rem;
+    background-color: $main;
+    color: #fff;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    font-weight: 500;
   }
   .left-img {
     width: 35vw;
@@ -148,7 +177,14 @@ body {
     }
   }
   .mainpage {
-    .move-to-top__btn {
+    &__path {
+      display: none;
+      z-index: -3;
+      width: 80vw;
+      height: 500vh;
+      position: absolute;
+      margin-left: 15vw;
+      margin-top: 0vh;
     }
     .bottom-btn {
       position: fixed;
@@ -161,7 +197,10 @@ body {
       font-size: 1rem;
       font-weight: 500;
       color: #fff;
-      background-color: #f36672a6;
+      background-color: #f36672e5;
+    }
+    .move-to-top__btn {
+      margin-bottom: 9vh;
     }
     .fixToBottom {
       transition: all ease 0.2s;
@@ -170,6 +209,15 @@ body {
       right: 0;
       bottom: 0;
     }
+    &__btns {
+      display: none;
+      button {
+        width: 9rem;
+        height: 2.3rem;
+        font-size: 0.8rem;
+        border: 1.8px dashed $main;
+      }
+    }
     &__body {
       display: flex;
       flex-direction: column;
@@ -177,27 +225,30 @@ body {
       align-items: center;
     }
     &__page {
-      padding: 20vh 20vw;
+      padding: 20vh 10vw;
       display: flex;
       justify-content: center;
     }
     &__texts {
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
     }
     &__step {
       font-size: 1rem;
     }
     &__title {
-      font-size: 2.5rem;
+      font-size: 2.3rem;
       text-align: center;
       line-height: 3rem;
     }
     &__subtitle {
+      margin-top: 1.2rem;
       font-size: 1rem;
       text-align: center;
       line-height: 1.5rem;
     }
+
     .right-img {
       margin-top: 5vh;
       width: 60vw;
@@ -206,8 +257,13 @@ body {
       margin-top: 5vh;
       width: 60vw;
     }
+    .fifth-step button {
+      margin-top: 2rem;
+      width: 10rem;
+      height: 3rem;
+    }
     &__footer {
-      padding: 2rem 6rem;
+      padding: 2rem 5rem;
       &__section {
         flex-direction: column;
         margin: 0;
@@ -218,6 +274,7 @@ body {
         p {
           margin-right: 4rem;
         }
+        font-size: 0.75rem;
       }
     }
   }
@@ -1006,7 +1063,6 @@ body {
     }
     .viewcuration__contents {
       display: flex;
-      // flex-wrap: wrap;
       height: 40vh;
       padding: 1rem;
       justify-content: center;
@@ -1154,8 +1210,7 @@ body {
   padding-left: 16vw;
   width: 100vw;
   height: auto;
-  min-width: 760px;
-  max-width: 1585px;
+  // max-width: 1585px;
   &__banner {
     margin-top: 5rem;
     margin-bottom: 3rem;
@@ -1179,24 +1234,23 @@ body {
       z-index: -90;
     }
     &-text {
+      font-size: 1.8rem;
+      font-weight: 600;
+      letter-spacing: -1px;
       position: relative;
       top: -9rem;
-      left: 42%;
-      font-size: 1.6rem;
-      font-weight: 600;
+      left: 30vw;
     }
     &__btn {
       position: relative;
-      top: -8rem;
-      left: 50vw;
+      top: -8.5rem;
+      left: 30vw;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 12rem;
       height: 2.2rem;
       border-radius: 1.1rem;
-      background-color: #fff;
-      margin-right: 10%;
+      background-color: rgba(0, 0, 0, 0);
       p {
         color: $main;
         font-size: 0.8rem;
@@ -1208,7 +1262,7 @@ body {
         opacity: 0.7;
       }
       &:hover {
-        background-color: #f3667228;
+        color: #e05f6a;
         transition: all ease 0.5s;
       }
     }
@@ -1355,7 +1409,7 @@ body {
         align-items: center;
         justify-content: center;
         margin: 1rem;
-        width: 370px;
+        width: 20rem;
         height: 170px;
         border: 2px dashed $light;
         img {
@@ -1370,6 +1424,66 @@ body {
         &:hover {
           background-color: #f3667236;
           transition: 0.5s all ease;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .feedpage {
+    padding: 10vw;
+    &__banner {
+      width: 100%;
+      height: 25vh;
+      &__wrapper {
+        width: 80vw;
+        height: 25vh;
+      }
+      &-text {
+        left: 20vw;
+        font-size: 1.5rem;
+      }
+      img {
+        opacity: 0;
+      }
+    }
+    &__title {
+      width: 100%;
+    }
+    &__contents {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      &__search-bar {
+        height: 12rem;
+        input {
+          width: 3rem;
+        }
+        input[type="number"]::-webkit-inner-spin-button {
+          opacity: 1;
+        }
+        &-address {
+          &-all {
+            min-width: 4rem;
+          }
+        }
+        &-search-btn {
+          position: absolute;
+          left: -4rem;
+          margin-top: 7rem;
+          width: 70%;
+          font-size: 0.7rem;
+        }
+      }
+      &__plans {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0;
+        width: 100%;
+        .plansummary {
+          margin: 1rem 0;
         }
       }
     }
