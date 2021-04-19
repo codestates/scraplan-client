@@ -77,7 +77,7 @@ const PlanTimeline = ({
   }, [layoutState, planCardsList]);
 
   const generateLayout = () => {
-    return (planCardsList || filterByDay[day - 1]).map((plancard, idx) => {
+    return (planCardsList || []).map((plancard, idx) => {
       const { startTime, endTime } = plancard;
       const startHour = Number(startTime.split(":")[0]);
       const startMin = Number(startTime.split(":")[1]);

@@ -462,6 +462,7 @@ const PlanPage = () => {
         moveKakaoMap={moveKakaoMap}
         planId={planId}
         currentDay={currentDay}
+        setCurrentDay={setCurrentDay}
         moveToTheNextDay={moveToTheNextDay}
         moveToThePrevDay={moveToThePrevDay}
       />
