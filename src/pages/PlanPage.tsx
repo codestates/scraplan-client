@@ -421,6 +421,7 @@ const PlanPage = () => {
       },
       { day: currentDay, endTime: "10:00" },
     );
+    console.log("maxxxxx", max);
 
     let endMin =
       (Number(max.endTime.split(":")[1]) +
@@ -448,8 +449,6 @@ const PlanPage = () => {
       }),
     );
   };
-
-  console.log(planReducer);
 
   return (
     <div className="planpage">
