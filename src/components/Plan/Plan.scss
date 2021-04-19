@@ -26,7 +26,7 @@ $light: #f7f7f9;
     height: 4rem;
     border-radius: 0.5rem 0 0 0.5rem;
     background-color: #f7f7f9;
-    box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: -3px 0px 3px 1px rgba(0, 0, 0, 0.1);
     img {
       height: 1rem;
     }
@@ -189,6 +189,7 @@ $light: #f7f7f9;
         display: flex;
         flex-direction: column;
         overflow-x: visible;
+        height: 75%;
         &__top-bar {
           position: relative;
           display: flex;
@@ -227,7 +228,7 @@ $light: #f7f7f9;
         }
         &__plancards {
           width: 300px;
-          height: 34rem;
+          height: 30rem;
           overflow-x: visible;
           overflow-y: scroll;
           .plancards-by-day {
@@ -244,7 +245,6 @@ $light: #f7f7f9;
           &__grid {
             position: relative;
             top: 1rem;
-            // left: 0.2rem;
             width: 270px;
             div {
               border-bottom: 1px solid #eee;
@@ -264,12 +264,13 @@ $light: #f7f7f9;
       .planlist__save {
         float: right;
         &__button {
+          z-index: 996;
           text-align: center;
           vertical-align: middle;
           height: 2rem;
           width: 6rem;
           border-radius: 3px;
-          margin-top: 0.5rem;
+          margin-top: 2rem;
           margin-bottom: 0.5rem;
           background-color: $main;
           color: #fff;
@@ -525,11 +526,10 @@ $light: #f7f7f9;
   display: flex;
   flex-direction: column;
   width: 24rem;
-  // height: 15rem;
   padding: 1rem 1rem 0 2rem;
   background-color: #fff;
   border: 2px solid $main;
-  border-radius: 0.5rem;
+  border-radius: 6px;
   &__cancle-btn {
     margin-left: auto;
     &:hover {
@@ -550,8 +550,7 @@ $light: #f7f7f9;
       padding-left: 0.5rem;
       &:focus {
         outline: none;
-        border: 1px solid $main;
-        border-radius: 0.5rem;
+        border-bottom: 2px solid #ffced4;
         transition: all ease 0.3s;
       }
     }
@@ -565,17 +564,18 @@ $light: #f7f7f9;
         flex: none;
         margin-right: 0.6rem;
         height: 1.2rem;
+        opacity: 0.7;
       }
       input {
         background-color: $light;
         flex: 1 1 auto;
         height: 100%;
-        border-radius: 0.5rem;
+        border-radius: 3px;
         padding-left: 0.5rem;
+        border: 1px solid $light;
         &:focus {
           outline: none;
-          border: 1px solid $main;
-          border-radius: 0.5rem;
+          border: 1px solid #ebb5bb;
           transition: all ease 0.3s;
         }
       }

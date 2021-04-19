@@ -67,6 +67,7 @@ const PlanList = ({
 
   const refDaySlide = useRef<HTMLUListElement>(null);
 
+  // 최초 로딩시 - 데이터 받아오기
   useEffect(() => {
     // [] 으로 수정 예정
     if (planId) {
@@ -205,12 +206,14 @@ const PlanList = ({
     }
   }, [planId]);
 
+  // 최초 로딩시 - 데이터 day별로 분류하기
   useEffect(() => {
     const dayfilter = (arr: any) => {
       let result: any = [];
-      let maxDay = arr.reduce((acc: any, cur: any) => {
-        return acc.day > cur.day ? acc : cur;
-      },
+      let maxDay = arr.reduce(
+        (acc: any, cur: any) => {
+          return acc.day > cur.day ? acc : cur;
+        },
         { day: 1 },
       );
       for (let i = 0; i < maxDay.day; i++) {
@@ -238,7 +241,6 @@ const PlanList = ({
       const filter = dayfilter(planCards);
       // dayCount 초기값
       const initialDayCount = makeDayCountArray(filter);
-
       setFilterByDay(filter);
       setDayCount(initialDayCount);
       if (currentDay > initialDayCount.length) {
@@ -295,7 +297,6 @@ const PlanList = ({
 
   const handleSavePlanBtn = () => {
     let finalPlanCards = filterByDay.flat();
-    console.log(finalPlanCards);
     dispatch(getPlanCards({ planCards: finalPlanCards, isMember, isValid }));
     if (!isMember) {
       // isMember === false -> 로그인창
@@ -392,12 +393,6 @@ const PlanList = ({
     setInputAddrGu(gu);
   };
 
-  // const handleAddrReset = (): void => {
-  //   setInputAddrSi("선택");
-  //   setInputAddrGun("선택");
-  //   setInputAddrGu("선택");
-  // };
-
   useEffect(() => {
     refDaySlide.current?.style.setProperty(
       "transition",
@@ -411,16 +406,15 @@ const PlanList = ({
     );
   }, [currentDay]);
 
-  const handleMovePrevDay = useCallback(() => {
+  const handleMovePrevDay = () => {
     if (currentDay !== 1) {
       moveToThePrevDay();
     }
-  }, [currentDay]);
+  };
 
   const handleMoveNextDay = () => {
     if (currentDay === dayCount.length) {
       // Modal로 물어보기
-      alert("일단 지우고, 뜨면 처음부터 안되는 것");
       let addDayCount = dayCount.concat([dayCount.length + 1]);
       setDayCount(addDayCount);
       setFilterByDay([...filterByDay].concat([[]]));

@@ -32,15 +32,16 @@ const PlanTimeline = ({
   } = state;
 
   const [layoutState, setLayoutState] = useState([]);
-  const [planCardsList, setPlanCardsList] = useState([]);
+  const [genCnt, setGenCnt] = useState(0);
 
+  console.log("day", day);
+  console.log("filterByDay", filterByDay);
+  console.log("layoutState", layoutState);
+
+  // 초기 레이아웃 생성
   useEffect(() => {
     setLayoutState(generateLayout());
-  }, [planCardsList, filterByDay]);
-
-  useEffect(() => {
-    setPlanCardsList(filterByDay[day - 1]);
-  }, [filterByDay]);
+  }, []);
 
   useEffect(() => {
     if (saveBtnClicked) {
@@ -49,60 +50,125 @@ const PlanTimeline = ({
     }
   }, [saveBtnClicked]);
 
-  // 수정용
   useEffect(() => {
-    if (planCardsList && planCardsList.length !== 0 && !layoutState) {
-      let newPlanCardsList = planCardsList.map((plan, idx) => {
+    // if (
+    //   filterByDay &&
+    //   filterByDay[day - 1] &&
+    //   layoutState &&
+    //   layoutState.length !== 0 &&
+    //   layoutState.length === filterByDay[day - 1].length
+    // ) {
+    //   console.log("layout이 바뀔때마다");
+    //   // 시간 변환
+    //   let newPlanCardsList = layoutState.map((plan, idx) => {
+    //     // let startHour = Math.floor(layoutState[idx].y / 4);
+    //     // let startMin =
+    //     //   (layoutState[idx].y % 4) * 15 === 0
+    //     //     ? "00"
+    //     //     : (layoutState[idx].y % 4) * 15;
+    //     // let endHour = Math.floor((layoutState[idx].y + layoutState[idx].h) / 4);
+    //     // let endMin =
+    //     //   ((layoutState[idx].y + layoutState[idx].h) % 4) * 15 === 0
+    //     //     ? "00"
+    //     //     : ((layoutState[idx].y + layoutState[idx].h) % 4) * 15;
+    //     const { startTime, endTime } = plan;
+    //     const startHour = Number(startTime.split(":")[0]);
+    //     const startMin = Number(startTime.split(":")[1]);
+    //     const endHour = Number(endTime.split(":")[0]);
+    //     const endMin = Number(endTime.split(":")[1]);
+    //     let newPlan = Object.assign({}, plan, {
+    //       startTime: startHour + ":" + startMin,
+    //       endTime: endHour + ":" + endMin,
+    //     });
+    //     return newPlan;
+    //   });
+    //   if (
+    //     filterByDay !==
+    //     [
+    //       ...filterByDay.slice(0, day - 1),
+    //       newPlanCardsList,
+    //       ...filterByDay.slice(day),
+    //     ]
+    //   ) {
+    //     console.log("set!");
+    //     setFilterByDay([
+    //       ...filterByDay.slice(0, day - 1),
+    //       newPlanCardsList,
+    //       ...filterByDay.slice(day),
+    //     ]);
+    //   }
+    // }
+  }, [layoutState]);
+
+  const generateLayout = () => {
+    if (filterByDay[day - 1] && filterByDay[day - 1].length !== 0) {
+      return filterByDay[day - 1].map((plancard, idx) => {
+        const { startTime, endTime } = plancard;
+        const startHour = Number(startTime.split(":")[0]);
+        const startMin = Number(startTime.split(":")[1]);
+        const endHour = Number(endTime.split(":")[0]);
+        const endMin = Number(endTime.split(":")[1]);
+        return {
+          w: 1,
+          x: 0,
+          h: endHour * 4 + endMin / 15 - startHour * 4 - startMin / 15, // 높이
+          y: startHour * 4 + startMin / 15, // 위치
+          i: idx.toString(),
+          moved: false,
+          static: false,
+        };
+      });
+    }
+  };
+
+  const onLayoutChange = (layout) => {
+    console.log("layout", layout);
+    setLayoutState(generateLayout());
+    if (
+      filterByDay &&
+      filterByDay[day - 1] &&
+      layoutState &&
+      layoutState.length !== 0 &&
+      layoutState.length === filterByDay[day - 1].length
+    ) {
+      console.log("layout이 바뀔때마다");
+      console.log(filterByDay);
+      // 시간 변환
+      let newPlanCardsList = filterByDay[day - 1].map((plan, idx) => {
         let startHour = Math.floor(layoutState[idx].y / 4);
         let startMin =
           (layoutState[idx].y % 4) * 15 === 0
             ? "00"
             : (layoutState[idx].y % 4) * 15;
-
         let endHour = Math.floor((layoutState[idx].y + layoutState[idx].h) / 4);
         let endMin =
           ((layoutState[idx].y + layoutState[idx].h) % 4) * 15 === 0
             ? "00"
             : ((layoutState[idx].y + layoutState[idx].h) % 4) * 15;
+        // const { startTime, endTime } = plan;
+        // const startHour = Number(startTime.split(":")[0]);
+        // const startMin = Number(startTime.split(":")[1]);
+        // const endHour = Number(endTime.split(":")[0]);
+        // const endMin = Number(endTime.split(":")[1]);
         let newPlan = Object.assign({}, plan, {
           startTime: startHour + ":" + startMin,
           endTime: endHour + ":" + endMin,
         });
         return newPlan;
       });
-      if (newPlanCardsList.length !== 0) {
-        setPlanCardsList(newPlanCardsList);
-      }
+      console.log("set!");
+      setFilterByDay([
+        ...filterByDay.slice(0, day - 1),
+        newPlanCardsList,
+        ...filterByDay.slice(day),
+      ]);
     }
-  }, [layoutState, planCardsList]);
-
-  const generateLayout = () => {
-    return (planCardsList || []).map((plancard, idx) => {
-      const { startTime, endTime } = plancard;
-      const startHour = Number(startTime.split(":")[0]);
-      const startMin = Number(startTime.split(":")[1]);
-      const endHour = Number(endTime.split(":")[0]);
-      const endMin = Number(endTime.split(":")[1]);
-      return {
-        w: 1,
-        x: 0,
-        h: endHour * 4 + endMin / 15 - startHour * 4 - startMin / 15, // 높이
-        y: startHour * 4 + startMin / 15, // 위치
-        i: idx.toString(),
-        moved: false,
-        static: false,
-      };
-    });
-  };
-
-  const onLayoutChange = (layout) => {
-    setLayoutState(layout);
   };
 
   // Timeline에 있는 일정들을 PlanCards 데이터로 변환
   const handleSaveBtn = () => {
-    if (planCardsList) {
-      let newPlanCardsList = planCardsList.map((plan, idx) => {
+    if (filterByDay[day - 1].length !== 0) {
+      let newPlanCardsList = filterByDay[day - 1].map((plan, idx) => {
         let startHour = Math.floor(layoutState[idx].y / 4);
         let startMin =
           (layoutState[idx].y % 4) * 15 === 0
@@ -122,14 +188,12 @@ const PlanTimeline = ({
         return newPlan;
       });
       filterByDay[day - 1] = newPlanCardsList;
-      setPlanCardsList(newPlanCardsList);
       setFilterByDay([
         ...filterByDay.slice(0, day - 1),
         newPlanCardsList,
         ...filterByDay.slice(day),
       ]);
       handleSavePlanBtn();
-      // dispatch(getPlanCards({ planCards: newPlanCardsList }));
     }
   };
 
@@ -141,7 +205,7 @@ const PlanTimeline = ({
       {...{
         isDraggable: true,
         isResizable: true,
-        items: (planCardsList || []).length,
+        items: (filterByDay[day - 1] || []).length,
         rowHeight: 28,
         cols: 1,
         rows: 96,
@@ -151,8 +215,9 @@ const PlanTimeline = ({
         width: 240,
       }}
     >
-      {planCardsList &&
-        planCardsList.map((plancard, idx) => {
+      {filterByDay &&
+        filterByDay[day - 1] &&
+        filterByDay[day - 1].map((plancard, idx) => {
           const {
             day,
             startTime,
@@ -164,20 +229,21 @@ const PlanTimeline = ({
           } = plancard;
 
           const handleChangeTheme = (themeIndex, cardIdx) => {
-            planCardsList[cardIdx].theme = themeIndex;
+            filterByDay[day - 1][cardIdx].theme = themeIndex;
           };
 
           const handleDeletePlancard = (e, cardIdx) => {
-            setPlanCardsList(
-              planCardsList.filter((card, idx) => {
-                return idx !== cardIdx;
-              }),
-            );
-            setLayoutState(
-              layoutState.filter((_, idx) => {
-                return idx !== cardIdx;
-              }),
-            );
+            // // 수정필요
+            // setPlanCardsList(
+            //   planCardsList.filter((card, idx) => {
+            //     return idx !== cardIdx;
+            //   }),
+            // );
+            // setLayoutState(
+            //   layoutState.filter((_, idx) => {
+            //     return idx !== cardIdx;
+            //   }),
+            // );
           };
 
           return (

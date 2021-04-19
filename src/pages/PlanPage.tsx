@@ -7,6 +7,7 @@ import PlanList from "../components/Plan/PlanList";
 import { getCurationCards, getPlanCards } from "../actions";
 import Modal from "../components/UI/Modal";
 import AddPlan from "../components/Plan/AddPlan";
+import planReducer from "../reducers/planReducer";
 
 declare global {
   interface Window {
@@ -420,7 +421,6 @@ const PlanPage = () => {
       },
       { day: currentDay, endTime: "10:00" },
     );
-
     let endMin =
       (Number(max.endTime.split(":")[1]) +
         Number((avgTime % 1).toFixed(2)) * 100) %
