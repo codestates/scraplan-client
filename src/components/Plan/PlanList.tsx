@@ -210,7 +210,9 @@ const PlanList = ({
       let result: any = [];
       let maxDay = arr.reduce((acc: any, cur: any) => {
         return acc.day > cur.day ? acc : cur;
-      });
+      },
+        { day: 1 },
+      );
       for (let i = 0; i < maxDay.day; i++) {
         result.push([]);
       }
