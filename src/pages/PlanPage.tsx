@@ -7,6 +7,7 @@ import PlanList from "../components/Plan/PlanList";
 import { getCurationCards, getPlanCards } from "../actions";
 import Modal from "../components/UI/Modal";
 import AddPlan from "../components/Plan/AddPlan";
+import planReducer from "../reducers/planReducer";
 
 declare global {
   interface Window {
@@ -447,6 +448,8 @@ const PlanPage = () => {
       }),
     );
   };
+
+  console.log(planReducer);
 
   return (
     <div className="planpage">

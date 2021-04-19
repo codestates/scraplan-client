@@ -6,7 +6,11 @@ export type State = {
   };
   googleToken: string;
   plans: any;
-  planList: any;
+  planList: {
+    isValid: boolean;
+    isMember: boolean;
+    planCards: any;
+  };
   curations: any;
   curationCards: any;
   curationRequests: any;
