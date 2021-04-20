@@ -29,14 +29,6 @@ const MyPage = () => {
       dayCount: 3,
       representAddr: "울산광역시",
     },
-    {
-      id: 0,
-      title: "2박3일 울산여행",
-      desc: "여행을 떠나보세요!",
-      writer: "jooing",
-      dayCount: 3,
-      representAddr: "울산광역시",
-    },
   ]);
 
   const [curationsRequestsList, setCurationsRequestsList] = useState([
@@ -107,19 +99,7 @@ const MyPage = () => {
   }, []);
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_SERVER_URL}/plans?writer-email=${email}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        credentials: "include",
-      },
-    })
-      .then((res) => res.json())
-      .then((body) => {
-        dispatch(getPlans(body.plans));
-        setPlanList(body.plans);
-      })
-      .catch((err) => console.error(err));
+    handleGetAllPlans();
   }, []);
 
   useEffect(() => {
@@ -203,6 +183,23 @@ const MyPage = () => {
     setInputAddrSi("선택");
     setInputAddrGun("선택");
     setInputAddrGu("선택");
+  };
+
+  const handleGetAllPlans = () => {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/plans/${1}?writer=${nickname}`, {
+      method: "GET",
+      headers: {
+        authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        credentials: "include",
+      },
+    })
+      .then((res) => res.json())
+      .then((body) => {
+        dispatch(getPlans(body.plans));
+        setPlanList(body.plans);
+      })
+      .catch((err) => console.error(err));
   };
 
   const handleGetPlansByFilter = () => {
@@ -425,6 +422,7 @@ const MyPage = () => {
                     writer={plan.writer}
                     dayCount={plan.dayCount}
                     representAddr={plan.representAddr}
+                    handleGetAllPlans={handleGetAllPlans}
                   />
                 );
               })}

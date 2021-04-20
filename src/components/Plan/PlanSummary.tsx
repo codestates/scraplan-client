@@ -19,13 +19,22 @@ type PlanSummaryProps = {
   writer: string;
   dayCount: number;
   representAddr: string;
+  handleGetAllPlans?: any;
 };
 
 const PlanSummary = (props: PlanSummaryProps) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const { id, title, desc, writer, dayCount, representAddr } = props;
+  const {
+    id,
+    title,
+    desc,
+    writer,
+    dayCount,
+    representAddr,
+    handleGetAllPlans,
+  } = props;
   const userState = useSelector((state: RootState) => state.userReducer);
   const {
     user: { token, email, nickname },
@@ -39,7 +48,14 @@ const PlanSummary = (props: PlanSummaryProps) => {
   };
 
   const handleClickShowmore = () => {
-    history.push(`/planpage/${id}`);
+    history.push({
+      pathname: `/planpage/${id}`,
+      state: {
+        title,
+        desc,
+        representAddr,
+      },
+    });
   };
 
   const handleModalOpen = () => {
@@ -103,6 +119,9 @@ const PlanSummary = (props: PlanSummaryProps) => {
       .then((res) => res.json())
       .then((body) => {
         handleModalClose();
+        if (handleGetAllPlans) {
+          handleGetAllPlans();
+        }
       })
       .catch((err) => console.error(err));
   };
@@ -120,10 +139,12 @@ const PlanSummary = (props: PlanSummaryProps) => {
         <div className="plansummary__contents__plan">
           <span className="plansummary__contents__plan__title">{title}</span>
           <p className="plansummary__contents__plan__info">
-            {`${representAddr}   |   ${dayCount}박 ${dayCount + 1}일`}{" "}
+            {dayCount === 1
+              ? `${representAddr}   |   하루일정`
+              : `${representAddr}   |   ${dayCount - 1 + "박"} ${dayCount}일`}
           </p>
           <span className="plansummary__contents__plan__description">
-            {desc} 여행을 떠나요
+            {desc}
           </span>
           <div className="plansummary__contents__plan__showmore">
             <img src="/images/next.png" alt="" />

@@ -7,7 +7,6 @@ import PlanList from "../components/Plan/PlanList";
 import { getCurationCards, getPlanCards } from "../actions";
 import Modal from "../components/UI/Modal";
 import AddPlan from "../components/Plan/AddPlan";
-import planReducer from "../reducers/planReducer";
 
 declare global {
   interface Window {
@@ -36,6 +35,8 @@ const PlanPage = () => {
   const [mapBounds, setMapBounds] = useState<object>();
   const [markerList, setMarkerList] = useState<any>([]);
   const [curationId, setCurationId] = useState<number | undefined>();
+  const [curationAddr, setCurationAddr] = useState<string>("");
+  const [curationCoordinates, setCurationCoordinates] = useState<any>([]);
   const [planId, setPlanId] = useState<number | string | undefined>();
 
   const [inputKeyword, setInputKeyword] = useState<string>("");
@@ -87,7 +88,6 @@ const PlanPage = () => {
   // 비동기 통신으로 페이지에 v3를 동적으로 삽입할 경우에 주로 사용된다.
   // v3 로딩 스크립트 주소에 파라메터로 autoload=false 를 지정해 주어야 한다.
 
-  // 주석처리해도 된다..?!
   useEffect(() => {
     window.kakao.maps.load(() => {
       loadKakaoMap();
@@ -177,19 +177,23 @@ const PlanPage = () => {
         image: markerImage,
       });
 
-      ((marker, curationId, curationAddr) => {
+      ((marker, curationId, curationAddr, curationCoordinates) => {
         window.kakao.maps.event.addListener(marker, "click", () => {
-          handleClickMarker(curationId, curationAddr);
+          handleClickMarker(curationId, curationAddr, curationCoordinates);
         });
-      })(marker, markerList[i].id, markerList[i].address);
+      })(
+        marker,
+        markerList[i].id,
+        markerList[i].address,
+        markerList[i].coordinates,
+      );
       marker.setMap(map);
     }
   };
 
   // 맵의 변화 (drag, zoom)가 있을 때 마다
   // 중심좌표, 경계값을 구한다.
-  // 위에서 useEffect로 경계값이 변할때마다 marker리스트를 계속요청하고 저장
-  // -> map을 돌려 바로 리스트들을 보여줄 수 있다?
+  // 위에서 useEffect로 경계값이 변할때마다 marker리스트를 계속요청하고 저장 -> map을 돌려 바로 리스트들을 보여줄 수 있다?
   const loadKakaoMap = () => {
     let container = document.getElementById("planpage__map");
     let options = {
@@ -314,7 +318,7 @@ const PlanPage = () => {
 
   // 옵션과 관련된 함수들
   const handleViewOnlyMine = () => {
-    alert("내 일정만 보기");
+    // alert("내 일정만 보기");
   };
 
   const handleFilterByTheme = (idx: number): void => {
@@ -369,7 +373,13 @@ const PlanPage = () => {
     setSearchMode(false);
   };
 
-  const handleClickMarker = (curationId: number, curationAddr: string) => {
+  const handleClickMarker = (
+    curationId: number,
+    curationAddr: string,
+    curationCoordinates: any,
+  ) => {
+    setCurationAddr(curationAddr);
+    setCurationCoordinates(curationCoordinates.coordinates);
     setOpenList(true);
     fetch(`${process.env.REACT_APP_SERVER_URL}/curation-cards/${curationId}`, {
       method: "GET",
@@ -389,7 +399,7 @@ const PlanPage = () => {
   };
 
   const handleAddToPlan = (props: any, e: Event) => {
-    // curaton 에서 + 버튼 클릭시 plan으로 정보를 넘겨주는 함수
+    // curation 에서 + 버튼 클릭시 plan으로 정보를 넘겨주는 함수
     e.stopPropagation();
     const {
       curationCardId,
@@ -400,7 +410,6 @@ const PlanPage = () => {
       avgTime,
       feedbackCnt,
     } = props;
-
     // let max = planCards.reduce((plan: any, cur: any) => {
     //   return Number(plan.endTime.split(":")[0]) * 60 +
     //     Number(plan.endTime.split(":")[1]) >
@@ -443,6 +452,8 @@ const PlanPage = () => {
           endTime: endHour + ":" + endMin,
           comment: title,
           theme,
+          coordinates: curationCoordinates,
+          address: curationAddr,
         }),
       }),
     );
@@ -450,7 +461,7 @@ const PlanPage = () => {
 
   return (
     <div className="planpage">
-      <Navbar currentPage="/planpage/newpage" />
+      <Navbar currentPage="/planpage/newplan" />
       <CurationList
         addEventFunc={handleAddToPlan}
         openList={openList}

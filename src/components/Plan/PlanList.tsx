@@ -1,10 +1,10 @@
 import React, { useCallback, useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { RootState } from "../../reducers";
 import { getPlanCards } from "../../actions";
 import AddPlan from "./AddPlan";
 import PlanTimeline from "./PlanTimeline";
-import planReducer from "../../reducers/planReducer";
 import mapdata from "../../data/mapdata.json";
 
 interface ForAddPlanProps {
@@ -29,6 +29,7 @@ const PlanList = ({
   moveToThePrevDay,
 }: ForAddPlanProps) => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const state = useSelector((state: RootState) => state);
   const {
     userReducer: {
@@ -69,142 +70,39 @@ const PlanList = ({
 
   // 최초 로딩시 - 데이터 받아오기
   useEffect(() => {
-    // [] 으로 수정 예정
+    planId = Number(location.pathname.split("/")[2]);
     if (planId) {
-      // 수정 예정
-      // fetch(`${process.env.REACT_APP_SERVER_URL}/plan-card/${planId}`, {
-      //   method: "GET",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     credentials: "include",
-      //     authorization: `bearer ${token}`,
-      //   },
-      // })
-      //   .then((res) => res.json())
-      //   .then((body) => {
-      //     dispatch(getPlanCards(body.planCards));
-      //   })
-      //   .catch((err) => console.error(err));
-      //실험용
-      dispatch(
-        getPlanCards({
-          isMember: false,
-          isValid: false,
-          planCards: [
-            {
-              day: 1,
-              startTime: "10:00",
-              endTime: "10:15",
-              comment: "기존페이지 1-1",
-              theme: 1,
-              coordinates: [37.55, 126.92],
-              address: "장소1",
-            },
-            {
-              day: 1,
-              startTime: "10:30",
-              endTime: "10:45",
-              comment: "기존페이지 1-2",
-              theme: 2,
-              coordinates: [37.53, 126.89],
-              address: "장소2",
-            },
-            {
-              day: 1,
-              startTime: "10:45",
-              endTime: "11:00",
-              comment: "기존페이지 1-3",
-              theme: 3,
-              coordinates: [37.53, 126.89],
-              address: "장소2",
-            },
-            {
-              day: 1,
-              startTime: "11:00",
-              endTime: "11:30",
-              comment: "기존페이지 1-4",
-              theme: 4,
-              coordinates: [37.53, 126.89],
-              address: "장소2",
-            },
-            {
-              day: 2,
-              startTime: "10:00",
-              endTime: "10:15",
-              comment: "기존페이지 2-1",
-              theme: 1,
-              coordinates: [37.55, 126.92],
-              address: "장소1",
-            },
-            {
-              day: 2,
-              startTime: "10:30",
-              endTime: "10:45",
-              comment: "기존페이지 2-2",
-              theme: 2,
-              coordinates: [37.53, 126.89],
-              address: "장소2",
-            },
-            {
-              day: 2,
-              startTime: "10:45",
-              endTime: "11:00",
-              comment: "기존페이지 2-3",
-              theme: 3,
-              coordinates: [37.53, 126.89],
-              address: "장소2",
-            },
-            {
-              day: 3,
-              startTime: "10:45",
-              endTime: "11:30",
-              comment: "기존페이지 3-1",
-              theme: 2,
-              coordinates: [37.53, 126.89],
-              address: "장소2",
-            },
-            {
-              day: 4,
-              startTime: "10:45",
-              endTime: "11:30",
-              comment: "기존페이지 4-1",
-              theme: 2,
-              coordinates: [37.53, 126.89],
-              address: "장소2",
-            },
-          ],
-        }),
-      );
+      if (location.state) {
+        // setInputTitle(location.state.title);
+      }
+      fetch(
+        `${process.env.REACT_APP_SERVER_URL}/plan-cards/${planId}?email=${email}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            credentials: "include",
+            authorization: `Bearer ${token}`,
+          },
+        },
+      )
+        .then((res) => res.json())
+        .then((body) => {
+          dispatch(getPlanCards(body));
+          console.log(body);
+        })
+        .catch((err) => console.error(err));
     } else {
-      // planId가 없다 = newpage에 기본값들
+      // newplan
       dispatch(
         getPlanCards({
-          isMember: false,
+          isMember: token.length > 0 ? true : false,
           isValid: false,
-          planCards: [
-            {
-              day: 1,
-              startTime: "10:00",
-              endTime: "10:15",
-              comment: "1-1",
-              theme: 1,
-              coordinates: [37.55, 126.92],
-              address: "장소1",
-            },
-            {
-              day: 1,
-              startTime: "10:30",
-              endTime: "11:00",
-              comment: "1-2",
-              theme: 2,
-              coordinates: [37.53, 126.89],
-              address: "장소2",
-            },
-          ],
+          planCards: [],
         }),
       );
     }
-  }, [planId]);
+  }, []);
 
   // 최초 로딩시 - 데이터 day별로 분류하기
   useEffect(() => {
@@ -297,13 +195,16 @@ const PlanList = ({
 
   const handleSavePlanBtn = () => {
     let finalPlanCards = filterByDay.flat();
+    console.log(finalPlanCards);
+    console.log("저장하기", finalPlanCards, isMember, isValid);
     dispatch(getPlanCards({ planCards: finalPlanCards, isMember, isValid }));
     if (!isMember) {
       // isMember === false -> 로그인창
     } else {
       // isMember === true
-      if (planId === "newplan") {
+      if (!planId) {
         // path가 newplan -> create
+        console.log("create!");
         fetch(`${process.env.REACT_APP_SERVER_URL}/plan`, {
           method: "POST",
           headers: {
@@ -315,13 +216,13 @@ const PlanList = ({
             email,
             title: inputTitle,
             public: isShare,
-            represnetAddr:
+            representAddr:
               (inputAddrSi === "선택" ? "" : inputAddrSi) +
               " " +
               (inputAddrGun === "선택" ? "" : inputAddrGun) +
               " " +
               (inputAddrGu === "선택" ? "" : inputAddrGu),
-            finalPlanCards,
+            planCards: encodeURIComponent(JSON.stringify(finalPlanCards)),
           }),
         })
           .then((res) => res.json())
@@ -332,19 +233,24 @@ const PlanList = ({
         if (isValid) {
           // isValid === true -> update
           fetch(`${process.env.REACT_APP_SERVER_URL}/plan`, {
-            method: "PUT",
+            method: "PATCH",
             headers: {
+              authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
               credentials: "include",
-              authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
               email,
               planId,
               title: inputTitle,
               public: isShare,
-              // represnetAddr:
-              finalPlanCards,
+              representAddr:
+                (inputAddrSi === "선택" ? "" : inputAddrSi) +
+                " " +
+                (inputAddrGun === "선택" ? "" : inputAddrGun) +
+                " " +
+                (inputAddrGu === "선택" ? "" : inputAddrGu),
+              planCards: encodeURIComponent(JSON.stringify(finalPlanCards)),
             }),
           })
             .then((res) => res.json())
@@ -363,12 +269,19 @@ const PlanList = ({
               email,
               title: inputTitle,
               public: isShare,
-              // represnetAddr:
-              finalPlanCards,
+              representAddr:
+                (inputAddrSi === "선택" ? "" : inputAddrSi) +
+                " " +
+                (inputAddrGun === "선택" ? "" : inputAddrGun) +
+                " " +
+                (inputAddrGu === "선택" ? "" : inputAddrGu),
+              planCards: encodeURIComponent(JSON.stringify(finalPlanCards)),
             }),
           })
             .then((res) => res.json())
-            .then((body) => {})
+            .then((body) => {
+              // modal로 update 알려주기
+            })
             .catch((err) => console.error(err));
         }
       }
