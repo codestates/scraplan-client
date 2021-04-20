@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../reducers";
 import { useHistory } from "react-router-dom";
-import { signOut, getGoogleToken } from "../../actions";
+import { signOut, getGoogleToken, signIn } from "../../actions";
 
 import Signin from "../User/Signin";
 import Signup from "../User/Signup";
@@ -24,6 +24,91 @@ const Navbar = (props: NavbarProps) => {
 
   const [SignInModalOpen, setSignInModalOpen] = useState<boolean>(false);
   const [SignUpModalOpen, setSignUpModalOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (window.location.hash !== "") {
+      const hashData = window.location.hash;
+      let nickname = "";
+      let state = "";
+      const googleData = decodeURI(window.location.href)
+        .split("#")[1]
+        .split("&");
+      for (const query of googleData) {
+        const splited = query.split("=");
+        if (splited[0] === "state") {
+          state = splited[1].slice(0, 6);
+          nickname = splited[1].slice(7);
+        }
+      }
+
+      const googleSignIn = (hashData: string) => {
+        fetch(`${process.env.REACT_APP_SERVER_URL}/google-sign/in`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            credentials: "include",
+          },
+          body: JSON.stringify({ hashData }),
+        })
+          .then((res) => res.json())
+          .then((body) => {
+            if (body.accessToken) {
+              dispatch(signIn(body.accessToken, body.email, body.nickname));
+              history.push(`${currentPage}`);
+              return;
+            } else {
+              history.push(`${currentPage}`);
+              return;
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+            history.push(`${currentPage}`);
+          });
+      };
+
+      if (state === "signup") {
+        fetch(`${process.env.REACT_APP_SERVER_URL}/google-sign/up`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            credentials: "include",
+          },
+          body: JSON.stringify({
+            nickname,
+            hashData: window.location.hash,
+          }),
+        })
+          .then((res) => res.json())
+          .then((body) => {
+            if (
+              body.message === "Successfully signedup" ||
+              body.message === "Already exists email"
+            ) {
+              return "success";
+            } else {
+              return "fail";
+            }
+          })
+          .then((data) => {
+            if (data === "success") {
+              googleSignIn(hashData);
+            } else {
+              history.push(`${currentPage}`);
+              return;
+            }
+          });
+      }
+
+      // 로그인만
+      if (state === "signin") {
+        googleSignIn(hashData);
+      } else {
+        history.push(`${currentPage}`);
+        return;
+      }
+    }
+  }, [window.location.hash]);
 
   const closeSignInModal = () => {
     setSignInModalOpen(false);
@@ -82,7 +167,7 @@ const Navbar = (props: NavbarProps) => {
       scope:
         "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
       include_granted_scopes: "true",
-      state,
+      state: state,
     };
 
     // Add form parameters as hidden input values.
