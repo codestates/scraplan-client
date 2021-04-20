@@ -197,7 +197,7 @@ const ViewCuration = (props: ViewCurationProps) => {
                     <span>{detail || "설명"}</span>
                   </div>
                   <div className="viewcuration__contents__desc__photo">
-                    <img src={photo} alt="" />
+                    <img src={decodeURIComponent(photo)} alt="" />
                   </div>
                 </div>
               </div>
@@ -225,6 +225,7 @@ const ViewCuration = (props: ViewCurationProps) => {
                 </div>
                 <div className="viewcuration__contents__feedback__lists">
                   {feedbackList &&
+                    feedbackList.length > 0 &&
                     feedbackList.map((feedback, idx) => {
                       return <Feedback key={idx} detail={feedback} />;
                     })}
