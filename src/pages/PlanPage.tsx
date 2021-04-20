@@ -90,7 +90,9 @@ const PlanPage = () => {
   }, [viewOnlyMine, planCards, currentDay]);
 
   useEffect(() => {
-    makeMarker();
+    if (!viewOnlyMine) {
+      makeMarker();
+    }
   }, [markerList]);
 
   // marker request
@@ -206,6 +208,7 @@ const PlanPage = () => {
       let dailyPlanCards = planCards.filter((card: { day: number }) => {
         return currentDay === card.day;
       });
+      console.log(dailyPlanCards);
       dailyPlanCards.sort(function (
         a: { startTime: string },
         b: { startTime: string },
