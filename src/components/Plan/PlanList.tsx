@@ -101,7 +101,6 @@ const PlanList = ({
               coordinates: plan.coordinates.coordinates,
             });
           });
-          console.log(planCards);
           dispatch(
             getPlanCards({
               isMember: body.isMember,
@@ -141,7 +140,7 @@ const PlanList = ({
           result[arr[j].day - 1].push(arr[j]);
         }
       }
-      console.log("값 대입", result);
+      // console.log("값 대입", result);
       return result;
     };
 
@@ -213,8 +212,8 @@ const PlanList = ({
 
   const handleSavePlanBtn = () => {
     let finalPlanCards = filterByDay.flat();
-    console.log(finalPlanCards);
-    console.log("저장하기", finalPlanCards, isMember, isValid);
+    // console.log(finalPlanCards);
+    // console.log("저장하기", finalPlanCards, isMember, isValid);
     dispatch(getPlanCards({ planCards: finalPlanCards, isMember, isValid }));
     if (!isMember) {
       // isMember === false -> 로그인창
@@ -249,7 +248,6 @@ const PlanList = ({
         // path가 planId -> 내꺼면 update, 남꺼면 create
         if (isValid) {
           // isValid === true -> update
-          console.log("보내는값", finalPlanCards);
           fetch(`${process.env.REACT_APP_SERVER_URL}/plan`, {
             method: "PATCH",
             headers: {
@@ -358,7 +356,7 @@ const PlanList = ({
   // day는 그대로 입력하면 됨
   // ex) day 1에 그대로 1 기입 -> filterByDay[0] = Day1의 리스트들
   const handleShowPlanlistThatDay = (day: number) => {
-    console.log("어떻게 나오나?", filterByDay[day - 1]);
+    // console.log("어떻게 나오나?", filterByDay[day - 1]);
   };
 
   const handleDayList = () => {
