@@ -222,7 +222,6 @@ const AddPlan = ({
         }),
       );
       handleCloseBtn();
-      return;
     }
     // 임시처리 - 지우기
     if (type === "requestCuration" && inputDesc === "") {
