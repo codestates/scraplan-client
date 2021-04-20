@@ -23,6 +23,7 @@ function Modal(props: ModalProps) {
   const refInput = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
+    refInput.current?.focus();
     window.addEventListener("keydown", (e) => {
       if (e.key === "Escape") handleCloseBtn();
     });
@@ -39,6 +40,7 @@ function Modal(props: ModalProps) {
   const handleYesBtn = () => {
     if (modalType === "inputModal") {
       if (inputValue === "") {
+        alert("닉네임을 입력해주세요");
         refInput.current?.focus();
         return;
       }
@@ -58,7 +60,8 @@ function Modal(props: ModalProps) {
 
   const handleKeyPressEnter = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
-      handleYesBtn;
+      alert("제출!");
+      handleYesBtn();
     }
   };
 
