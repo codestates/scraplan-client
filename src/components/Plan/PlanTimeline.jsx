@@ -7,7 +7,6 @@ import SetTime from "../UI/SetTime";
 import SetTheme from "../UI/SetTheme";
 import "./PlanTimeline.scss";
 import "./Plan.scss";
-import { filter } from "lodash";
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -233,8 +232,6 @@ const PlanTimeline = ({
 
           const handleDeletePlancard = (e, cardIdx) => {
             // 수정필요
-            console.log(layoutState);
-
             setFilterByDay(
               ...filterByDay.slice(0, day - 1),
               [

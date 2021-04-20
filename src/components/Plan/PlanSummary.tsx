@@ -167,7 +167,7 @@ const PlanSummary = (props: PlanSummaryProps) => {
               <></>
             )}
 
-            <button
+            <div
               className="plansummary__contents__plan-hover__share-btn"
               onClick={handleToggleShareBtn}
             >
@@ -182,7 +182,7 @@ const PlanSummary = (props: PlanSummaryProps) => {
                 </button>
                 <button onClick={handleShareUrl}>URL로 공유하기</button>
               </div>
-            </button>
+            </div>
           </div>
         </div>
       </div>

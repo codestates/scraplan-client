@@ -214,7 +214,11 @@ const MyPage = () => {
         " " +
         (inputAddrGu === "선택" ? "" : inputAddrGu);
       fetch(
-        `${process.env.REACT_APP_SERVER_URL}/plans?writer-email=${email}&min-day=${inputDaycountMin}&max-day=${inputDaycountMax}&addr=${addr}`,
+        `${
+          process.env.REACT_APP_SERVER_URL
+        }/plans/${1}/?writer=${nickname}&min-day=${inputDaycountMin}&max-day=${inputDaycountMax}&addr=${encodeURIComponent(
+          addr,
+        )}`,
         {
           method: "GET",
           headers: {
