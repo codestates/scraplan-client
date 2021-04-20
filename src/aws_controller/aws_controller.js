@@ -13,13 +13,12 @@ const {
 } = require("@aws-sdk/client-s3");
 const REGION = process.env.REACT_APP_CLIENT_AWS_REGION;
 
-// 버킷 생성 후 주석 풀기
 const s3 = new S3Client({
-  // region: REGION,
-  // credentials: fromCognitoIdentityPool({
-  //   client: new CognitoIdentityClient({ region: REGION }),
-  //   identityPoolId: process.env.REACT_APP_CLIENT_AWS_POOLID,
-  // }),
+  region: REGION,
+  credentials: fromCognitoIdentityPool({
+    client: new CognitoIdentityClient({ region: REGION }),
+    identityPoolId: process.env.REACT_APP_CLIENT_AWS_POOLID,
+  }),
 });
 const bucketName = process.env.REACT_APP_CLIENT_AWS_BUCKETNAME;
 /**
@@ -187,7 +186,7 @@ const uploadScraplanThumbnail = async (email, files) => {
   try {
     const filename = await getNextFileIndex(email);
     const savedFileLocation = await uploadFile(email, files, filename);
-    return `http://${bucketName}/${savedFileLocation}`;
+    return `http://${bucketName}/${encodeURIComponent(savedFileLocation)}`;
   } catch (err) {
     return -2;
   }

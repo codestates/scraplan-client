@@ -334,13 +334,13 @@ const CurationManagement = () => {
   );
 
   const handleChangePhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    // if (e.target.files && e.target.files.length > 0) {
-    //   const tempThumbnail = await uploadScraplanThumbnail(
-    //     email,
-    //     e.target.files,
-    //   );
-    //   setInputPhoto(tempThumbnail.toString());
-    // }
+    if (e.target.files && e.target.files.length > 0) {
+      const tempThumbnail = await uploadScraplanThumbnail(
+        email,
+        e.target.files,
+      );
+      setInputPhoto(tempThumbnail.toString());
+    }
   };
 
   const handleChangeTime = useCallback(
@@ -396,7 +396,7 @@ const CurationManagement = () => {
         theme: inputTheme,
         title: inputTitle,
         detail: inputDesc,
-        photo: "ㅁㄴㅇㄹ",
+        photo: inputPhoto,
       }),
     })
       .then((res) => res.json())
