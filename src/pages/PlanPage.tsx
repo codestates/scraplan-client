@@ -87,10 +87,12 @@ const PlanPage = () => {
     window.kakao.maps.load(() => {
       loadKakaoMap();
     });
-  }, [viewOnlyMine, planCards, currentDay]);
+  }, [viewOnlyMine, planCards, currentDay, selectTheme]);
 
   useEffect(() => {
-    makeMarker();
+    if (!viewOnlyMine) {
+      makeMarker();
+    }
   }, [markerList]);
 
   // marker request
@@ -99,7 +101,9 @@ const PlanPage = () => {
     fetch(
       `${
         process.env.REACT_APP_SERVER_URL
-      }/curations?coordinates=${encodeURIComponent(JSON.stringify(mapBounds))}`,
+      }/curations?coordinates=${encodeURIComponent(
+        JSON.stringify(mapBounds),
+      )}&theme=${selectTheme}`,
       {
         method: "GET",
         headers: {
@@ -113,7 +117,7 @@ const PlanPage = () => {
         setMarkerList(body);
       })
       .catch((err) => console.error(err));
-  }, [mapBounds]);
+  }, [mapBounds, selectTheme]);
 
   // keyword request
   useEffect(() => {
@@ -168,7 +172,6 @@ const PlanPage = () => {
         title: markerList[i].address,
         image: markerImage,
       });
-
       ((marker, curationId, curationAddr, curationCoordinates) => {
         window.kakao.maps.event.addListener(marker, "click", () => {
           handleClickMarker(curationId, curationAddr, curationCoordinates);
@@ -206,6 +209,7 @@ const PlanPage = () => {
       let dailyPlanCards = planCards.filter((card: { day: number }) => {
         return currentDay === card.day;
       });
+      console.log(dailyPlanCards);
       dailyPlanCards.sort(function (
         a: { startTime: string },
         b: { startTime: string },

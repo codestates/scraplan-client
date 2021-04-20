@@ -43,29 +43,7 @@ const ViewCuration = (props: ViewCurationProps) => {
   const [inputFeedbackTimes, setInputFeedbackTimes] = useState<number>(1);
   const [inputFeedbackComment, setInputFeedbackComment] = useState<string>("");
 
-  const [feedbackList, setFeedbackList] = useState([
-    {
-      curationFeedbackId: 0,
-      writer: "tester",
-      times: 1.15,
-      comment: "편안하고 조용한 곳! 부리또도 맛있어요",
-      rate: 1,
-    },
-    {
-      curationFeedbackId: 0,
-      writer: "tester",
-      times: 3,
-      comment: "편안하고 조용한 곳이라 또 가고싶어요",
-      rate: 2,
-    },
-    {
-      curationFeedbackId: 0,
-      writer: "tester",
-      times: 2,
-      comment: "별로!",
-      rate: 0,
-    },
-  ]);
+  const [feedbackList, setFeedbackList] = useState([]);
 
   useEffect(() => {
     fetch(
@@ -83,7 +61,7 @@ const ViewCuration = (props: ViewCurationProps) => {
         setFeedbackList(body);
       })
       .catch((err) => console.error(err));
-  }, []);
+  }, [open]);
 
   useEffect(() => {
     window.addEventListener("keydown", (e) => {
@@ -99,15 +77,6 @@ const ViewCuration = (props: ViewCurationProps) => {
   );
 
   const handleCreateCurationFeedback = () => {
-    console.log(
-      JSON.stringify({
-        email,
-        curationCardId,
-        times: Number(inputFeedbackTimes),
-        comment: inputFeedbackComment,
-        rate: inputFeedbackRate,
-      }),
-    );
     fetch(`${process.env.REACT_APP_SERVER_URL}/curation-card-feedback`, {
       method: "POST",
       headers: {
@@ -197,7 +166,7 @@ const ViewCuration = (props: ViewCurationProps) => {
                     <span>{detail || "설명"}</span>
                   </div>
                   <div className="viewcuration__contents__desc__photo">
-                    <img src={photo} alt="" />
+                    <img src={decodeURIComponent(photo)} alt="" />
                   </div>
                 </div>
               </div>
@@ -225,6 +194,7 @@ const ViewCuration = (props: ViewCurationProps) => {
                 </div>
                 <div className="viewcuration__contents__feedback__lists">
                   {feedbackList &&
+                    feedbackList.length > 0 &&
                     feedbackList.map((feedback, idx) => {
                       return <Feedback key={idx} detail={feedback} />;
                     })}

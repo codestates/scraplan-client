@@ -1114,7 +1114,10 @@ body {
           margin-top: 2rem;
           height: 8.75rem;
           width: 95%;
-          background-color: #fff2f2;
+          overflow: hidden;
+          img {
+            width: 100%;
+          }
         }
       }
       &__feedback {

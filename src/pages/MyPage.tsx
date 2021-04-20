@@ -31,28 +31,7 @@ const MyPage = () => {
     },
   ]);
 
-  const [curationsRequestsList, setCurationsRequestsList] = useState([
-    {
-      id: 0,
-      title: "서울 여행",
-      requester: "tester",
-      coordinates: [10, 10],
-      address: "서울시 강남구 -",
-      requestComment: "이 장소에 대해 추가해주세요~! ",
-      requestTheme: 3,
-      status: 0,
-    },
-    {
-      id: 1,
-      title: "마장동 소고기 투어",
-      requester: "tester",
-      coordinates: [10, 10],
-      address: "서울시 성동구 마장동",
-      requestComment: "소고기는 마장동에서!",
-      requestTheme: 3,
-      status: 3,
-    },
-  ]);
+  const [curationsRequestsList, setCurationsRequestsList] = useState([]);
 
   const [inputAddrSi, setInputAddrSi] = useState<string>("선택");
   const [inputAddrGun, setInputAddrGun] = useState<string>("선택");
@@ -416,20 +395,22 @@ const MyPage = () => {
                 <img src="/images/add.png" alt="" />
                 <p>일정 만들기</p>
               </div>
-              {planList.map((plan, idx) => {
-                return (
-                  <PlanSummary
-                    key={idx}
-                    id={plan.id}
-                    title={plan.title}
-                    desc={plan.desc}
-                    writer={plan.writer}
-                    dayCount={plan.dayCount}
-                    representAddr={plan.representAddr}
-                    handleGetAllPlans={handleGetAllPlans}
-                  />
-                );
-              })}
+              {planList &&
+                planList.length > 0 &&
+                planList.map((plan, idx) => {
+                  return (
+                    <PlanSummary
+                      key={idx}
+                      id={plan.id}
+                      title={plan.title}
+                      desc={plan.desc}
+                      writer={plan.writer}
+                      dayCount={plan.dayCount}
+                      representAddr={plan.representAddr}
+                      handleGetAllPlans={handleGetAllPlans}
+                    />
+                  );
+                })}
             </div>
           </div>
         ) : (
@@ -446,9 +427,11 @@ const MyPage = () => {
                 <p>상태</p>
                 <p>제목</p>
               </div>
-              {curationsRequestsList.map((item, idx) => {
-                return <CurationRequestItem key={idx} props={item} />;
-              })}
+              {curationsRequestsList &&
+                curationsRequestsList.length > 0 &&
+                curationsRequestsList.map((item, idx) => {
+                  return <CurationRequestItem key={idx} props={item} />;
+                })}
             </div>
           </div>
         )}
