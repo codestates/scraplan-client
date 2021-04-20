@@ -134,9 +134,9 @@ const Signup = (props: SignupProps) => {
 
   const checkValidPassword = useCallback(
     (password) => {
-      if (!/^[a-zA-Z0-9]{8,20}$/.test(password)) {
+      if (!/^(?=.*[a-zA-Z])((?=.*\d)|(?=.*\W)).{6,20}$/.test(password)) {
         setDenyMessage(
-          "비밀번호는 숫자와 영문자 조합으로 8~20자리를 사용해야 합니다.",
+          "영문자 + 숫자/특수문자 조합으로 8~20자리를 사용해야 합니다.",
         );
         return false;
       }
