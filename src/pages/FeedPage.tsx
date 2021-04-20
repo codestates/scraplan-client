@@ -168,7 +168,7 @@ const FeedPage = () => {
   };
 
   const handleCreateMyPlan = () => {
-    history.push("/planpage/newpage");
+    history.push("/planpage/newplan");
   };
 
   return (

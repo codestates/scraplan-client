@@ -213,6 +213,11 @@ const AddPlan = ({
             endTime: endHour + ":" + endMin,
             comment: inputTitle,
             theme: requestTheme,
+            coordinates: [
+              Number(forRequestLatLng[0]),
+              Number(forRequestLatLng[1]),
+            ],
+            address: forRequestAddress,
           }),
         }),
       );
@@ -225,7 +230,6 @@ const AddPlan = ({
       return;
     }
     if (type === "requestCuration") {
-      console.log([Number(forRequestLatLng[0]), Number(forRequestLatLng[1])]);
       return fetch(`${process.env.REACT_APP_SERVER_URL}/curation-request`, {
         method: "POST",
         headers: {

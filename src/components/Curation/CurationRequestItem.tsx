@@ -39,7 +39,7 @@ const CurationRequestItem = ({ props }: any) => {
 
   const handleCurationRequestCancelBtn = (): void => {
     fetch(`${process.env.REACT_APP_SERVER_URL}/curation-request`, {
-      method: "PATCh",
+      method: "PATCH",
       headers: {
         authorization: `Bearer ${token}`,
         "Content-Type": "application/json",

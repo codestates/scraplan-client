@@ -34,9 +34,9 @@ const PlanTimeline = ({
   const [layoutState, setLayoutState] = useState([]);
   const [genCnt, setGenCnt] = useState(0);
 
-  console.log("day", day);
-  console.log("filterByDay", filterByDay);
-  console.log("layoutState", layoutState);
+  // console.log("day", day);
+  // console.log("filterByDay", filterByDay);
+  // console.log("layoutState", layoutState);
 
   // 초기 레이아웃 생성
   useEffect(() => {
@@ -122,7 +122,7 @@ const PlanTimeline = ({
   };
 
   const onLayoutChange = (layout) => {
-    console.log("layout", layout);
+    // console.log("layout", layout);
     setLayoutState(generateLayout());
     if (
       filterByDay &&
@@ -131,8 +131,8 @@ const PlanTimeline = ({
       layoutState.length !== 0 &&
       layoutState.length === filterByDay[day - 1].length
     ) {
-      console.log("layout이 바뀔때마다");
-      console.log(filterByDay);
+      // console.log("layout이 바뀔때마다");
+      // console.log(filterByDay);
       // 시간 변환
       let newPlanCardsList = filterByDay[day - 1].map((plan, idx) => {
         let startHour = Math.floor(layoutState[idx].y / 4);
@@ -156,7 +156,6 @@ const PlanTimeline = ({
         });
         return newPlan;
       });
-      console.log("set!");
       setFilterByDay([
         ...filterByDay.slice(0, day - 1),
         newPlanCardsList,
@@ -167,7 +166,7 @@ const PlanTimeline = ({
 
   // Timeline에 있는 일정들을 PlanCards 데이터로 변환
   const handleSaveBtn = () => {
-    if (filterByDay[day - 1].length !== 0) {
+    if (filterByDay[day - 1] && filterByDay[day - 1].length !== 0) {
       let newPlanCardsList = filterByDay[day - 1].map((plan, idx) => {
         let startHour = Math.floor(layoutState[idx].y / 4);
         let startMin =
@@ -233,17 +232,23 @@ const PlanTimeline = ({
           };
 
           const handleDeletePlancard = (e, cardIdx) => {
-            // // 수정필요
-            // setPlanCardsList(
-            //   planCardsList.filter((card, idx) => {
-            //     return idx !== cardIdx;
-            //   }),
-            // );
-            // setLayoutState(
-            //   layoutState.filter((_, idx) => {
-            //     return idx !== cardIdx;
-            //   }),
-            // );
+            // 수정필요
+            console.log(layoutState);
+
+            setFilterByDay(
+              ...filterByDay.slice(0, day - 1),
+              [
+                filterByDay[day - 1].filter((card, idx) => {
+                  return idx !== cardIdx;
+                }),
+              ],
+              ...filterByDay.slice(day),
+            );
+            setLayoutState(
+              layoutState.filter((_, idx) => {
+                return idx !== cardIdx;
+              }),
+            );
           };
 
           return (
