@@ -193,7 +193,7 @@ const PlanPage = () => {
       center: new window.kakao.maps.LatLng(LatLng[0], LatLng[1]),
       level: mapLevel,
     };
-    // 여기서 map은 useState로 선언했었는데 또 이렇게 하신이유가 있으신가요?!
+
     let map = new window.kakao.maps.Map(container, options);
     setMap(map);
     // 여기까지
@@ -203,13 +203,10 @@ const PlanPage = () => {
       [bounds.ha, bounds.oa],
     ]);
 
-    // 내 일정만 보기인 경우
-    if (viewOnlyMine) {
-      //리덕스 값
+    const viewMyPlan = () => {
       let dailyPlanCards = planCards.filter((card: { day: number }) => {
         return currentDay === card.day;
       });
-      console.log(dailyPlanCards);
       dailyPlanCards.sort(function (
         a: { startTime: string },
         b: { startTime: string },
@@ -223,89 +220,101 @@ const PlanPage = () => {
         return 0;
       });
       let bounds = new window.kakao.maps.LatLngBounds();
-      for (let i = 0; i < dailyPlanCards.length; i++) {
-        // 마커 만들기 (시작)
-        const position = new window.kakao.maps.LatLng(
-          dailyPlanCards[i].coordinates[0],
-          dailyPlanCards[i].coordinates[1],
-        );
-        const marker = new window.kakao.maps.Marker({
-          map,
-          position,
-          title: dailyPlanCards[i].address,
-        });
-
-        // 지도 재배치 (시작)
-        bounds.extend(position);
-        // 지도 재배치 (끝)
-
-        const customOverlayContent = document.createElement("div");
-        const innerOverlayContent = document.createElement("div");
-        customOverlayContent.className = "customOverlay";
-        innerOverlayContent.textContent = `${i + 1}`;
-        customOverlayContent.append(innerOverlayContent);
-
-        const customOverlay = new window.kakao.maps.CustomOverlay({
-          position,
-          content: customOverlayContent,
-        });
-
-        const iwContent =
-          "<div class='infoWindow'>" +
-          `<div class='day'>${currentDay}일차</div>` +
-          `<div class='time'>${dailyPlanCards[i].startTime} ~ ${
-            dailyPlanCards[i].endTime === 0 ? "00" : dailyPlanCards[i].endTime
-          }</div>` +
-          `<div class='title'>${dailyPlanCards[i].comment}</div>` +
-          `<div class='address'>${dailyPlanCards[i].address}</div>` +
-          "</div>";
-        // 마커에 표시할 인포윈도우를 생성합니다
-        const infowindow = new window.kakao.maps.InfoWindow({
-          content: iwContent, // 인포윈도우에 표시할 내용
-        });
-
-        customOverlayContent.addEventListener("mouseover", function () {
-          infowindow.open(map, marker);
-        });
-        customOverlayContent.addEventListener("mouseout", function () {
-          infowindow.close();
-        });
-
-        marker.setMap(map);
-        customOverlay.setMap(map);
-        // 마커 만들기 (끝)
-
-        // 선 만들기 (시작)
-        let linePath: any = [];
+      if (dailyPlanCards.length > 0) {
         for (let i = 0; i < dailyPlanCards.length; i++) {
-          linePath.push(
-            new window.kakao.maps.LatLng(
-              dailyPlanCards[i].coordinates[0],
-              dailyPlanCards[i].coordinates[1],
-            ),
+          // 마커 만들기 (시작)
+          const position = new window.kakao.maps.LatLng(
+            dailyPlanCards[i].coordinates[0],
+            dailyPlanCards[i].coordinates[1],
           );
+          const marker = new window.kakao.maps.Marker({
+            map,
+            position,
+            title: dailyPlanCards[i].address,
+          });
+
+          // 지도 재배치 (시작)
+          bounds.extend(position);
+          // 지도 재배치 (끝)
+
+          const customOverlayContent = document.createElement("div");
+          const innerOverlayContent = document.createElement("div");
+          customOverlayContent.className = "customOverlay";
+          innerOverlayContent.textContent = `${i + 1}`;
+          customOverlayContent.append(innerOverlayContent);
+
+          const customOverlay = new window.kakao.maps.CustomOverlay({
+            position,
+            content: customOverlayContent,
+          });
+
+          const iwContent =
+            "<div class='infoWindow'>" +
+            `<div class='day'>${currentDay}일차</div>` +
+            `<div class='time'>${
+              dailyPlanCards[i].startTime.split(":")[1] === "0"
+                ? `${dailyPlanCards[i].startTime.split(":")[0]}:00`
+                : dailyPlanCards[i].startTime
+            } ~ ${
+              dailyPlanCards[i].endTime.split(":")[1] === "0"
+                ? `${dailyPlanCards[i].endTime.split(":")[0]}:00`
+                : dailyPlanCards[i].endTime
+            }</div>` +
+            `<div class='title'>${dailyPlanCards[i].comment}</div>` +
+            `<div class='address'>${dailyPlanCards[i].address}</div>` +
+            "</div>";
+          // 마커에 표시할 인포윈도우를 생성합니다
+          const infowindow = new window.kakao.maps.InfoWindow({
+            content: iwContent, // 인포윈도우에 표시할 내용
+          });
+
+          customOverlayContent.addEventListener("mouseover", function () {
+            infowindow.open(map, marker);
+          });
+          customOverlayContent.addEventListener("mouseout", function () {
+            infowindow.close();
+          });
+
+          marker.setMap(map);
+          customOverlay.setMap(map);
+          // 마커 만들기 (끝)
+
+          // 선 만들기 (시작)
+          let linePath: any = [];
+          for (let i = 0; i < dailyPlanCards.length; i++) {
+            linePath.push(
+              new window.kakao.maps.LatLng(
+                dailyPlanCards[i].coordinates[0],
+                dailyPlanCards[i].coordinates[1],
+              ),
+            );
+          }
+          const polyline = new window.kakao.maps.Polyline({
+            endArrow: true,
+            path: linePath, // 선을 구성하는 좌표배열 입니다
+            strokeWeight: 5, // 선의 두께 입니다
+            strokeColor: "red", // 선의 색깔입니다
+            strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+            strokeStyle: "solid", // 선의 스타일입니다
+          });
+          polyline.setMap(map);
+          // 선 만들기 (끝)
         }
-        const polyline = new window.kakao.maps.Polyline({
-          endArrow: true,
-          path: linePath, // 선을 구성하는 좌표배열 입니다
-          strokeWeight: 5, // 선의 두께 입니다
-          strokeColor: "red", // 선의 색깔입니다
-          strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-          strokeStyle: "solid", // 선의 스타일입니다
-        });
-        polyline.setMap(map);
-        // 선 만들기 (끝)
+        if (viewOnlyMine) {
+          map.setBounds(bounds);
+          // 지도 레벨 1 증가
+          const zoomOut = () => {
+            const level = map.getLevel();
+            map.setLevel(level + 1);
+          };
+          zoomOut();
+        }
+        // 지도 영역 재배치
       }
-      console.log("bounds-----------", bounds);
-      // 지도 영역 재배치
-      map.setBounds(bounds);
-      // 지도 레벨 1 증가
-      const zoomOut = () => {
-        const level = map.getLevel();
-        map.setLevel(level + 1);
-      };
-      zoomOut();
-    } else {
+    };
+    viewMyPlan();
+
+    if (!viewOnlyMine) {
       // 전체 큐레이션 보기인 경우
       // drag event controller
       window.kakao.maps.event.addListener(map, "dragend", () => {
