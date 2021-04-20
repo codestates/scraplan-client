@@ -154,7 +154,7 @@ const FeedPage = () => {
       fetch(
         `${
           process.env.REACT_APP_SERVER_URL
-        }/plans/${1}/?writer=${nickname}&min-day=${inputDaycountMin}&max-day=${inputDaycountMax}&addr=${encodeURIComponent(
+        }/plans/${1}/?min-day=${inputDaycountMin}&max-day=${inputDaycountMax}&addr=${encodeURIComponent(
           addr,
         )}`,
         {
