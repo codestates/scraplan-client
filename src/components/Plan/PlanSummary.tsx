@@ -66,13 +66,14 @@ const PlanSummary = (props: PlanSummaryProps) => {
   };
 
   const handleShareKakao = () => {
-    window.Kakao.init(process.env.REACT_APP_KAKAO_MAP_JS_KEY);
-    window.Kakao.isInitialized();
+    if (!window.Kakao.isInitialized()) {
+      window.Kakao.init(process.env.REACT_APP_KAKAO_MAP_JS_KEY);
+    }
     window.Kakao.Link.sendDefault({
       objectType: "feed",
       content: {
         title,
-        description: desc,
+        description: desc || "Scraplan과 함께 일정을 계획해요!",
         imageUrl:
           "http://mud-kage.kakao.co.kr/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg",
         link: {

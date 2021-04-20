@@ -284,6 +284,7 @@ button {
     background-color: #fff;
     border-radius: 4px;
     overflow-y: scroll;
+    position: absolute;
     height: 6rem;
     ul {
       display: block;
@@ -294,7 +295,6 @@ button {
       list-style: none;
       li {
         text-align: center;
-        margin-left: 2px;
         box-sizing: border-box;
         font-size: 0.8rem;
         font-weight: 500;

@@ -151,7 +151,7 @@ const MainPage = () => {
                 <button onClick={() => history.push("/planpage/newplan")}>
                   바로시작하기
                 </button>
-                <button onClick={() => history.push("/planpage/newplan")}>
+                <button onClick={() => history.push("/feedpage")}>
                   먼저구경하기
                 </button>
               </div>

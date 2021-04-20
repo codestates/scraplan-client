@@ -17,6 +17,7 @@ interface ViewCurationProps {
     avgTime: number;
     feedbackCnt: number;
   };
+  curationAddr: any;
 }
 
 const ViewCuration = (props: ViewCurationProps) => {
@@ -32,6 +33,7 @@ const ViewCuration = (props: ViewCurationProps) => {
       avgTime,
       feedbackCnt,
     },
+    curationAddr,
   } = props;
   const userState = useSelector((state: RootState) => state.userReducer);
   const themeList = ["🍽", "☕️", "🕹", "🚴🏻", "🚗", "🤔"];
@@ -124,6 +126,8 @@ const ViewCuration = (props: ViewCurationProps) => {
   };
 
   const handleClickCloseBtn = (e: any) => {
+    e.preventDefault();
+    e.stopPropagation();
     close();
   };
 
@@ -159,7 +163,7 @@ const ViewCuration = (props: ViewCurationProps) => {
                 <div className="viewcuration__contents__desc__items">
                   <div className="viewcuration__contents__desc__items__item">
                     <img src="/images/pin.png" alt="" />
-                    <p>서울시 종로구</p>
+                    <p>{curationAddr}</p>
                   </div>
                   <div className="viewcuration__contents__desc__items__item">
                     <img src="/images/document.png" alt="" />

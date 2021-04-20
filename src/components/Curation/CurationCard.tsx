@@ -12,9 +12,14 @@ interface CurationCardProps {
     feedbackCnt: number;
   };
   addEventFunc: any;
+  curationAddr?: any;
 }
 
-const CurationCard = ({ props, addEventFunc }: CurationCardProps) => {
+const CurationCard = ({
+  props,
+  addEventFunc,
+  curationAddr,
+}: CurationCardProps) => {
   const {
     curationCardId,
     theme,
@@ -41,6 +46,7 @@ const CurationCard = ({ props, addEventFunc }: CurationCardProps) => {
         open={openViewCuration}
         close={handleViewCurationClose}
         curationCard={props}
+        curationAddr={curationAddr}
       />
       <div className="curation-card__info">
         <div className="curation-card__info__theme">

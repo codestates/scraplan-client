@@ -4,7 +4,12 @@ import "./Curation.scss";
 import { useSelector } from "react-redux";
 import { RootState } from "../../reducers";
 
-const CurationList = ({ addEventFunc, openList, setOpenList }: any) => {
+const CurationList = ({
+  addEventFunc,
+  openList,
+  setOpenList,
+  curationAddr,
+}: any) => {
   const [sortByTime, setSortByTime] = useState<boolean>(false);
 
   const curationState = useSelector(
@@ -59,6 +64,7 @@ const CurationList = ({ addEventFunc, openList, setOpenList }: any) => {
                     props={card}
                     key={index}
                     addEventFunc={addEventFunc}
+                    curationAddr={curationAddr}
                   />
                 );
               },
