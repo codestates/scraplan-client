@@ -985,6 +985,15 @@ body {
   right: 0;
   bottom: 0;
   left: 0;
+  .set-theme {
+    span {
+      width: 3rem;
+      div {
+        margin: 0;
+        padding: 0.2rem;
+      }
+    }
+  }
   &__outsider {
     position: fixed;
     width: 100vw;
@@ -1007,12 +1016,11 @@ body {
     border-radius: 4px;
     padding: 4rem;
     .viewcuration__close-btn {
-      position: absolute;
+      position: relative;
       background-color: #fff;
       font-size: 1rem;
       border: 0;
       outline: 0;
-      position: relative;
       top: -8vh;
       left: 46.5vw;
       padding: 0.2rem 0.4rem;

@@ -492,6 +492,7 @@ const PlanPage = () => {
         addEventFunc={handleAddToPlan}
         openList={openList}
         setOpenList={setOpenList}
+        curationAddr={curationAddr}
       />
       <PlanList
         LatLng={LatLng}
@@ -518,7 +519,7 @@ const PlanPage = () => {
             {viewOnlyMine ? "👀" : "🗺"}
           </button>
           <span className="planpage__layout__options__option-desc">
-            {viewOnlyMine ? "내 일정만 보기" : "전체 보기"}
+            {viewOnlyMine ? "전체 보러가기" : "내 일정만 보러가기"}
           </span>
           <button
             className="planpage__layout__options__option"
