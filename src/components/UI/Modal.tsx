@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./UI.scss";
 
 type ModalProps = {
@@ -7,20 +7,58 @@ type ModalProps = {
   close: () => void;
   comment: string;
   handleAcceptAction?: () => void;
+  handleInputAction?: any;
 };
 
 function Modal(props: ModalProps) {
-  const { open, close, comment, handleAcceptAction, modalType } = props;
+  const {
+    open,
+    close,
+    comment,
+    handleAcceptAction,
+    modalType,
+    handleInputAction,
+  } = props;
+  const [inputValue, setInputValue] = useState<string>("");
+  const refInput = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") close();
+      if (e.key === "Escape") handleCloseBtn();
     });
   }, [open]);
 
+  const handleCloseBtn = () => {
+    if (modalType === "inputModal" && handleInputAction) {
+      setInputValue("");
+      handleInputAction("");
+    }
+    close();
+  };
+
   const handleYesBtn = () => {
+    if (modalType === "inputModal") {
+      if (inputValue === "") {
+        refInput.current?.focus();
+        return;
+      }
+    }
     if (handleAcceptAction) {
       handleAcceptAction();
+    }
+  };
+
+  const handleChangeInput = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setInputValue(e.target?.value);
+      handleInputAction(e.target?.value);
+    },
+    [inputValue],
+  );
+
+  const handleKeyPressEnter = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleYesBtn;
     }
   };
 
@@ -28,9 +66,9 @@ function Modal(props: ModalProps) {
     <div className={`modal ${open ? "show" : ""}`}>
       {open ? (
         <>
-          <div className="modal__outsider" onClick={close}></div>
+          <div className="modal__outsider" onClick={handleCloseBtn}></div>
           <div className="modal__wrapper">
-            <button className="modal__close-btn" onClick={close}>
+            <button className="modal__close-btn" onClick={handleCloseBtn}>
               &times;
             </button>
             {modalType === "alertModal" ? (
@@ -40,7 +78,14 @@ function Modal(props: ModalProps) {
             )}
             <div className="modal__title">{comment}</div>
             {modalType === "inputModal" ? (
-              <input type="text" className="modal__input-text" />
+              <input
+                type="text"
+                className="modal__input-text"
+                value={inputValue}
+                onChange={handleChangeInput}
+                onKeyPress={handleKeyPressEnter}
+                ref={refInput}
+              />
             ) : (
               <></>
             )}

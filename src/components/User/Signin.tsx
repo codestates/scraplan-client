@@ -24,40 +24,6 @@ const Signin = (props: SigninProps) => {
   const [denyMessage, setDenyMessage] = useState<string>("");
 
   useEffect(() => {
-    if (window.location.hash !== "") {
-      const state = window.location.hash.slice(7, 13);
-      if (state === "signin") {
-        fetch(`${process.env.REACT_APP_SERVER_URL}/google-sign/in`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            credentials: "include",
-          },
-          body: JSON.stringify({ data: window.location.hash }),
-        })
-          .then((res) => res.json())
-          .then((body) => {
-            if (body.accessToken) {
-              dispatch(signIn(body.accessToken, body.email, body.nickname));
-              history.push(`${currentPage}`);
-              return;
-            } else {
-              history.push(`${currentPage}`);
-              return;
-            }
-          })
-          .catch((err) => {
-            console.error(err);
-            history.push(`${currentPage}`);
-          });
-      } else {
-        history.push(`${currentPage}`);
-        return;
-      }
-    }
-  });
-
-  useEffect(() => {
     refEmail.current?.focus();
     window.addEventListener("keydown", (e) => {
       if (e.key === "Escape") handleCloseBtn();

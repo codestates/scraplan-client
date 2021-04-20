@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { signIn } from "../../actions";
+import Modal from "../UI/Modal";
 
 type SignupProps = {
   open: boolean;
@@ -25,66 +26,18 @@ const Signup = (props: SignupProps) => {
   const [inputNickname, setInputNickname] = useState<string>("");
   const [inputPassword, setInputPassword] = useState<string>("");
   const [inputPasswordCheck, setInputPasswordCheck] = useState<string>("");
+  const [inputNicknameModal, setInputNicknameModal] = useState<string>("");
   const [denyMessage, setDenyMessage] = useState<string>("");
 
-  useEffect(() => {
-    if (window.location.hash !== "") {
-      const state = window.location.hash.slice(7, 13);
-      if (state === "signup") {
-        fetch(`${process.env.REACT_APP_SERVER_URL}/google-sign/up`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            credentials: "include",
-          },
-          body: JSON.stringify({
-            nickname: inputNickname,
-            hashData: window.location.hash,
-          }),
-        })
-          .then((res) => res.json())
-          .then((body) => {
-            if (body.message === "Successfully signedup") {
-              return "success";
-            } else {
-              return "fail";
-            }
-          })
-          .then((data) => {
-            if (data === "success") {
-              fetch(`${process.env.REACT_APP_SERVER_URL}/google-sign/in`, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  credentials: "include",
-                },
-                body: JSON.stringify({ data: window.location.hash }),
-              })
-                .then((res) => res.json())
-                .then((body) => {
-                  if (body.accessToken) {
-                    dispatch(
-                      signIn(body.accessToken, body.email, body.nickname),
-                    );
-                    history.push(`${currentPage}`);
-                    return;
-                  } else {
-                    history.push(`${currentPage}`);
-                    return;
-                  }
-                })
-                .catch((err) => {
-                  console.error(err);
-                  history.push(`${currentPage}`);
-                });
-            } else {
-              history.push(`${currentPage}`);
-              return;
-            }
-          });
-      }
-    }
-  }, []);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [modalComment, setModalComment] = useState<string>("");
+
+  const handleModalOpen = () => {
+    setOpenModal(true);
+  };
+  const handleModalClose = () => {
+    setOpenModal(false);
+  };
 
   useEffect(() => {
     refEmail.current?.focus();
@@ -248,101 +201,120 @@ const Signup = (props: SignupProps) => {
     }
   };
 
+  const handleSigUpWithGoogle = () => {
+    setModalComment("사용하실 닉네임을 입력해주세요.");
+    handleModalOpen();
+  };
+  const handleAcceptActionToModal = () => {
+    handleGoogleSign(`${currentPage}`, `signup/${inputNicknameModal}`);
+  };
+
   return (
-    <div className={`signup ${open ? "show" : ""}`}>
-      {open ? (
-        <>
-          <div className="signup__outsider" onClick={handleCloseBtn}></div>
-          <div className="signup__wrapper">
-            <button className="signup__close-btn" onClick={handleCloseBtn}>
-              &times;
-            </button>
-            <div className="signup__form">
-              <div className="signup__form__title">회원가입</div>
-              <ul className="signup__form__list">
-                <li className="signup__form__list__item">
-                  <p className="label">E-mail</p>
-                  <input
-                    className="email"
-                    type="text"
-                    placeholder="사용하실 E-mail을 입력해주세요."
-                    value={inputEmail}
-                    onChange={handleChangeEmail}
-                    onKeyPress={handleMoveToNickname}
-                    ref={refEmail}
-                  />
-                  <div className="send" onClick={handleEmailCertSend}>
-                    보내기
-                  </div>
-                </li>
-                <li className="signup__form__list__item">
-                  <p className="label">E-mail 인증번호</p>
-                  <input
-                    className="emailCert"
-                    type="text"
-                    value={inputEmailCert}
-                    onChange={handleChangeEmailCert}
-                    ref={refEmailCert}
-                  />
-                  <div className="confirm">확인</div>
-                </li>
-                <li className="signup__form__list__item">
-                  <p className="label">닉네임</p>
-                  <input
-                    className="nickname"
-                    type="text"
-                    placeholder="사용하실 닉네임을 입력해주세요."
-                    value={inputNickname}
-                    onChange={handleChangeNickname}
-                    onKeyPress={handleMoveTopassword}
-                    ref={refNickname}
-                  />
-                </li>
-                <li className="signup__form__list__item">
-                  <p className="label">비밀번호</p>
-                  <input
-                    className="password"
-                    type="password"
-                    placeholder="Password"
-                    value={inputPassword}
-                    onChange={handleChangePassword}
-                    onKeyPress={handleMoveTopasswordCheck}
-                    ref={refPassword}
-                  />
-                </li>
-                <li className="signup__form__list__item">
-                  <p className="label">비밀번호 확인</p>
-                  <input
-                    className="passwordcheck"
-                    type="password"
-                    placeholder="Password Check"
-                    value={inputPasswordCheck}
-                    onChange={handleChangePasswordCheck}
-                    onKeyPress={handleMoveToSignUp}
-                    ref={refPasswordCheck}
-                  />
-                </li>
-              </ul>
-              <p className="signup__form__deny-message">{denyMessage}</p>
-              <button
-                className="signup__form__submit-btn"
-                onClick={handleSignUp}
-              >
-                회원가입
+    <>
+      <Modal
+        modalType="inputModal"
+        open={openModal}
+        close={handleModalClose}
+        comment={modalComment}
+        handleAcceptAction={handleAcceptActionToModal}
+        handleInputAction={setInputNicknameModal}
+      />
+      <div className={`signup ${open ? "show" : ""}`}>
+        {open ? (
+          <>
+            <div className="signup__outsider" onClick={handleCloseBtn}></div>
+            <div className="signup__wrapper">
+              <button className="signup__close-btn" onClick={handleCloseBtn}>
+                &times;
               </button>
-              <button
-                className="signup__form__google-btn"
-                onClick={() => handleGoogleSign(`${currentPage}`, "signup")}
-              >
-                Google
-              </button>
+              <div className="signup__form">
+                <div className="signup__form__title">회원가입</div>
+                <ul className="signup__form__list">
+                  <li className="signup__form__list__item">
+                    <p className="label">E-mail</p>
+                    <input
+                      className="email"
+                      type="text"
+                      placeholder="사용하실 E-mail을 입력해주세요."
+                      value={inputEmail}
+                      onChange={handleChangeEmail}
+                      onKeyPress={handleMoveToNickname}
+                      ref={refEmail}
+                    />
+                    <div className="send" onClick={handleEmailCertSend}>
+                      보내기
+                    </div>
+                  </li>
+                  <li className="signup__form__list__item">
+                    <p className="label">E-mail 인증번호</p>
+                    <input
+                      className="emailCert"
+                      type="text"
+                      value={inputEmailCert}
+                      onChange={handleChangeEmailCert}
+                      ref={refEmailCert}
+                    />
+                    <div className="confirm">확인</div>
+                  </li>
+                  <li className="signup__form__list__item">
+                    <p className="label">닉네임</p>
+                    <input
+                      className="nickname"
+                      type="text"
+                      placeholder="사용하실 닉네임을 입력해주세요."
+                      value={inputNickname}
+                      onChange={handleChangeNickname}
+                      onKeyPress={handleMoveTopassword}
+                      ref={refNickname}
+                    />
+                  </li>
+                  <li className="signup__form__list__item">
+                    <p className="label">비밀번호</p>
+                    <input
+                      className="password"
+                      type="password"
+                      placeholder="Password"
+                      value={inputPassword}
+                      onChange={handleChangePassword}
+                      onKeyPress={handleMoveTopasswordCheck}
+                      ref={refPassword}
+                    />
+                  </li>
+                  <li className="signup__form__list__item">
+                    <p className="label">비밀번호 확인</p>
+                    <input
+                      className="passwordcheck"
+                      type="password"
+                      placeholder="Password Check"
+                      value={inputPasswordCheck}
+                      onChange={handleChangePasswordCheck}
+                      onKeyPress={handleMoveToSignUp}
+                      ref={refPasswordCheck}
+                    />
+                  </li>
+                </ul>
+                <p className="signup__form__deny-message">{denyMessage}</p>
+                <button
+                  className="signup__form__submit-btn"
+                  onClick={handleSignUp}
+                >
+                  회원가입
+                </button>
+                <button
+                  className="signup__form__google-btn"
+                  // onClick={() => handleGoogleSign(`${currentPage}`, "signup")}
+                  onClick={handleSigUpWithGoogle}
+                >
+                  Google
+                </button>
+              </div>
             </div>
-          </div>
-        </>
-      ) : (
-        <></>
-      )}
-    </div>
+          </>
+        ) : (
+          <></>
+        )}
+      </div>
+    </>
   );
 };
 

@@ -135,6 +135,11 @@ button {
       border-radius: 3px;
       margin-top: 1rem;
       padding: 0.3rem 1rem;
+      &:focus {
+        outline: none;
+        border: 1px solid $main;
+        transition: all ease 0.3s;
+      }
     }
     .modal__btns {
       position: relative;
