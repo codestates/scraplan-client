@@ -1,4 +1,8 @@
-import { GET_PLANS, GET_PLAN_CARDS } from "../actions/index";
+import {
+  GET_PLANS,
+  GET_PLAN_CARDS,
+  GET_PLAN_CARDS_BY_DAY,
+} from "../actions/index";
 import { initialState, State } from "./initialState";
 import { Action } from "../actions/index";
 
@@ -12,6 +16,10 @@ const planReducer = (state: State = initialState, action: Action): State => {
     case GET_PLAN_CARDS:
       return Object.assign({}, state, {
         planList: action.payload.data,
+      });
+    case GET_PLAN_CARDS_BY_DAY:
+      return Object.assign({}, state, {
+        planCardsByDay: action.payload.data,
       });
     default:
       return state;
