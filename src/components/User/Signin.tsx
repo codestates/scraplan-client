@@ -26,7 +26,6 @@ const Signin = (props: SigninProps) => {
   useEffect(() => {
     if (window.location.hash !== "") {
       const state = window.location.hash.slice(7, 13);
-      console.log("state를 보자", state);
       if (state === "signin") {
         fetch(`${process.env.REACT_APP_SERVER_URL}/google-sign/in`, {
           method: "POST",
