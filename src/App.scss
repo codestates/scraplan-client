@@ -22,6 +22,8 @@ body {
 
 .mainpage {
   position: absolute;
+  height: 640vh;
+  overflow-y: hidden;
   &__path {
     z-index: -3;
     width: 80vw;
@@ -56,7 +58,6 @@ body {
       width: 12rem;
       height: 3rem;
       border-radius: 5px;
-      // background-color: $main;
       color: $main;
       font-weight: 500;
       font-size: 1rem;
@@ -135,14 +136,6 @@ body {
   .right-text {
     text-align: right;
   }
-  // &__bg-end {
-  //   position: absolute;
-  //   top: 0;
-  //   width: 120%;
-  //   height: 100vh;
-  //   z-index: -1;
-  //   // margin: 0 -20vw;
-  // }
   &__footer {
     display: flex;
     padding: 6rem 8rem;

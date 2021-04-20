@@ -113,18 +113,6 @@ const MainPage = () => {
             </g>
           </g>
         </svg>
-        {/* <svg
-          className="mainpage__path"
-          id="mainpage__path-move"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1171.12 4898.51"
-        >
-          <g id="레이어_2" data-name="레이어 2">
-            <g id="레이어_1-2" data-name="레이어 1">
-             
-            </g>
-          </g>
-        </svg> */}
         <button className={`bottom-btn ${bottomBtn ? "fixToBottom" : ""}`}>
           일정 만들러 가기
         </button>
@@ -163,6 +151,9 @@ const MainPage = () => {
                 <button onClick={() => history.push("/planpage/newplan")}>
                   바로시작하기
                 </button>
+                <button onClick={() => history.push("/planpage/newplan")}>
+                  먼저구경하기
+                </button>
               </div>
             </div>
             <img
@@ -200,7 +191,15 @@ const MainPage = () => {
             </div>
           </div>
         </div>
-        <div className="mainpage__page second-step" ref={secondRef}>
+        <div
+          className="mainpage__page second-step"
+          ref={secondRef}
+          onClick={() => {
+            thirdRef.current.scrollIntoView({
+              behavior: "smooth",
+            });
+          }}
+        >
           <div className="mainpage__body">
             <div className="mainpage__texts">
               <div className="mainpage__step">Step 2</div>
@@ -233,7 +232,15 @@ const MainPage = () => {
             />
           </div>
         </div>
-        <div className="mainpage__page third-step" ref={thirdRef}>
+        <div
+          className="mainpage__page third-step"
+          ref={thirdRef}
+          onClick={() => {
+            fourthRef.current.scrollIntoView({
+              behavior: "smooth",
+            });
+          }}
+        >
           <div className="mainpage__body">
             <img className="left-img" src="/images/mainpage/step3.png" alt="" />
             <div className="mainpage__texts right-text">
@@ -261,7 +268,15 @@ const MainPage = () => {
             </div>
           </div>
         </div>
-        <div className="mainpage__page fourth-step" ref={fourthRef}>
+        <div
+          className="mainpage__page fourth-step"
+          ref={fourthRef}
+          onClick={() => {
+            fifthRef.current.scrollIntoView({
+              behavior: "smooth",
+            });
+          }}
+        >
           <div className="mainpage__body">
             <div className="mainpage__texts">
               <div className="mainpage__step">Step 4</div>
