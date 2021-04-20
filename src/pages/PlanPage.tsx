@@ -87,7 +87,7 @@ const PlanPage = () => {
     window.kakao.maps.load(() => {
       loadKakaoMap();
     });
-  }, [viewOnlyMine, planCards]);
+  }, [viewOnlyMine, planCards, currentDay]);
 
   useEffect(() => {
     makeMarker();
@@ -203,17 +203,38 @@ const PlanPage = () => {
     // 내 일정만 보기인 경우
     if (viewOnlyMine) {
       //리덕스 값
-      for (let i = 0; i < planCards.length; i++) {
+      let dailyPlanCards = planCards.filter((card: { day: number }) => {
+        return currentDay === card.day;
+      });
+      dailyPlanCards.sort(function (
+        a: { startTime: string },
+        b: { startTime: string },
+      ) {
+        if (a.startTime > b.startTime) {
+          return 1;
+        }
+        if (a.startTime < b.startTime) {
+          return -1;
+        }
+        return 0;
+      });
+      let bounds = new window.kakao.maps.LatLngBounds();
+      for (let i = 0; i < dailyPlanCards.length; i++) {
         // 마커 만들기 (시작)
         const position = new window.kakao.maps.LatLng(
-          planCards[i].coordinates[0],
-          planCards[i].coordinates[1],
+          dailyPlanCards[i].coordinates[0],
+          dailyPlanCards[i].coordinates[1],
         );
         const marker = new window.kakao.maps.Marker({
           map,
           position,
-          title: planCards[i].address,
+          title: dailyPlanCards[i].address,
         });
+
+        // 지도 재배치 (시작)
+        bounds.extend(position);
+        // 지도 재배치 (끝)
+
         const customOverlayContent = document.createElement("div");
         const innerOverlayContent = document.createElement("div");
         customOverlayContent.className = "customOverlay";
@@ -224,13 +245,15 @@ const PlanPage = () => {
           position,
           content: customOverlayContent,
         });
-        // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다.
-        // const iwContent = `<div style="padding:5px;">${planCards.planCards[i].comment}</div>`;
+
         const iwContent =
           "<div class='infoWindow'>" +
-          `<div class='time'>${planCards[i].startTime} ~ ${planCards[i].endTime}</div>` +
-          `<div class='title'>${planCards[i].comment}</div>` +
-          `<div class='address'>${planCards[i].address}</div>` +
+          `<div class='day'>${currentDay}일차</div>` +
+          `<div class='time'>${dailyPlanCards[i].startTime} ~ ${
+            dailyPlanCards[i].endTime === 0 ? "00" : dailyPlanCards[i].endTime
+          }</div>` +
+          `<div class='title'>${dailyPlanCards[i].comment}</div>` +
+          `<div class='address'>${dailyPlanCards[i].address}</div>` +
           "</div>";
         // 마커에 표시할 인포윈도우를 생성합니다
         const infowindow = new window.kakao.maps.InfoWindow({
@@ -250,11 +273,11 @@ const PlanPage = () => {
 
         // 선 만들기 (시작)
         let linePath: any = [];
-        for (let i = 0; i < planCards.length; i++) {
+        for (let i = 0; i < dailyPlanCards.length; i++) {
           linePath.push(
             new window.kakao.maps.LatLng(
-              planCards[i].coordinates[0],
-              planCards[i].coordinates[1],
+              dailyPlanCards[i].coordinates[0],
+              dailyPlanCards[i].coordinates[1],
             ),
           );
         }
@@ -269,6 +292,15 @@ const PlanPage = () => {
         polyline.setMap(map);
         // 선 만들기 (끝)
       }
+      console.log("bounds-----------", bounds);
+      // 지도 영역 재배치
+      map.setBounds(bounds);
+      // 지도 레벨 1 증가
+      const zoomOut = () => {
+        const level = map.getLevel();
+        map.setLevel(level + 1);
+      };
+      zoomOut();
     } else {
       // 전체 큐레이션 보기인 경우
       // drag event controller
