@@ -29,7 +29,7 @@ const PlanList = ({
   moveToThePrevDay,
 }: ForAddPlanProps) => {
   const dispatch = useDispatch();
-  const location = useLocation();
+  const location = useLocation() as any;
   const state = useSelector((state: RootState) => state);
   const {
     userReducer: {
@@ -73,7 +73,15 @@ const PlanList = ({
     planId = Number(location.pathname.split("/")[2]);
     if (planId) {
       if (location.state) {
-        // setInputTitle(location.state.title);
+        const { title, representAddr } = location.state;
+        setInputTitle(title);
+        setInputAddrSi(representAddr.split(" ")[0]);
+        setInputAddrGun(
+          representAddr.split(" ")[1] ? representAddr.split(" ")[1] : "선택",
+        );
+        setInputAddrGu(
+          representAddr.split(" ")[2] ? representAddr.split(" ")[2] : "선택",
+        );
       }
       fetch(
         `${process.env.REACT_APP_SERVER_URL}/plan-cards/${planId}?email=${email}`,
@@ -88,8 +96,19 @@ const PlanList = ({
       )
         .then((res) => res.json())
         .then((body) => {
-          dispatch(getPlanCards(body));
-          console.log(body);
+          let planCards = body.planCards.map((plan: any) => {
+            return Object.assign({}, plan, {
+              coordinates: plan.coordinates.coordinates,
+            });
+          });
+          console.log(planCards);
+          dispatch(
+            getPlanCards({
+              isMember: body.isMember,
+              isValid: body.isValid,
+              planCards,
+            }),
+          );
         })
         .catch((err) => console.error(err));
     } else {
@@ -117,7 +136,6 @@ const PlanList = ({
       for (let i = 0; i < maxDay.day; i++) {
         result.push([]);
       }
-      console.log("기본 세팅", result);
       for (let j = 0; j < arr.length; j++) {
         if (arr[j]) {
           result[arr[j].day - 1].push(arr[j]);
@@ -204,7 +222,6 @@ const PlanList = ({
       // isMember === true
       if (!planId) {
         // path가 newplan -> create
-        console.log("create!");
         fetch(`${process.env.REACT_APP_SERVER_URL}/plan`, {
           method: "POST",
           headers: {
@@ -229,9 +246,10 @@ const PlanList = ({
           .then((body) => {})
           .catch((err) => console.error(err));
       } else {
-        // path가 !newplan
+        // path가 planId -> 내꺼면 update, 남꺼면 create
         if (isValid) {
           // isValid === true -> update
+          console.log("보내는값", finalPlanCards);
           fetch(`${process.env.REACT_APP_SERVER_URL}/plan`, {
             method: "PATCH",
             headers: {

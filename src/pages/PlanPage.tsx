@@ -82,12 +82,7 @@ const PlanPage = () => {
     setPlanId(Number(location.pathname.split("/")[2]));
   }, []);
 
-  // v3 스크립트를 동적으로 로드하기위해 사용한다.
-  // 스크립트의 로딩이 끝나기 전에 v3의 객체에 접근하려고 하면 에러가 발생하기 때문에
-  // 로딩이 끝나는 시점에 콜백을 통해 객체에 접근할 수 있도록 해 준다.
-  // 비동기 통신으로 페이지에 v3를 동적으로 삽입할 경우에 주로 사용된다.
-  // v3 로딩 스크립트 주소에 파라메터로 autoload=false 를 지정해 주어야 한다.
-
+  // v3 스크립트 동적으로 로드
   useEffect(() => {
     window.kakao.maps.load(() => {
       loadKakaoMap();
@@ -99,10 +94,7 @@ const PlanPage = () => {
   }, [markerList]);
 
   // marker request
-  // 1. 지도가 이동할 때 (mapBounds의 값이 변할 때)
-  // 2. 서버에 mapBounds를 보낸다.
-  // 3. 응답을 받는다. => setMarkerList를 통해 마커리스트 저장
-  // 4. 해당 bounds안에 마커들이 표기
+  // 지도가 이동할 때 (mapBounds의 값이 변할 때)서버에 mapBounds를 보낸다.
   useEffect(() => {
     fetch(
       `${
@@ -185,15 +177,13 @@ const PlanPage = () => {
         marker,
         markerList[i].id,
         markerList[i].address,
-        markerList[i].coordinates,
+        markerList[i].coordinates.coordinates,
       );
       marker.setMap(map);
     }
   };
 
-  // 맵의 변화 (drag, zoom)가 있을 때 마다
-  // 중심좌표, 경계값을 구한다.
-  // 위에서 useEffect로 경계값이 변할때마다 marker리스트를 계속요청하고 저장 -> map을 돌려 바로 리스트들을 보여줄 수 있다?
+  // 맵의 변화 (drag, zoom)가 있을 때 마다 중심좌표, 경계값을 구한다.
   const loadKakaoMap = () => {
     let container = document.getElementById("planpage__map");
     let options = {
@@ -379,7 +369,7 @@ const PlanPage = () => {
     curationCoordinates: any,
   ) => {
     setCurationAddr(curationAddr);
-    setCurationCoordinates(curationCoordinates.coordinates);
+    setCurationCoordinates(curationCoordinates);
     setOpenList(true);
     fetch(`${process.env.REACT_APP_SERVER_URL}/curation-cards/${curationId}`, {
       method: "GET",

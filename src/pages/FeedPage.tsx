@@ -56,20 +56,8 @@ const FeedPage = () => {
   }, []);
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_SERVER_URL}/plans`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        credentials: "include",
-      },
-    })
-      .then((res) => res.json())
-      .then((body) => {
-        dispatch(getPlans(body.plans));
-        setPlanList(body.plans);
-      })
-      .catch((err) => console.error(err));
-  });
+    handleGetAllPlans();
+  }, []);
 
   useEffect(() => {
     if (inputAddrSi !== "선택" && addrList[inputAddrSi]) {
@@ -88,6 +76,22 @@ const FeedPage = () => {
       setAddrListGu(addrList[inputAddrSi][inputAddrGun]);
     }
   }, [inputAddrGun]);
+
+  const handleGetAllPlans = () => {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/plans/${1}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        credentials: "include",
+      },
+    })
+      .then((res) => res.json())
+      .then((body) => {
+        dispatch(getPlans(body.plans));
+        setPlanList(body.plans);
+      })
+      .catch((err) => console.error(err));
+  };
 
   const handleModalOpen = () => {
     setOpenModal(true);
@@ -136,7 +140,6 @@ const FeedPage = () => {
     setInputAddrGun("선택");
     setInputAddrGu("선택");
   };
-
   const handleGetPlansByFilter = () => {
     if (Number(inputDaycountMin) > Number(inputDaycountMax)) {
       setModalComment("최소값이 최대값보다 작아야합니다.");
@@ -149,7 +152,11 @@ const FeedPage = () => {
         " " +
         (inputAddrGu === "선택" ? "" : inputAddrGu);
       fetch(
-        `${process.env.REACT_APP_SERVER_URL}/plans?&min-day=${inputDaycountMin}&max-day=${inputDaycountMax}&addr=${addr}`,
+        `${
+          process.env.REACT_APP_SERVER_URL
+        }/plans/${1}/?writer=${nickname}&min-day=${inputDaycountMin}&max-day=${inputDaycountMax}&addr=${encodeURIComponent(
+          addr,
+        )}`,
         {
           method: "GET",
           headers: {
@@ -166,7 +173,6 @@ const FeedPage = () => {
         .catch((err) => console.error(err));
     }
   };
-
   const handleCreateMyPlan = () => {
     history.push("/planpage/newplan");
   };

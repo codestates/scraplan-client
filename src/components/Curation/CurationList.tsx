@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import CurationCard from "./CurationCard";
 import "./Curation.scss";
 import { useSelector } from "react-redux";
