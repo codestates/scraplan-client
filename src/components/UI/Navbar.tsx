@@ -7,6 +7,7 @@ import { signOut, getGoogleToken, signIn } from "../../actions";
 import Signin from "../User/Signin";
 import Signup from "../User/Signup";
 import "./UI.scss";
+import Modal from "./Modal";
 require("dotenv").config();
 
 interface NavbarProps {
@@ -25,7 +26,55 @@ const Navbar = (props: NavbarProps) => {
   const [SignInModalOpen, setSignInModalOpen] = useState<boolean>(false);
   const [SignUpModalOpen, setSignUpModalOpen] = useState<boolean>(false);
 
+  // 여기부터
+  const [inputNicknameModal, setInputNicknameModal] = useState<string>("");
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [modalType, setModalType] = useState<string>("");
+  const [modalComment, setModalComment] = useState<string>("");
+
+  const handleModalOpen = () => {
+    setOpenModal(true);
+  };
+  const handleModalClose = () => {
+    setOpenModal(false);
+  };
+  const handleSignUpWithGoogle = () => {
+    setModalComment("사용하실 닉네임을 입력해주세요.");
+    setModalType("inputModal");
+    handleModalOpen();
+  };
+  const handleAcceptActionToModal = () => {
+    handleGoogleSign(`${currentPage}`, `signup/${inputNicknameModal}`);
+  };
+  // 여기까지 작성
   useEffect(() => {
+    const googleSignIn = (hashData: string) => {
+      fetch(`${process.env.REACT_APP_SERVER_URL}/google-sign/in`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          credentials: "include",
+        },
+        body: JSON.stringify({ hashData }),
+      })
+        .then((res) => res.json())
+        .then((body) => {
+          if (body.accessToken) {
+            dispatch(signIn(body.accessToken, body.email, body.nickname));
+            history.push(`${currentPage}`);
+            return;
+          } else {
+            history.push(`${currentPage}`);
+            return;
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          history.push(`${currentPage}`);
+          return;
+        });
+    };
+
     if (window.location.hash !== "") {
       const hashData = window.location.hash;
       let nickname = "";
@@ -41,32 +90,6 @@ const Navbar = (props: NavbarProps) => {
         }
       }
 
-      const googleSignIn = (hashData: string) => {
-        fetch(`${process.env.REACT_APP_SERVER_URL}/google-sign/in`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            credentials: "include",
-          },
-          body: JSON.stringify({ hashData }),
-        })
-          .then((res) => res.json())
-          .then((body) => {
-            if (body.accessToken) {
-              dispatch(signIn(body.accessToken, body.email, body.nickname));
-              history.push(`${currentPage}`);
-              return;
-            } else {
-              history.push(`${currentPage}`);
-              return;
-            }
-          })
-          .catch((err) => {
-            console.error(err);
-            history.push(`${currentPage}`);
-          });
-      };
-
       if (state === "signup") {
         fetch(`${process.env.REACT_APP_SERVER_URL}/google-sign/up`, {
           method: "POST",
@@ -81,27 +104,33 @@ const Navbar = (props: NavbarProps) => {
         })
           .then((res) => res.json())
           .then((body) => {
-            if (
-              body.message === "Successfully signedup" ||
-              body.message === "Already exists email"
-            ) {
-              return "success";
-            } else {
-              return "fail";
-            }
-          })
-          .then((data) => {
-            if (data === "success") {
+            if (body.message === "Successfully signedup") {
               googleSignIn(hashData);
+              return;
+            } else if (body.message === "Already exists email") {
+              history.push(`${currentPage}`);
+              handleSignupBtn();
+              setModalComment("사용중인 이메일입니다.");
+              setModalType("alertModal");
+              handleModalOpen();
+              return;
+            } else if (body.message === "Already exists nickname") {
+              handleSignupBtn();
+              setModalComment("사용중인 닉네임입니다.");
+              setModalType("inputModal");
+              handleModalOpen();
+              return;
             } else {
               history.push(`${currentPage}`);
+              handleSignupBtn();
+              setModalComment("오류가 발생했습니다.");
+              setModalType("alertModal");
+              handleModalOpen();
               return;
             }
-          });
-      }
-
-      // 로그인만
-      if (state === "signin") {
+          })
+          .catch((err) => console.error(err));
+      } else if (state === "signin") {
         googleSignIn(hashData);
       } else {
         history.push(`${currentPage}`);
@@ -186,6 +215,14 @@ const Navbar = (props: NavbarProps) => {
 
   return (
     <>
+      <Modal
+        modalType={modalType}
+        open={openModal}
+        close={handleModalClose}
+        comment={modalComment}
+        handleAcceptAction={handleAcceptActionToModal}
+        handleInputAction={setInputNicknameModal}
+      />
       <Signin
         open={SignInModalOpen}
         close={closeSignInModal}
@@ -197,6 +234,7 @@ const Navbar = (props: NavbarProps) => {
         close={closeSignUpModal}
         handleGoogleSign={handleGoogleSign}
         currentPage={currentPage}
+        handleSignUpWithGoogle={handleSignUpWithGoogle}
       />
       <div className="navbar">
         <div className="navbar__logo" onClick={handleMainPageBtn}>
