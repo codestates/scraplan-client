@@ -45,21 +45,21 @@ const MainPage = () => {
   //   return () => observer && observer.disconnect();
   // });
 
-  useEffect(() => {
-    let observer;
-    if (topRef.current) {
-      observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setBottomBtn(!bottomBtn);
-          }
-        },
-        { threshold: 0.6 },
-      );
-      observer.observe(topRef.current);
-    }
-    return () => observer && observer.disconnect();
-  });
+  // useEffect(() => {
+  //   let observer;
+  //   if (topRef.current) {
+  //     observer = new IntersectionObserver(
+  //       ([entry]) => {
+  //         if (entry.isIntersecting) {
+  //           setBottomBtn(!bottomBtn);
+  //         }
+  //       },
+  //       { threshold: 0.6 },
+  //     );
+  //     observer.observe(topRef.current);
+  //   }
+  //   return () => observer && observer.disconnect();
+  // });
 
   useEffect(() => {
     const svg = document.getElementById("mainpage__path-move");

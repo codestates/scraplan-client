@@ -100,6 +100,13 @@ $light: #f7f7f9;
           width: 8rem;
           margin-bottom: 0.5rem;
         }
+        .curation-management__search-bar button {
+          width: 10rem;
+          padding: 0.4rem 1rem;
+          color: $main;
+          font-weight: 600;
+          border-radius: 4px;
+        }
         .marker-del-btn {
           border: 3px solid $main;
           width: 7rem;

@@ -132,7 +132,8 @@ const CurationRequest = ({ setMenu }: any) => {
           <p>상태변경</p>
         </div>
         <ul className="curation-request__table__contents">
-          {curationRequests.length > 0 &&
+          {curationRequests &&
+            curationRequests.length > 0 &&
             curationRequests.map((item: any) => {
               const [showmore, setShowmore] = useState<boolean>(false);
               const {
