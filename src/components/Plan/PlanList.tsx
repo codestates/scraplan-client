@@ -1,10 +1,12 @@
 import React, { useCallback, useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { RootState } from "../../reducers";
 import { getPlanCards, getPlanCardsByDay } from "../../actions";
 import AddPlan from "./AddPlan";
 import PlanTimeline from "./PlanTimeline";
+import Modal from "../UI/Modal";
+import Signin from "../User/Signin";
 import mapdata from "../../data/mapdata.json";
 
 interface ForAddPlanProps {
@@ -30,6 +32,7 @@ const PlanList = ({
 }: ForAddPlanProps) => {
   const dispatch = useDispatch();
   const location = useLocation() as any;
+  const history = useHistory();
   const state = useSelector((state: RootState) => state);
   const {
     userReducer: {
@@ -40,6 +43,11 @@ const PlanList = ({
       planCardsByDay,
     },
   } = state;
+
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [modalComment, setModalComment] = useState<string>("");
+  const [SignInModalOpen, setSignInModalOpen] = useState<boolean>(false);
+
   const [openList, setOpenList] = useState<boolean>(true);
   const [inputTitle, setInputTitle] = useState<string>("");
   const [isShare, setIsShare] = useState<boolean>(true);
@@ -124,6 +132,14 @@ const PlanList = ({
     }
   }, []);
 
+  useEffect(() => {
+    if (!SignInModalOpen) {
+      console.log(token);
+      if (token !== "") {
+      }
+    }
+  }, [SignInModalOpen]);
+
   // 최초 로딩시 - 데이터 day별로 분류하기
   useEffect(() => {
     const dayfilter = (arr: any) => {
@@ -142,7 +158,6 @@ const PlanList = ({
           result[arr[j].day - 1].push(arr[j]);
         }
       }
-      // console.log("값 대입", result);
       return result;
     };
 
@@ -190,6 +205,17 @@ const PlanList = ({
     }
   }, [inputAddrGun]);
 
+  const handleModalOpen = () => {
+    setOpenModal(true);
+  };
+  const handleModalClose = () => {
+    setOpenModal(false);
+  };
+
+  const closeSignInModal = () => {
+    setSignInModalOpen(false);
+  };
+
   const handleOpenAddRequset = useCallback(() => {
     setOpenAddRequest(true);
   }, [openAddRequest]);
@@ -213,12 +239,34 @@ const PlanList = ({
     setPublicToggleChecked(!publicToggleChecked);
   };
 
-  const handleSavePlanBtn = () => {
+  const handleSavePlanBtn = async () => {
+    if (inputTitle === "") {
+      setModalComment("제목을 입력해주세요❗️");
+      handleModalOpen();
+      return;
+    }
+    if (inputAddrSi === "선택") {
+      setModalComment("대표 지역을 설정해주세요❗️");
+      handleModalOpen();
+      return;
+    }
+
     let finalPlanCards = planCardsByDay.flat();
-    console.log("저장하기", finalPlanCards, isMember, isValid);
+    // console.log("저장하기", finalPlanCards, isMember, isValid);
+    if (finalPlanCards.length === 0) {
+      setModalComment("일정을 하나이상 추가해주세요.");
+      handleModalOpen();
+      return;
+    }
+    console.log(isMember, isValid);
     dispatch(getPlanCards({ planCards: finalPlanCards, isMember, isValid }));
-    if (!isMember) {
+    if (token === "") {
       // isMember === false -> 로그인창
+      setSignInModalOpen(true);
+      // token 확인
+
+      // 존재시 -> 요청
+      // 존재X시 -> 닫기만하고 return
     } else {
       // isMember === true
       if (!planId) {
@@ -244,7 +292,18 @@ const PlanList = ({
           }),
         })
           .then((res) => res.json())
-          .then((body) => {})
+          .then((body) => {
+            if (body.message === "successfully added") {
+              setModalComment("일정이 생성되었습니다 👏🏻");
+              handleModalOpen();
+              setTimeout(() => {
+                history.push("/mypage");
+              }, 1000);
+            } else {
+              setModalComment("정보가 부족합니다 😨");
+              handleModalOpen();
+            }
+          })
           .catch((err) => console.error(err));
       } else {
         // path가 planId -> 내꺼면 update, 남꺼면 create
@@ -272,7 +331,18 @@ const PlanList = ({
             }),
           })
             .then((res) => res.json())
-            .then((body) => {})
+            .then((body) => {
+              if (body.message === "successfully edited") {
+                setModalComment("수정이 완료되었습니다 👏🏻");
+                handleModalOpen();
+              } else if (body.message === "Nothing Changed") {
+                setModalComment("변경사항이 없습니다 😥");
+                handleModalOpen();
+              } else {
+                setModalComment("정보가 부족합니다 😨");
+                handleModalOpen();
+              }
+            })
             .catch((err) => console.error(err));
         } else {
           // isValid === false -> create
@@ -299,6 +369,16 @@ const PlanList = ({
             .then((res) => res.json())
             .then((body) => {
               // modal로 update 알려주기
+              if (body.message === "successfully added") {
+                setModalComment("일정이 생성되었습니다 👏🏻");
+                handleModalOpen();
+                setTimeout(() => {
+                  history.push("/mypage");
+                }, 1000);
+              } else {
+                setModalComment("정보가 부족합니다 😨");
+                handleModalOpen();
+              }
             })
             .catch((err) => console.error(err));
         }
@@ -373,12 +453,57 @@ const PlanList = ({
     setShowDayList(false);
   };
 
+  const handleGoogleSign = (currentPage: string, state: string): void => {
+    // Google's OAuth 2.0 endpoint for requesting an access token
+    let oauth2Endpoint = "https://accounts.google.com/o/oauth2/v2/auth";
+
+    // Create <form> element to submit parameters to OAuth 2.0 endpoint.
+    var form = document.createElement("form");
+    form.setAttribute("method", "GET");
+    form.setAttribute("action", oauth2Endpoint);
+
+    // Parameters to pass to OAuth 2.0 endpoint.
+    const params: { [key: string]: string | any } = {
+      client_id: process.env.REACT_APP_CLIENT_ID,
+      redirect_uri: `${process.env.REACT_APP_CLIENT_URL}${currentPage}`,
+      response_type: "token",
+      scope:
+        "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
+      include_granted_scopes: "true",
+      state: state,
+    };
+
+    // Add form parameters as hidden input values.
+    for (let p in params) {
+      var input = document.createElement("input");
+      input.setAttribute("type", "hidden");
+      input.setAttribute("name", p);
+      input.setAttribute("value", params[p]);
+      form.appendChild(input);
+    }
+
+    // Add form to page and submit it to open the OAuth 2.0 endpoint.
+    document.body.appendChild(form);
+    form.submit();
+  };
+
   console.log("planList 렌더링 planCarsByDay", planCardsByDay);
   console.log("planList 렌더링 CurrentDay", currentDay);
 
   // 지역 정하기 => input list 사용
   return (
     <div className="planlist">
+      <Modal
+        modalType="basicModal"
+        open={openModal}
+        close={handleModalClose}
+        comment={modalComment}
+      />
+      <Signin
+        open={SignInModalOpen}
+        close={closeSignInModal}
+        handleGoogleSign={handleGoogleSign}
+      />
       <AddPlan
         type="addPlan"
         open={openAddRequest}
