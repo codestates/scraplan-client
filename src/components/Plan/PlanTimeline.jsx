@@ -102,34 +102,7 @@ const PlanTimeline = ({
 
   // Timeline에 있는 일정들을 PlanCards 데이터로 변환
   const handleSaveBtn = () => {
-    // if (filterByDay[day - 1] && filterByDay[day - 1].length !== 0) {
-    //   let newPlanCardsList = filterByDay[day - 1].map((plan, idx) => {
-    //     let startHour = Math.floor(layoutState[idx].y / 4);
-    //     let startMin =
-    //       (layoutState[idx].y % 4) * 15 === 0
-    //         ? "00"
-    //         : (layoutState[idx].y % 4) * 15;
-
-    //     let endHour = Math.floor((layoutState[idx].y + layoutState[idx].h) / 4);
-    //     let endMin =
-    //       ((layoutState[idx].y + layoutState[idx].h) % 4) * 15 === 0
-    //         ? "00"
-    //         : ((layoutState[idx].y + layoutState[idx].h) % 4) * 15;
-
-    //     let newPlan = Object.assign({}, plan, {
-    //       startTime: startHour + ":" + startMin,
-    //       endTime: endHour + ":" + endMin,
-    //     });
-    //     return newPlan;
-    //   });
-    //   filterByDay[day - 1] = newPlanCardsList;
-    //   setFilterByDay([
-    //     ...filterByDay.slice(0, day - 1),
-    //     newPlanCardsList,
-    //     ...filterByDay.slice(day),
-    //   ]);
     handleSavePlanBtn();
-    // }
   };
 
   return (
@@ -165,6 +138,7 @@ const PlanTimeline = ({
 
           const handleChangeTheme = (themeIndex, cardIdx) => {
             planCardsByDay[day - 1][cardIdx].theme = themeIndex;
+            dispatch(getPlanCardsByDay([...planCardsByDay]));
           };
 
           const handleDeletePlancard = (e, cardIdx) => {

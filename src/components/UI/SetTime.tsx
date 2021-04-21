@@ -20,13 +20,17 @@ const SetTime = ({
     if (startTime && endTime) {
       setCurrentTime(getTimeFromProps(startTime, endTime));
     }
-  });
+  }, [startTime, endTime]);
 
   useEffect(() => {
     window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") setIsSelectTime(false);
+      if (e.key === "Escape") {
+        setIsSelectTime(false);
+        setCurrentTime("1:00");
+      }
     });
   }, [isSelectTime]);
+
   // 추가할때가 아닌 서버로 부터 받은 startTime, endTime이 존재할 경우 사이 시간을 구하는 함수
   const getTimeFromProps = useCallback(
     (startTime: string, endTime: string) => {
