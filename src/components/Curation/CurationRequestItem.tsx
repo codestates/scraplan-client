@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../reducers";
-import { signIn } from "../../actions";
+import { signIn,getCurationsRequests } from "../../actions";
+
 import Modal from "../UI/Modal";
 import "./Curation.scss";
 
 type CurationRequestItemProps = {
   id: number;
-  title: string;
+  requestTitle: string;
   requester: string;
   coordinates: [];
   address: string;
@@ -19,11 +20,12 @@ type CurationRequestItemProps = {
 const CurationRequestItem = ({ props }: any) => {
   const dispatch = useDispatch();
   const userState = useSelector((state: RootState) => state.userReducer);
-  const statusCode = ["대기중", "처리중", "승인완료", "요청취소"];
+  const dispatch = useDispatch();
+  const statusCode = ["대기중", "처리중", "승인", "요청취소"];
   //0, 1, 2, 3 -> pending, processing, resolved, rejected
   const {
     id,
-    title,
+    requestTitle,
     requester,
     coordinates,
     address,
@@ -38,6 +40,7 @@ const CurationRequestItem = ({ props }: any) => {
   const [showmore, setShowmore] = useState<boolean>(false);
   const [modalComment, setModalComment] = useState<string>("");
   const [openModal, setOpenModal] = useState<boolean>(false);
+
 
   const handleShowmoreBtn = (): void => {
     setShowmore(!showmore);
@@ -78,6 +81,10 @@ const CurationRequestItem = ({ props }: any) => {
       .catch((err) => console.error(err));
   };
 
+  const handleModalClose = () => {
+    setOpenModal(false);
+  };
+
   return (
     <>
       <Modal
@@ -98,7 +105,7 @@ const CurationRequestItem = ({ props }: any) => {
                 {statusCode[status]}
               </span>
             </p>
-            <p>{title}</p>
+            <p>{requestTitle}</p>
           </div>
           <div className="mypage__contents__req-table__item__details__btns">
             <button
@@ -107,7 +114,7 @@ const CurationRequestItem = ({ props }: any) => {
             >
               {showmore ? "접기" : "더보기"}
             </button>
-            {status === 3 ? (
+            {status === 0 ? (
               <button
                 className="mypage__contents__req-table__item__details__btns-cancel"
                 onClick={handleCurationRequestCancelBtn}
@@ -116,7 +123,7 @@ const CurationRequestItem = ({ props }: any) => {
               </button>
             ) : (
               <button className="mypage__contents__req-table__item__details__btns-limited">
-                취소불가
+                -
               </button>
             )}
           </div>
