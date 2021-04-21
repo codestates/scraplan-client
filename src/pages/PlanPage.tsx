@@ -88,13 +88,31 @@ const PlanPage = () => {
     window.kakao.maps.load(() => {
       loadKakaoMap();
     });
-  }, [viewOnlyMine, planCards, currentDay, selectTheme]);
+  }, [viewOnlyMine, planCardsByDay, currentDay, selectTheme, LatLng]);
 
   useEffect(() => {
     if (!viewOnlyMine) {
       makeMarker();
     }
   }, [markerList]);
+
+  const [planMarkerList, setPlanMarkerList] = useState<any>([]);
+  // 일정 전용 마커
+  useEffect(() => {
+    let dailyPlanCards = planCardsByDay[currentDay - 1];
+    console.log("dailyPlanCards 시간 바뀌기 전", dailyPlanCards);
+    let sortPlanCards = [...dailyPlanCards].sort(function (a: any, b: any) {
+      console.log("-------------", a.startTime, b.startTime);
+      if (a.startTime > b.startTime) {
+        return 1;
+      }
+      if (a.startTime < b.startTime) {
+        return -1;
+      }
+      return 0;
+    });
+    console.log("dailyPlanCards 시간 바뀐 후 sort", sortPlanCards);
+  }, [planCardsByDay, currentDay]);
 
   // marker request
   // 지도가 이동할 때 (mapBounds의 값이 변할 때)서버에 mapBounds를 보낸다.
@@ -204,14 +222,26 @@ const PlanPage = () => {
       [bounds.ha, bounds.oa],
     ]);
 
+    // 검색결과
+    let searchMarkerPosition = new window.kakao.maps.LatLng(
+      LatLng[0],
+      LatLng[1],
+    );
+    let searchMarkerImage = new window.kakao.maps.MarkerImage(
+      `/images/marker/theme0.png`,
+      new window.kakao.maps.Size(54, 58),
+      { offset: new window.kakao.maps.Point(20, 58) },
+    );
+    let searchMarker = new window.kakao.maps.Marker({
+      image: searchMarkerImage,
+      position: searchMarkerPosition,
+    });
+    searchMarker.setMap(map);
+
     const viewMyPlan = () => {
-      let dailyPlanCards = planCards.filter((card: { day: number }) => {
-        return currentDay === card.day;
-      });
-      dailyPlanCards.sort(function (
-        a: { startTime: string },
-        b: { startTime: string },
-      ) {
+      let dailyPlanCards = planCardsByDay[currentDay - 1];
+      // console.log("dailyPlanCards 시간 바뀌기 전", dailyPlanCards);
+      dailyPlanCards.sort(function (a: any, b: any) {
         if (a.startTime > b.startTime) {
           return 1;
         }
@@ -220,6 +250,7 @@ const PlanPage = () => {
         }
         return 0;
       });
+      // console.log("dailyPlanCards 시간 바뀐 후", dailyPlanCards);
       let bounds = new window.kakao.maps.LatLngBounds();
       if (dailyPlanCards.length > 0) {
         for (let i = 0; i < dailyPlanCards.length; i++) {

@@ -46,7 +46,11 @@ const PlanTimeline = ({
   }, [saveBtnClicked]);
 
   const generateLayout = () => {
-    if (planCardsByDay[day - 1] && planCardsByDay[day - 1].length > 0) {
+    if (
+      planCardsByDay &&
+      planCardsByDay[day - 1] &&
+      planCardsByDay[day - 1].length > 0
+    ) {
       return planCardsByDay[day - 1].map((plancard, idx) => {
         const { startTime, endTime } = plancard;
         const startHour = Number(startTime.split(":")[0]);
@@ -140,7 +144,7 @@ const PlanTimeline = ({
       {...{
         isDraggable: true,
         isResizable: true,
-        items: (planCardsByDay[day - 1] || []).length,
+        items: planCardsByDay ? planCardsByDay[day - 1].length : 0,
         rowHeight: 28,
         cols: 1,
         rows: 96,

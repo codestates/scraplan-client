@@ -142,7 +142,6 @@ const PlanList = ({
           result[arr[j].day - 1].push(arr[j]);
         }
       }
-      // console.log("값 대입", result);
       return result;
     };
 
@@ -215,7 +214,6 @@ const PlanList = ({
 
   const handleSavePlanBtn = () => {
     let finalPlanCards = planCardsByDay.flat();
-    console.log("저장하기", finalPlanCards, isMember, isValid);
     dispatch(getPlanCards({ planCards: finalPlanCards, isMember, isValid }));
     if (!isMember) {
       // isMember === false -> 로그인창
@@ -344,7 +342,6 @@ const PlanList = ({
   };
 
   const handleMoveNextDay = () => {
-    console.log("next day");
     if (currentDay === dayCount.length) {
       // Modal로 물어보기
       let addDayCount = dayCount.concat([dayCount.length + 1]);
@@ -372,9 +369,6 @@ const PlanList = ({
     handleShowPlanlistThatDay(day + 1);
     setShowDayList(false);
   };
-
-  console.log("planList 렌더링 planCarsByDay", planCardsByDay);
-  console.log("planList 렌더링 CurrentDay", currentDay);
 
   // 지역 정하기 => input list 사용
   return (
