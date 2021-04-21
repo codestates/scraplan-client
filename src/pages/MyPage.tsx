@@ -169,14 +169,19 @@ const MyPage = () => {
   };
 
   const handleGetAllPlans = () => {
-    fetch(`${process.env.REACT_APP_SERVER_URL}/plans/${1}?writer=${nickname}`, {
-      method: "GET",
-      headers: {
-        authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-        credentials: "include",
+    fetch(
+      `${
+        process.env.REACT_APP_SERVER_URL
+      }/plans/${1}?writer=${nickname}&email=${email}`,
+      {
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          credentials: "include",
+        },
       },
-    })
+    )
       .then((res) => res.json())
       .then((body) => {
         dispatch(getPlans(body.plans));

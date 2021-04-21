@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../reducers";
-import { getPlanCards, getPlanCardsByDay } from "../../actions";
+import { getPlanCardsByDay } from "../../actions";
 import Modal from "../UI/Modal";
 import SetTheme from "../UI/SetTheme";
 import SetTime from "../UI/SetTime";
