@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./UI.scss";
 
 type ModalProps = {
-  modalType: string | null; // yesNoModal, inputModal, alertModal
+  modalType: string | null; // yesNoModal, inputModal, alertModal, basicModal
   open: boolean;
   close: () => void;
   comment: string;
