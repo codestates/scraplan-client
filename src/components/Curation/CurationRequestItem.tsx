@@ -1,11 +1,13 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../reducers";
+import { getCurationsRequests } from "../../actions";
+import Modal from "../UI/Modal";
 import "./Curation.scss";
 
 type CurationRequestItemProps = {
   id: number;
-  title: string;
+  requestTitle: string;
   requester: string;
   coordinates: [];
   address: string;
@@ -16,11 +18,12 @@ type CurationRequestItemProps = {
 
 const CurationRequestItem = ({ props }: any) => {
   const userState = useSelector((state: RootState) => state.userReducer);
-  const statusCode = ["대기중", "처리중", "승인완료", "요청취소"];
+  const dispatch = useDispatch();
+  const statusCode = ["대기중", "처리중", "승인", "요청취소"];
   //0, 1, 2, 3 -> pending, processing, resolved, rejected
   const {
     id,
-    title,
+    requestTitle,
     requester,
     coordinates,
     address,
@@ -32,6 +35,8 @@ const CurationRequestItem = ({ props }: any) => {
     user: { token, email, nickname },
   } = userState;
   const [showmore, setShowmore] = useState<boolean>(false);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [modalComment, setModalComment] = useState<string>("");
 
   const handleShowmoreBtn = (): void => {
     setShowmore(!showmore);
@@ -53,15 +58,29 @@ const CurationRequestItem = ({ props }: any) => {
     })
       .then((res) => res.json())
       .then((body) => {
-        if (body.message === "Successfully updated status") {
-          // 취소 성공
+        if (body.message === "successfully updated status") {
+          setModalComment("요청이 취소되었습니다.");
+          setOpenModal(true);
+        } else {
+          setModalComment("취소가 불가능한 요청입니다.");
+          setOpenModal(true);
         }
       })
       .catch((err) => console.error(err));
   };
 
+  const handleModalClose = () => {
+    setOpenModal(false);
+  };
+
   return (
     <>
+      <Modal
+        modalType="basicModal"
+        open={openModal}
+        close={handleModalClose}
+        comment={modalComment}
+      />
       <div className="mypage__contents__req-table__item">
         <div className="mypage__contents__req-table__item__details">
           <div
@@ -74,7 +93,7 @@ const CurationRequestItem = ({ props }: any) => {
                 {statusCode[status]}
               </span>
             </p>
-            <p>{title}</p>
+            <p>{requestTitle}</p>
           </div>
           <div className="mypage__contents__req-table__item__details__btns">
             <button
@@ -83,7 +102,7 @@ const CurationRequestItem = ({ props }: any) => {
             >
               {showmore ? "접기" : "더보기"}
             </button>
-            {status === 3 ? (
+            {status === 0 ? (
               <button
                 className="mypage__contents__req-table__item__details__btns-cancel"
                 onClick={handleCurationRequestCancelBtn}
@@ -92,7 +111,7 @@ const CurationRequestItem = ({ props }: any) => {
               </button>
             ) : (
               <button className="mypage__contents__req-table__item__details__btns-limited">
-                취소불가
+                -
               </button>
             )}
           </div>
