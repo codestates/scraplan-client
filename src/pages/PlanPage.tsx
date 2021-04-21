@@ -4,7 +4,7 @@ import { RootState } from "../reducers";
 import Navbar from "../components/UI/Navbar";
 import CurationList from "../components/Curation/CurationList";
 import PlanList from "../components/Plan/PlanList";
-import { getCurationCards, getPlanCards } from "../actions";
+import { getCurationCards, getPlanCards, getPlanCardsByDay } from "../actions";
 import Modal from "../components/UI/Modal";
 import AddPlan from "../components/Plan/AddPlan";
 
@@ -22,6 +22,7 @@ const PlanPage = () => {
     },
     planReducer: {
       planList: { isValid, isMember, planCards },
+      planCardsByDay,
     },
   } = state;
   const dispatch = useDispatch();
@@ -433,8 +434,9 @@ const PlanPage = () => {
       .catch((err) => console.error(err));
   };
 
+  // curation 에서 + 버튼 클릭시 plan으로 정보를 넘겨주는 함수
+  // getCurationCards
   const handleAddToPlan = (props: any, e: Event) => {
-    // curation 에서 + 버튼 클릭시 plan으로 정보를 넘겨주는 함수
     e.stopPropagation();
     const {
       curationCardId,
@@ -445,26 +447,21 @@ const PlanPage = () => {
       avgTime,
       feedbackCnt,
     } = props;
-    // let max = planCards.reduce((plan: any, cur: any) => {
-    //   return Number(plan.endTime.split(":")[0]) * 60 +
-    //     Number(plan.endTime.split(":")[1]) >
-    //     Number(cur.endTime.split(":")[0]) * 60 +
-    //       Number(cur.endTime.split(":")[1])
-    //     ? plan
-    //     : cur;
-    // });
-    let max = planCards.reduce(
-      (plan: any, cur: any) => {
-        return Number(cur.day) === Number(currentDay) &&
-          Number(cur.endTime.split(":")[0]) * 60 +
+
+    let max =
+      planCardsByDay &&
+      planCardsByDay[currentDay - 1].reduce(
+        (plan: any, cur: any) => {
+          return Number(cur.endTime.split(":")[0]) * 60 +
             Number(cur.endTime.split(":")[1]) >
             Number(plan.endTime.split(":")[0]) * 60 +
               Number(plan.endTime.split(":")[1])
-          ? cur
-          : plan;
-      },
-      { day: currentDay, endTime: "10:00" },
-    );
+            ? cur
+            : plan;
+        },
+        { day: currentDay, endTime: "10:00" },
+      );
+
     let endMin =
       (Number(max.endTime.split(":")[1]) +
         Number((avgTime % 1).toFixed(2)) * 100) %
@@ -477,11 +474,11 @@ const PlanPage = () => {
           Number((avgTime % 1).toFixed(2)) * 100) /
           60,
       );
+
     dispatch(
-      getPlanCards({
-        isValid,
-        isMember,
-        planCards: planCards.concat({
+      getPlanCardsByDay([
+        ...planCardsByDay.slice(0, currentDay - 1),
+        planCardsByDay[currentDay - 1].concat({
           day: currentDay,
           startTime: max.endTime,
           endTime: endHour + ":" + endMin,
@@ -490,7 +487,8 @@ const PlanPage = () => {
           coordinates: curationCoordinates,
           address: curationAddr,
         }),
-      }),
+        ...planCardsByDay.slice(currentDay),
+      ]),
     );
   };
 

@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { RootState } from "../../reducers";
-import { getPlanCards } from "../../actions";
+import { getPlanCards, getPlanCardsByDay } from "../../actions";
 import AddPlan from "./AddPlan";
 import PlanTimeline from "./PlanTimeline";
 import mapdata from "../../data/mapdata.json";
@@ -37,6 +37,7 @@ const PlanList = ({
     },
     planReducer: {
       planList: { isValid, isMember, planCards },
+      planCardsByDay,
     },
   } = state;
   const [openList, setOpenList] = useState<boolean>(true);
@@ -101,6 +102,7 @@ const PlanList = ({
               coordinates: plan.coordinates.coordinates,
             });
           });
+
           dispatch(
             getPlanCards({
               isMember: body.isMember,
@@ -158,6 +160,7 @@ const PlanList = ({
       const initialDayCount = makeDayCountArray(filter);
       setFilterByDay(filter);
       setDayCount(initialDayCount);
+      dispatch(getPlanCardsByDay(filter));
       if (currentDay > initialDayCount.length) {
         setCurrentDay(initialDayCount.length);
       }
@@ -211,9 +214,8 @@ const PlanList = ({
   };
 
   const handleSavePlanBtn = () => {
-    let finalPlanCards = filterByDay.flat();
-    // console.log(finalPlanCards);
-    // console.log("저장하기", finalPlanCards, isMember, isValid);
+    let finalPlanCards = planCardsByDay.flat();
+    console.log("저장하기", finalPlanCards, isMember, isValid);
     dispatch(getPlanCards({ planCards: finalPlanCards, isMember, isValid }));
     if (!isMember) {
       // isMember === false -> 로그인창
@@ -342,11 +344,13 @@ const PlanList = ({
   };
 
   const handleMoveNextDay = () => {
+    console.log("next day");
     if (currentDay === dayCount.length) {
       // Modal로 물어보기
       let addDayCount = dayCount.concat([dayCount.length + 1]);
       setDayCount(addDayCount);
       setFilterByDay([...filterByDay].concat([[]]));
+      getPlanCardsByDay(planCardsByDay.push([]));
       moveToTheNextDay();
     } else {
       moveToTheNextDay();
@@ -368,6 +372,9 @@ const PlanList = ({
     handleShowPlanlistThatDay(day + 1);
     setShowDayList(false);
   };
+
+  console.log("planList 렌더링 planCarsByDay", planCardsByDay);
+  console.log("planList 렌더링 CurrentDay", currentDay);
 
   // 지역 정하기 => input list 사용
   return (
