@@ -90,7 +90,9 @@ const AddPlan = ({
 
   useEffect(() => {
     window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") handleCloseBtn();
+      if (e.key === "Escape") {
+        handleCloseBtn();
+      }
     });
   }, [open]);
 
@@ -106,6 +108,8 @@ const AddPlan = ({
     setInputTitle("");
     setInputKeyword("");
     setInputDesc("");
+    setRequestTime("1:00");
+    setRequestTheme(0);
     close();
   };
 
@@ -217,22 +221,6 @@ const AddPlan = ({
         );
 
       dispatch(
-        // getPlanCards({
-        //   isValid,
-        //   isMember,
-        //   planCards: planCards.concat({
-        //     day: currentDay,
-        //     startTime: max.endTime,
-        //     endTime: endHour + ":" + endMin,
-        //     comment: inputTitle,
-        //     theme: requestTheme,
-        //     coordinates: [
-        //       Number(forRequestLatLng[0]),
-        //       Number(forRequestLatLng[1]),
-        //     ],
-        //     address: forRequestAddress,
-        //   }),
-        // }),
         getPlanCardsByDay([
           ...planCardsByDay.slice(0, currentDay - 1),
           planCardsByDay[currentDay - 1].concat({
@@ -302,7 +290,6 @@ const AddPlan = ({
         comment={modalComment}
       />
       {open ? (
-        // <div className='addPlan'>
         <div
           className={`addPlan ${type === "requestCuration" ? "addDesc" : ""}`}
         >
