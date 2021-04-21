@@ -80,17 +80,6 @@ const PlanList = ({
   useEffect(() => {
     planId = Number(location.pathname.split("/")[2]);
     if (planId) {
-      if (location.state) {
-        const { title, representAddr } = location.state;
-        setInputTitle(title);
-        setInputAddrSi(representAddr.split(" ")[0]);
-        setInputAddrGun(
-          representAddr.split(" ")[1] ? representAddr.split(" ")[1] : "선택",
-        );
-        setInputAddrGu(
-          representAddr.split(" ")[2] ? representAddr.split(" ")[2] : "선택",
-        );
-      }
       fetch(
         `${process.env.REACT_APP_SERVER_URL}/plan-cards/${planId}?email=${email}`,
         {
@@ -109,12 +98,22 @@ const PlanList = ({
               coordinates: plan.coordinates.coordinates,
             });
           });
-
+          const { title, representAddr } = body.plan;
+          setInputTitle(title);
+          setPublicToggleChecked(!body.plan.public);
+          setInputAddrSi(representAddr.split(" ")[0]);
+          setInputAddrGun(
+            representAddr.split(" ")[1] ? representAddr.split(" ")[1] : "선택",
+          );
+          setInputAddrGu(
+            representAddr.split(" ")[2] ? representAddr.split(" ")[2] : "선택",
+          );
           dispatch(
             getPlanCards({
               isMember: body.isMember,
               isValid: body.isValid,
               planCards,
+              plan: body.plan,
             }),
           );
         })
@@ -133,7 +132,6 @@ const PlanList = ({
 
   useEffect(() => {
     if (!SignInModalOpen) {
-      console.log(token);
       if (token !== "") {
       }
     }
@@ -257,7 +255,6 @@ const PlanList = ({
       handleModalOpen();
       return;
     }
-    console.log(isMember, isValid);
     dispatch(getPlanCards({ planCards: finalPlanCards, isMember, isValid }));
     if (token === "") {
       // isMember === false -> 로그인창
@@ -423,7 +420,6 @@ const PlanList = ({
   };
 
   const handleMoveNextDay = () => {
-    console.log("next day");
     if (currentDay === dayCount.length) {
       // Modal로 물어보기
       let addDayCount = dayCount.concat([dayCount.length + 1]);

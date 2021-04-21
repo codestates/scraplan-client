@@ -21,7 +21,7 @@ const PlanPage = () => {
       user: { token, email, nickname },
     },
     planReducer: {
-      planList: { isValid, isMember, planCards },
+      planList: { isValid, isMember, planCards, plan },
       planCardsByDay,
     },
   } = state;
@@ -55,29 +55,6 @@ const PlanPage = () => {
   const [viewOnlyMine, setViewOnlyMine] = useState<boolean>(false);
   const [selectTheme, setSelectTheme] = useState<number>(-1);
   const [currentDay, setCurrentDay] = useState<number>(1);
-
-  const moveToTheNextDay = () => {
-    setCurrentDay(currentDay + 1);
-  };
-
-  const moveToThePrevDay = () => {
-    setCurrentDay(currentDay - 1);
-  };
-
-  const handleOpenAddRequest = () => {
-    setOpenAddRequest(true);
-  };
-
-  const handleCloseAddRequest = () => {
-    setOpenAddRequest(false);
-  };
-
-  const handleModalOpen = () => {
-    setOpenModal(true);
-  };
-  const handleModalClose = () => {
-    setOpenModal(false);
-  };
 
   useEffect(() => {
     setPlanId(Number(location.pathname.split("/")[2]));
@@ -155,6 +132,29 @@ const PlanPage = () => {
     },
     [inputKeyword],
   );
+
+  const moveToTheNextDay = () => {
+    setCurrentDay(currentDay + 1);
+  };
+
+  const moveToThePrevDay = () => {
+    setCurrentDay(currentDay - 1);
+  };
+
+  const handleOpenAddRequest = () => {
+    setOpenAddRequest(true);
+  };
+
+  const handleCloseAddRequest = () => {
+    setOpenAddRequest(false);
+  };
+
+  const handleModalOpen = () => {
+    setOpenModal(true);
+  };
+  const handleModalClose = () => {
+    setOpenModal(false);
+  };
 
   const makeMarker = () => {
     for (var i = 0; i < markerList.length; i++) {
