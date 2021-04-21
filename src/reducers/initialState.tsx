@@ -10,6 +10,7 @@ export type State = {
     isValid: boolean;
     isMember: boolean;
     planCards: any;
+    plan: any;
   };
   planCardsByDay: any;
   curations: any;
@@ -31,6 +32,7 @@ export const initialState: State = {
   // Plan
   plans: {},
   planList: {
+    plan: {},
     isValid: false,
     isMember: false,
     planCards: [],
