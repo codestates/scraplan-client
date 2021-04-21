@@ -50,7 +50,6 @@ const PlanList = ({
 
   const [openList, setOpenList] = useState<boolean>(true);
   const [inputTitle, setInputTitle] = useState<string>("");
-  const [isShare, setIsShare] = useState<boolean>(true);
   const [publicToggleChecked, setPublicToggleChecked] = useState<boolean>(
     false,
   );
@@ -252,7 +251,7 @@ const PlanList = ({
     }
 
     let finalPlanCards = planCardsByDay.flat();
-    // console.log("저장하기", finalPlanCards, isMember, isValid);
+    console.log("저장하기", finalPlanCards, isMember, isValid);
     if (finalPlanCards.length === 0) {
       setModalComment("일정을 하나이상 추가해주세요.");
       handleModalOpen();
@@ -281,7 +280,7 @@ const PlanList = ({
           body: JSON.stringify({
             email,
             title: inputTitle,
-            public: isShare,
+            public: !publicToggleChecked,
             representAddr:
               (inputAddrSi === "선택" ? "" : inputAddrSi) +
               " " +
@@ -320,7 +319,7 @@ const PlanList = ({
               email,
               planId,
               title: inputTitle,
-              public: isShare,
+              public: !publicToggleChecked,
               representAddr:
                 (inputAddrSi === "선택" ? "" : inputAddrSi) +
                 " " +
@@ -356,7 +355,7 @@ const PlanList = ({
             body: JSON.stringify({
               email,
               title: inputTitle,
-              public: isShare,
+              public: !publicToggleChecked,
               representAddr:
                 (inputAddrSi === "선택" ? "" : inputAddrSi) +
                 " " +
