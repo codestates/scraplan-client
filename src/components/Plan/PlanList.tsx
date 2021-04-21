@@ -93,7 +93,6 @@ const PlanList = ({
       )
         .then((res) => res.json())
         .then((body) => {
-          console.log(body);
           if (body.message === "There is no data with given plan id") {
             dispatch(
               getPlanCards({
@@ -136,7 +135,6 @@ const PlanList = ({
         .catch((err) => console.error(err));
     } else {
       // newplan
-      console.log("여기서 실행해야 하는데?");
       dispatch(
         getPlanCards({
           isMember: token.length > 0 ? true : false,
