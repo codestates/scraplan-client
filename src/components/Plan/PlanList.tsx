@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { RootState } from "../../reducers";
-import { getPlanCards, getPlanCardsByDay } from "../../actions";
+import { getPlanCards, getPlanCardsByDay, signIn } from "../../actions";
 import AddPlan from "./AddPlan";
 import PlanTimeline from "./PlanTimeline";
 import Modal from "../UI/Modal";
@@ -289,15 +289,23 @@ const PlanList = ({
         })
           .then((res) => res.json())
           .then((body) => {
-            if (body.message === "successfully added") {
-              setModalComment("일정이 생성되었습니다 👏🏻");
-              handleModalOpen();
-              setTimeout(() => {
-                history.push("/mypage");
-              }, 1000);
-            } else {
-              setModalComment("정보가 부족합니다 😨");
-              handleModalOpen();
+            switch (body.message) {
+              case "successfully added":
+                setModalComment("일정이 생성되었습니다 👏🏻");
+                handleModalOpen();
+                setTimeout(() => {
+                  history.push("/mypage");
+                }, 1000);
+                break;
+              case "Expired token":
+              case "Invalid token":
+              case "Expired token or Not matched inform":
+                dispatch(signIn("", email, ""));
+                break;
+              default:
+                setModalComment("정보가 부족합니다 😨");
+                handleModalOpen();
+                break;
             }
           })
           .catch((err) => console.error(err));
@@ -328,15 +336,24 @@ const PlanList = ({
           })
             .then((res) => res.json())
             .then((body) => {
-              if (body.message === "successfully edited") {
-                setModalComment("수정이 완료되었습니다 👏🏻");
-                handleModalOpen();
-              } else if (body.message === "Nothing Changed") {
-                setModalComment("변경사항이 없습니다 😥");
-                handleModalOpen();
-              } else {
-                setModalComment("정보가 부족합니다 😨");
-                handleModalOpen();
+              switch (body.message) {
+                case "successfully edited":
+                  setModalComment("수정이 완료되었습니다 👏🏻");
+                  handleModalOpen();
+                  break;
+                case "Nothing Changed":
+                  setModalComment("변경사항이 없습니다 😥");
+                  handleModalOpen();
+                  break;
+                case "Expired token":
+                case "Invalid token":
+                case "Expired token or Not matched inform":
+                  dispatch(signIn("", email, ""));
+                  break;
+                default:
+                  setModalComment("정보가 부족합니다 😨");
+                  handleModalOpen();
+                  break;
               }
             })
             .catch((err) => console.error(err));
@@ -365,15 +382,23 @@ const PlanList = ({
             .then((res) => res.json())
             .then((body) => {
               // modal로 update 알려주기
-              if (body.message === "successfully added") {
-                setModalComment("일정이 생성되었습니다 👏🏻");
-                handleModalOpen();
-                setTimeout(() => {
-                  history.push("/mypage");
-                }, 1000);
-              } else {
-                setModalComment("정보가 부족합니다 😨");
-                handleModalOpen();
+              switch (body.message) {
+                case "successfully added":
+                  setModalComment("일정이 생성되었습니다 👏🏻");
+                  handleModalOpen();
+                  setTimeout(() => {
+                    history.push("/mypage");
+                  }, 1000);
+                  break;
+                case "Expired token":
+                case "Invalid token":
+                case "Expired token or Not matched inform":
+                  dispatch(signIn("", email, ""));
+                  break;
+                default:
+                  setModalComment("정보가 부족합니다 😨");
+                  handleModalOpen();
+                  break;
               }
             })
             .catch((err) => console.error(err));

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../reducers";
-import { getPlanCardsByDay } from "../../actions";
+import { getPlanCardsByDay, signIn } from "../../actions";
 import Modal from "../UI/Modal";
 import SetTheme from "../UI/SetTheme";
 import SetTime from "../UI/SetTime";
@@ -268,13 +268,20 @@ const AddPlan = ({
       })
         .then((res) => res.json())
         .then((body) => {
-          if (body.message) {
-            handleCloseBtn();
-            setModalComment("요청이 정상 처리되었습니다.");
-            handleModalOpen();
-          } else {
-            setModalComment("요청이 실패되었습니다.");
-            handleModalOpen();
+          switch (body.message) {
+            case "successfully added":
+              setModalComment("요청이 정상 처리되었습니다. 👏🏻");
+              handleModalOpen();
+              break;
+            case "Expired token":
+            case "Invalid token":
+            case "Expired token or Not matched inform":
+              dispatch(signIn("", email, ""));
+              break;
+            default:
+              setModalComment("정보가 부족합니다 😨");
+              handleModalOpen();
+              break;
           }
         })
         .catch((err) => console.log(err));

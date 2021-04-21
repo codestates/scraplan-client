@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../reducers";
+import { signIn } from "../../actions";
+import Modal from "../UI/Modal";
 import "./Curation.scss";
 
 type CurationRequestItemProps = {
@@ -15,6 +17,7 @@ type CurationRequestItemProps = {
 };
 
 const CurationRequestItem = ({ props }: any) => {
+  const dispatch = useDispatch();
   const userState = useSelector((state: RootState) => state.userReducer);
   const statusCode = ["대기중", "처리중", "승인완료", "요청취소"];
   //0, 1, 2, 3 -> pending, processing, resolved, rejected
@@ -31,7 +34,10 @@ const CurationRequestItem = ({ props }: any) => {
   const {
     user: { token, email, nickname },
   } = userState;
+
   const [showmore, setShowmore] = useState<boolean>(false);
+  const [modalComment, setModalComment] = useState<string>("");
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
   const handleShowmoreBtn = (): void => {
     setShowmore(!showmore);
@@ -53,8 +59,20 @@ const CurationRequestItem = ({ props }: any) => {
     })
       .then((res) => res.json())
       .then((body) => {
-        if (body.message === "Successfully updated status") {
-          // 취소 성공
+        switch (body.message) {
+          case "successfully updated status":
+            setModalComment("요청이 정상 처리되었습니다. 👏🏻");
+            setOpenModal(true);
+            break;
+          case "Expired token":
+          case "Invalid token":
+          case "Expired token or Not matched inform":
+            dispatch(signIn("", email, ""));
+            break;
+          default:
+            setModalComment("정보가 부족합니다 😨");
+            setOpenModal(true);
+            break;
         }
       })
       .catch((err) => console.error(err));
@@ -62,6 +80,12 @@ const CurationRequestItem = ({ props }: any) => {
 
   return (
     <>
+      <Modal
+        modalType="alertModal"
+        open={openModal}
+        close={() => setOpenModal(false)}
+        comment={modalComment}
+      />
       <div className="mypage__contents__req-table__item">
         <div className="mypage__contents__req-table__item__details">
           <div
