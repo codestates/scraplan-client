@@ -223,36 +223,6 @@ const PlanPage = () => {
       }
     }
   };
-  // const viewCurationMarker = () => {
-  //   for (var i = 0; i < markerList.length; i++) {
-  //     let markerImage = new window.kakao.maps.MarkerImage(
-  //       `/images/marker/theme0.png`,
-  //       new window.kakao.maps.Size(54, 58),
-  //       { offset: new window.kakao.maps.Point(20, 58) },
-  //     );
-  //     let position = new window.kakao.maps.LatLng(
-  //       markerList[i].coordinates.coordinates[0],
-  //       markerList[i].coordinates.coordinates[1],
-  //     );
-  //     let marker = new window.kakao.maps.Marker({
-  //       map,
-  //       position,
-  //       title: markerList[i].address,
-  //       image: markerImage,
-  //     });
-  //     ((marker, curationId, curationAddr, curationCoordinates) => {
-  //       window.kakao.maps.event.addListener(marker, "click", () => {
-  //         handleClickMarker(curationId, curationAddr, curationCoordinates);
-  //       });
-  //     })(
-  //       marker,
-  //       markerList[i].id,
-  //       markerList[i].address,
-  //       markerList[i].coordinates.coordinates,
-  //     );
-  //     marker.setMap(map);
-  //   }
-  // };
 
   // 내 일정 마커 제거 후 생성
   const [myPlanMarkers, setMyPlanMarkers] = useState<any[]>([]);
