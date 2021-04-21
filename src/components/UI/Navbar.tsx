@@ -139,6 +139,15 @@ const Navbar = (props: NavbarProps) => {
     }
   }, [window.location.hash]);
 
+  useEffect(() => {
+    if (token.length === 0 && email.length !== 0) {
+      dispatch(signOut());
+      setModalComment("접속 시간이 초과되었습니다.다시 로그인 해주세요.");
+      setModalType("alertModal");
+      handleModalOpen();
+    }
+  }, [token]);
+
   const closeSignInModal = () => {
     setSignInModalOpen(false);
   };
