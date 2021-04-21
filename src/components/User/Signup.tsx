@@ -9,12 +9,19 @@ type SignupProps = {
   close: () => void;
   handleGoogleSign: (reqPage: string, state: string) => void;
   currentPage?: string;
+  handleSignUpWithGoogle?: any;
 };
 
 const Signup = (props: SignupProps) => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const { open, close, handleGoogleSign, currentPage } = props;
+  const {
+    open,
+    close,
+    handleGoogleSign,
+    currentPage,
+    handleSignUpWithGoogle,
+  } = props;
   const refEmail = useRef<HTMLInputElement | null>(null);
   const refEmailCert = useRef<HTMLInputElement | null>(null);
   const refNickname = useRef<HTMLInputElement | null>(null);
@@ -26,7 +33,6 @@ const Signup = (props: SignupProps) => {
   const [inputNickname, setInputNickname] = useState<string>("");
   const [inputPassword, setInputPassword] = useState<string>("");
   const [inputPasswordCheck, setInputPasswordCheck] = useState<string>("");
-  const [inputNicknameModal, setInputNicknameModal] = useState<string>("");
   const [denyMessage, setDenyMessage] = useState<string>("");
 
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -128,9 +134,9 @@ const Signup = (props: SignupProps) => {
 
   const checkValidPassword = useCallback(
     (password) => {
-      if (!/^[a-zA-Z0-9]{8,20}$/.test(password)) {
+      if (!/^(?=.*[a-zA-Z])((?=.*\d)|(?=.*\W)).{6,20}$/.test(password)) {
         setDenyMessage(
-          "비밀번호는 숫자와 영문자 조합으로 8~20자리를 사용해야 합니다.",
+          "영문자 + 숫자/특수문자 조합으로 8~20자리를 사용해야 합니다.",
         );
         return false;
       }
@@ -191,33 +197,35 @@ const Signup = (props: SignupProps) => {
       })
         .then((res) => res.json())
         .then((body) => {
-          if (body.message) {
+          if (body.message === "Successfully signedUp") {
             handleCloseBtn();
+            setModalComment("회원가입이 완료되었습니다.");
+            handleModalOpen();
+            return;
+          } else if (body.message === "Already exists email") {
+            refEmail.current?.focus();
+            setDenyMessage("사용중인 이메일입니다.");
+            return;
+          } else if (body.message === "Already exists nickname") {
+            refNickname.current?.focus();
+            setDenyMessage("사용중인 닉네임입니다.");
+            return;
           } else {
-            setDenyMessage("이메일과 비밀번호를 다시 확인해주세요");
+            setDenyMessage("오류가 발생했습니다.");
+            return;
           }
         })
         .catch((err) => console.error(err));
     }
   };
 
-  const handleSigUpWithGoogle = () => {
-    setModalComment("사용하실 닉네임을 입력해주세요.");
-    handleModalOpen();
-  };
-  const handleAcceptActionToModal = () => {
-    handleGoogleSign(`${currentPage}`, `signup/${inputNicknameModal}`);
-  };
-
   return (
     <>
       <Modal
-        modalType="inputModal"
+        modalType="alertModal"
         open={openModal}
         close={handleModalClose}
         comment={modalComment}
-        handleAcceptAction={handleAcceptActionToModal}
-        handleInputAction={setInputNicknameModal}
       />
       <div className={`signup ${open ? "show" : ""}`}>
         {open ? (
@@ -302,8 +310,7 @@ const Signup = (props: SignupProps) => {
                 </button>
                 <button
                   className="signup__form__google-btn"
-                  // onClick={() => handleGoogleSign(`${currentPage}`, "signup")}
-                  onClick={handleSigUpWithGoogle}
+                  onClick={handleSignUpWithGoogle}
                 >
                   Google
                 </button>

@@ -23,11 +23,13 @@ function Modal(props: ModalProps) {
   const refInput = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    refInput.current?.focus();
+    if (modalType === "inputModal") {
+      refInput.current?.focus();
+    }
     window.addEventListener("keydown", (e) => {
       if (e.key === "Escape") handleCloseBtn();
     });
-  }, [open]);
+  }, [open, comment]);
 
   const handleCloseBtn = () => {
     if (modalType === "inputModal" && handleInputAction) {
@@ -40,12 +42,12 @@ function Modal(props: ModalProps) {
   const handleYesBtn = () => {
     if (modalType === "inputModal") {
       if (inputValue === "") {
-        alert("닉네임을 입력해주세요");
         refInput.current?.focus();
         return;
       }
     }
     if (handleAcceptAction) {
+      handleCloseBtn();
       handleAcceptAction();
     }
   };
@@ -60,7 +62,6 @@ function Modal(props: ModalProps) {
 
   const handleKeyPressEnter = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
-      alert("제출!");
       handleYesBtn();
     }
   };
@@ -83,6 +84,7 @@ function Modal(props: ModalProps) {
             {modalType === "inputModal" ? (
               <input
                 type="text"
+                placeholder="닉네임을 입력해주세요."
                 className="modal__input-text"
                 value={inputValue}
                 onChange={handleChangeInput}

@@ -85,8 +85,18 @@ const Signin = (props: SigninProps) => {
         if (body.accessToken) {
           dispatch(signIn(body.accessToken, inputEmail, ""));
           handleCloseBtn();
+        } else if (body.message === "Wrong password") {
+          refPassword.current?.focus();
+          setDenyMessage("비밀번호를 확인해주세요.");
+        } else if (body.message === "None exists user") {
+          refEmail.current?.focus();
+          setDenyMessage("해당 유저가 존재하지 않습니다.");
+        } else if (body.message === "Insufficient info") {
+          refEmail.current?.focus();
+          setDenyMessage("이메일과 비밀번호를 입력해주세요.");
         } else {
-          setDenyMessage("이메일과 비밀번호를 다시 확인해주세요");
+          refEmail.current?.focus();
+          setDenyMessage("알수없는 오류가 발생했습니다.");
         }
       })
       .catch((err) => console.error(err));
