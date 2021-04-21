@@ -7,6 +7,7 @@ import {
   uploadScraplanThumbnail,
   deleteFile,
 } from "../../aws_controller/aws_controller";
+import Modal from "../../components/UI/Modal";
 import "./Admin.scss";
 
 declare global {
@@ -31,6 +32,10 @@ const CurationManagement = () => {
   const [mode, setMode] = useState<string>("create");
   const [openList, setOpenList] = useState<boolean>(false);
 
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [modalType, setModalType] = useState<string>("");
+  const [modalComment, setModalComment] = useState<string>("");
+
   const [LatLng, setLatLng] = useState<number[]>([
     37.5139795454969,
     127.048963363388,
@@ -38,6 +43,7 @@ const CurationManagement = () => {
   const [map, setMap] = useState<any>({});
   const [mapLevel, setMapLevel] = useState<number>(5);
   const [mapBounds, setMapBounds] = useState<any>();
+  const [curMarker, setCurMarker] = useState<any>();
   const [markerList, setMarkerList] = useState<any>([]);
 
   const [keywordList, setKeywordList] = useState<any>([]);
@@ -47,12 +53,10 @@ const CurationManagement = () => {
     127.048963363388,
   ]);
 
-  const [inputCurationId, setInputCurationId] = useState<number | undefined>(
-    undefined,
-  );
+  const [inputCurationId, setInputCurationId] = useState<number | string>("");
   const [inputCurationCardId, setInputCurationCardId] = useState<
-    number | undefined
-  >(undefined);
+    number | string
+  >("");
   const [inputTitle, setInputTitle] = useState<string>("");
   const [inputKeyword, setInputKeyword] = useState<string>("");
   const [inputDesc, setInputDesc] = useState<string>("");
@@ -79,9 +83,8 @@ const CurationManagement = () => {
       setInputKeyword(address);
       setInputDesc(requestComment);
       setInputTheme(requestTheme);
+      setSearchMode(false);
     }
-    dispatch(getCurationsRequestsResolved({}));
-    setSearchMode(false);
   }, []);
 
   useEffect(() => {
@@ -91,10 +94,25 @@ const CurationManagement = () => {
   }, []);
 
   useEffect(() => {
+    if (!curationReducer.curationRequestsResolved) {
+      setInputCurationId("");
+      setInputCurationCardId("");
+      setInputTitle("");
+      setInputKeyword("");
+      setInputDesc("");
+      setInputPhoto("");
+      setInputTime("");
+      setInputTheme(0);
+      dispatch(getCurationsRequestsResolved(undefined));
+    }
+  }, [mode]);
+
+  useEffect(() => {
     makeMarker();
   }, [markerList]);
 
   useEffect(() => {
+    if (curMarker) curMarker.setMap(null);
     fetch(
       `${
         process.env.REACT_APP_SERVER_URL
@@ -115,9 +133,17 @@ const CurationManagement = () => {
   }, [mapBounds]);
 
   useEffect(() => {
-    setSearchMode(true);
     handleSearchKeywordKaKao();
   }, [inputKeyword]);
+
+  useEffect(() => {
+    if (curMarker) {
+      curMarker.setMap(null);
+    }
+    if (Object.keys(map).length > 0) {
+      makeCurMarker();
+    }
+  }, [searchLatLng, inputKeyword]);
 
   const makeMarker = () => {
     for (var i = 0; i < markerList.length; i++) {
@@ -136,14 +162,37 @@ const CurationManagement = () => {
         title: markerList[i].address,
         image: markerImage,
       });
-
-      ((marker, curationId, curationAddr) => {
+      ((marker, curationId, curationAddr, curationCoordinates) => {
         window.kakao.maps.event.addListener(marker, "click", () => {
-          handleClickMarker(curationId, curationAddr);
+          handleClickMarker(curationId, curationAddr, curationCoordinates);
         });
-      })(marker, markerList[i].id, markerList[i].address);
+      })(
+        marker,
+        markerList[i].id,
+        markerList[i].address,
+        markerList[i].coordinates.coordinates,
+      );
       marker.setMap(map);
     }
+  };
+
+  const makeCurMarker = () => {
+    let markerImage = new window.kakao.maps.MarkerImage(
+      `/images/marker/theme5.png`,
+      new window.kakao.maps.Size(54, 58),
+      { offset: new window.kakao.maps.Point(20, 58) },
+    );
+    let position = new window.kakao.maps.LatLng(
+      searchLatLng[0],
+      searchLatLng[1],
+    );
+    let marker = new window.kakao.maps.Marker({
+      map,
+      position,
+      image: markerImage,
+    });
+    setCurMarker(marker);
+    marker.setMap(map);
   };
 
   const loadKakaoMap = () => {
@@ -194,10 +243,16 @@ const CurationManagement = () => {
     setLatLng([Number(lat), Number(lng)]);
   };
 
-  const handleClickMarker = (curationId: number, curationAddr: string) => {
+  const handleClickMarker = (
+    curationId: number,
+    curationAddr: string,
+    curationCoordinates: any[],
+  ) => {
     setInputCurationId(curationId);
     setInputKeyword(curationAddr);
+    setSearchLatLng(curationCoordinates);
     setOpenList(true);
+    setSearchMode(false);
     fetch(`${process.env.REACT_APP_SERVER_URL}/curation-cards/${curationId}`, {
       method: "GET",
       headers: {
@@ -274,6 +329,7 @@ const CurationManagement = () => {
   };
 
   const handleSearchByKeyword = (): void => {
+    setSearchMode(true);
     moveKakaoMap(searchLatLng[0], searchLatLng[1]);
     setKeywordList([]);
     setInputKeyword(inputKeyword);
@@ -343,13 +399,6 @@ const CurationManagement = () => {
     }
   };
 
-  const handleChangeTime = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setInputTime(e.target?.value);
-    },
-    [inputTime],
-  );
-
   const handleChangeTheme = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setInputTheme(Number(e.target?.value));
@@ -358,6 +407,16 @@ const CurationManagement = () => {
   );
 
   const handleCreateCurationCard = async () => {
+    if (
+      inputKeyword === "" ||
+      inputPhoto === "" ||
+      inputTitle === "" ||
+      inputDesc === ""
+    ) {
+      setModalComment("필수값을 모두 입력해주세요.");
+      setOpenModal(true);
+      return;
+    }
     let curationId = inputCurationId;
     await fetch(`${process.env.REACT_APP_SERVER_URL}/curation`, {
       method: "POST",
@@ -368,7 +427,9 @@ const CurationManagement = () => {
       },
       body: JSON.stringify({
         email,
-        coordinates: encodeURIComponent(JSON.stringify(LatLng)),
+        coordinates: encodeURIComponent(
+          JSON.stringify([Number(searchLatLng[0]), Number(searchLatLng[1])]),
+        ),
         address: inputKeyword,
       }),
     })
@@ -377,8 +438,11 @@ const CurationManagement = () => {
         if (body.message === "successfully added") {
           // 기존에 존재 X
           curationId = body.id;
-        } else {
+        } else if (body.message === "Already exists coordinates") {
           // 기존에 존재 O
+          setModalComment("이미 존재하는 마커입니다. 마커ID를 입력해주세요.");
+          setOpenModal(true);
+          return;
         }
       })
       .catch((err) => console.error(err));
@@ -402,7 +466,8 @@ const CurationManagement = () => {
       .then((res) => res.json())
       .then((body) => {
         if (body.message === "successfully added") {
-          // Modal로 성공했다고 표시
+          setModalComment("큐레이션 카드가 추가되었습니다.");
+          setOpenModal(true);
           if (Object.keys(curationResolved).length !== 0) {
             const { id } = curationResolved;
             fetch(`${process.env.REACT_APP_SERVER_URL}/curation-request`, {
@@ -421,21 +486,32 @@ const CurationManagement = () => {
               .then((res) => res.json())
               .then((body) => {
                 if (body.message === "Successfully updated status") {
-                  // Modal - 승인 완료
+                  setModalComment("수정이 완료되었습니다.");
+                  setOpenModal(true);
                 }
               })
               .catch((err) => console.error(err));
           }
+        } else if (body.message === "There is no data with given curation id") {
+          setModalComment("이미 존재하는 마커입니다. 마커ID를 입력해주세요.");
+          setOpenModal(true);
+          return;
         } else {
-          // Modal로 실패했다고 표시
+          setModalComment("큐레이션 카드 생성에 실패했습니다.");
+          setOpenModal(true);
+          return;
         }
       })
       .catch((err) => console.error(err));
-
     // 요청으로 들어온 경우 승인처리
   };
 
   const handleEditCurationCard = () => {
+    if (inputCurationCardId === "") {
+      setModalComment("큐레이션 카드 ID는 필수값입니다.");
+      setOpenModal(true);
+      return;
+    }
     fetch(`${process.env.REACT_APP_SERVER_URL}/curation-card`, {
       method: "PATCH",
       headers: {
@@ -455,15 +531,22 @@ const CurationManagement = () => {
       .then((res) => res.json())
       .then((body) => {
         if (body.message === "successfully edited") {
-          // Modal로 성공했다고 표시
+          setModalComment("수정이 완료되었습니다 👏🏻");
+          setOpenModal(true);
         } else {
-          // Modal로 실패했다고 표시
+          setModalComment("수정에 실패했습니다 😥");
+          setOpenModal(true);
         }
       })
       .catch((err) => console.error(err));
   };
 
   const handleDeleteCurationCard = () => {
+    if (inputCurationCardId === "") {
+      setModalComment("큐레이션 카드 ID는 필수값입니다.");
+      setOpenModal(true);
+      return;
+    }
     fetch(`${process.env.REACT_APP_SERVER_URL}/curation-card`, {
       method: "DELETE",
       headers: {
@@ -479,16 +562,23 @@ const CurationManagement = () => {
       .then((res) => res.json())
       .then((body) => {
         if (body.message === "successfully deleted") {
-          // Modal로 성공했다고 표시
+          setModalComment("삭제되었습니다.");
+          setOpenModal(true);
           deleteFile(`${email}/${inputPhoto}`);
         } else {
-          // Modal로 실패했다고 표시
+          setModalComment("삭제에 실패했습니다 😥");
+          setOpenModal(true);
         }
       })
       .catch((err) => console.error(err));
   };
 
   const handleDeleteCuration = () => {
+    if (inputCurationId === "") {
+      setModalComment("큐레이션 ID는 필수값입니다.");
+      setOpenModal(true);
+      return;
+    }
     fetch(`${process.env.REACT_APP_SERVER_URL}/curation`, {
       method: "DELETE",
       headers: {
@@ -504,16 +594,28 @@ const CurationManagement = () => {
       .then((res) => res.json())
       .then((body) => {
         if (body.message === "successfully deleted") {
-          // Modal로 성공했다고 표시
+          setModalComment("삭제되었습니다.");
+          setOpenModal(true);
         } else {
-          // Modal로 실패했다고 표시
+          setModalComment("삭제에 실패했습니다 😥");
+          setOpenModal(true);
         }
       })
       .catch((err) => console.error(err));
   };
 
+  const handleModalClose = () => {
+    setOpenModal(false);
+  };
+
   return (
     <div className="curation-management">
+      <Modal
+        open={openModal}
+        close={handleModalClose}
+        comment={modalComment}
+        modalType={modalType}
+      />
       <div id="curation-management__map"></div>
       {mode === "edit" ? (
         <CurationList
@@ -528,95 +630,119 @@ const CurationManagement = () => {
         <div className="curation-management__edit__menu">
           <p
             className={`${mode === "create" ? "selected" : ""}`}
-            onClick={() => setMode("create")}
+            onClick={() => {
+              setMode("create");
+              dispatch(getCurationsRequestsResolved(undefined));
+            }}
           >
             큐레이션 카드 등록
           </p>
           <p
             className={`${mode === "edit" ? "selected" : ""}`}
-            onClick={() => setMode("edit")}
+            onClick={() => {
+              setMode("edit");
+              dispatch(getCurationsRequestsResolved(undefined));
+            }}
           >
             큐레이션 카드 수정
           </p>
         </div>
         <ul className="curation-management__edit-form">
-          <li className="curation-management__edit-form__item">
-            <p>큐레이션(마커) ID</p>
-            <input
-              type="text"
-              placeholder="큐레이션(마커) ID"
-              value={inputCurationId}
-              onChange={handleChangeCurationId}
-            />
-            <button className="marker-del-btn" onClick={handleDeleteCuration}>
-              {" "}
-              마커삭제{" "}
-            </button>
-          </li>
-          <li className="curation-management__edit-form__item">
-            <p>큐레이션 카드 ID</p>
-            <input
-              type="text"
-              placeholder="큐레이션카드 ID"
-              value={inputCurationCardId}
-              onChange={handleChangeCurationId}
-            />
-          </li>
+          {mode === "edit" ? (
+            <></>
+          ) : (
+            <li className="curation-management__edit-form__item">
+              <p>큐레이션(마커) ID</p>
+              <input
+                type="text"
+                placeholder="이미 존재하는 마커인 경우에만 입력하세요."
+                value={inputCurationId}
+                onChange={handleChangeCurationId}
+              />
+              <button className="marker-del-btn" onClick={handleDeleteCuration}>
+                마커삭제
+              </button>
+            </li>
+          )}
+
+          {mode === "create" ? (
+            <></>
+          ) : (
+            <li className="curation-management__edit-form__item">
+              <p>큐레이션 카드 ID</p>
+              <input
+                type="text"
+                placeholder="큐레이션카드 ID *"
+                value={inputCurationCardId}
+                onChange={handleChangeCurationId}
+              />
+            </li>
+          )}
+
           <li className="curation-management__edit-form__item">
             <p>제목</p>
             <input
               type="text"
-              placeholder="제목"
+              placeholder="제목 *"
               value={inputTitle}
               onChange={handleChangeTitle}
             />
           </li>
-          <li className="curation-management__edit-form__item">
-            <p>주소</p>
-            <div className="curation-management__search-bar__wrapper">
-              <div className="curation-management__search-bar">
-                <input
-                  type="text"
-                  placeholder="지역 검색"
-                  value={inputKeyword}
-                  onChange={handleChangeInputKeyword}
-                  onKeyPress={handleEnterSearch}
-                  onKeyDown={handleEscKey}
-                ></input>
-                <button onClick={handleSearchByKeyword}>🔍</button>
+          {curationReducer.curationRequestsResolved ? (
+            <li className="curation-management__edit-form__item">
+              <p>주소</p>
+              <div>{inputKeyword}</div>
+            </li>
+          ) : (
+            <li className="curation-management__edit-form__item">
+              <p>주소</p>
+              <div className="curation-management__search-bar__wrapper">
+                <div className="curation-management__search-bar">
+                  <input
+                    type="text"
+                    placeholder="지역 검색 *"
+                    value={inputKeyword}
+                    onChange={handleChangeInputKeyword}
+                    onKeyPress={handleEnterSearch}
+                    onKeyDown={handleEscKey}
+                  ></input>
+                  <button onClick={handleSearchByKeyword}>
+                    직접입력하기⌨️
+                  </button>
+                </div>
+                {keywordList.length !== 0 ? (
+                  <ul>
+                    {keywordList.map((addr: any, idx: number) => {
+                      return (
+                        <li
+                          key={idx}
+                          onClick={() =>
+                            handleClickKeywordList(addr.place_name)
+                          }
+                        >
+                          <div className="place_name">{`👉🏻  ${addr.place_name}`}</div>
+                          <div className="address_name">
+                            {addr.address_name}
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  <></>
+                )}
               </div>
-              {keywordList.length !== 0 ? (
-                <ul>
-                  {keywordList.map((addr: any, idx: number) => {
-                    return (
-                      <li
-                        key={idx}
-                        onClick={() => handleClickKeywordList(addr.place_name)}
-                      >
-                        <div className="place_name">{`👉🏻  ${addr.place_name}`}</div>
-                        <div className="address_name">{addr.address_name}</div>
-                      </li>
-                    );
-                  })}
-                </ul>
-              ) : (
-                <></>
-              )}
-            </div>
-          </li>
+            </li>
+          )}
           <li className="curation-management__edit-form__item">
-            <p>좌표</p>
-            <input
-              type="text"
-              placeholder="좌표값 (read only)"
-              value={LatLng.toString()}
-            />
+            <p></p>
+            <div>{`[${searchLatLng[0].toString()},  ${searchLatLng[1].toString()}]`}</div>
           </li>
           <li className="curation-management__edit-form__item">
             <p>상세정보</p>
             <input
               type="text"
-              placeholder="상세정보"
+              placeholder="상세정보 *"
               value={inputDesc}
               onChange={handleChangeDesc}
             />
@@ -630,19 +756,10 @@ const CurationManagement = () => {
             />
           </li>
           <li className="curation-management__edit-form__item">
-            <p>예상시간</p>
-            <input
-              type="text"
-              placeholder="예상시간"
-              value={inputTime}
-              onChange={handleChangeTime}
-            />
-          </li>
-          <li className="curation-management__edit-form__item">
             <p>테마</p>
             <input
               type="number"
-              placeholder="테마번호"
+              placeholder="테마번호 *"
               value={inputTheme}
               onChange={handleChangeTheme}
               min={0}

@@ -149,9 +149,6 @@ const PlanPage = () => {
     setOpenAddRequest(false);
   };
 
-  const handleModalOpen = () => {
-    setOpenModal(true);
-  };
   const handleModalClose = () => {
     setOpenModal(false);
   };
@@ -435,7 +432,6 @@ const PlanPage = () => {
   };
 
   // curation 에서 + 버튼 클릭시 plan으로 정보를 넘겨주는 함수
-  // getCurationCards
   const handleAddToPlan = (props: any, e: Event) => {
     e.stopPropagation();
     const {

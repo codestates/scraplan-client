@@ -249,7 +249,7 @@ const PlanList = ({
     }
 
     let finalPlanCards = planCardsByDay.flat();
-    console.log("저장하기", finalPlanCards, isMember, isValid);
+    // console.log("저장하기", finalPlanCards, isMember, isValid);
     if (finalPlanCards.length === 0) {
       setModalComment("일정을 하나이상 추가해주세요.");
       handleModalOpen();
@@ -507,8 +507,8 @@ const PlanList = ({
     form.submit();
   };
 
-  console.log("planList 렌더링 planCarsByDay", planCardsByDay);
-  console.log("planList 렌더링 CurrentDay", currentDay);
+  // console.log("planList 렌더링 planCarsByDay", planCardsByDay);
+  // console.log("planList 렌더링 CurrentDay", currentDay);
 
   // 지역 정하기 => input list 사용
   return (
