@@ -117,7 +117,7 @@ const PlanTimeline = ({
       {...{
         isDraggable: true,
         isResizable: true,
-        items: planCardsByDay ? planCardsByDay[day - 1].length : 0,
+        items: planCardsByDay.length ? planCardsByDay[day - 1].length : 1,
         rowHeight: 28,
         cols: 1,
         rows: 96,
