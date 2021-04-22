@@ -109,7 +109,6 @@ const PlanList = ({
                 coordinates: plan.coordinates.coordinates,
               });
             });
-
             const { title, representAddr } = body.plan;
             setInputTitle(title);
             setPublicToggleChecked(!body.plan.public);
