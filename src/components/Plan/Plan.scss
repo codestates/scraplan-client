@@ -138,7 +138,8 @@ $light: #f7f7f9;
               span {
                 font-size: 0.75rem;
                 height: 1.2rem;
-                width: 4rem;
+                min-width: 2rem;
+                text-align: start;
                 ul {
                   box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.1);
                   background-color: #fff;
@@ -147,10 +148,12 @@ $light: #f7f7f9;
                   z-index: 900;
                   position: relative;
                   list-style: none;
-                  margin-top: 1.2rem;
-                  width: 150%;
+                  margin-top: 0.1rem;
+                  min-width: 4rem;
                   li {
+                    text-align: center;
                     font-size: 0.75rem;
+                    min-width: 4rem;
                     padding: 0.3rem 1rem;
                     &:hover {
                       background-color: #eee;
@@ -168,10 +171,18 @@ $light: #f7f7f9;
               width: auto;
               text-align: center;
               background-color: $light;
-              height: 2rem;
+              height: 2.8rem;
               border-radius: 3px;
               margin-right: 1rem;
+              ul {
+                display: none;
+              }
+              &:hover ul,
+              &:hover ul:hover {
+                display: block;
+              }
             }
+
             &__reset-btn {
               font-size: 0.7rem;
               font-weight: 500;

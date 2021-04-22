@@ -38,9 +38,9 @@ const FeedPage = () => {
   const [inputAddrGun, setInputAddrGun] = useState<string>("선택");
   const [inputAddrGu, setInputAddrGu] = useState<string>("선택");
 
-  const [toggleSi, setToggleSi] = useState<boolean>(false);
-  const [toggleGun, setToggleGun] = useState<boolean>(false);
-  const [toggleGu, setToggleGu] = useState<boolean>(false);
+  const [toggleSi, setToggleSi] = useState<boolean>(true);
+  const [toggleGun, setToggleGun] = useState<boolean>(true);
+  const [toggleGu, setToggleGu] = useState<boolean>(true);
 
   const [inputDaycountMin, setInputDaycountMin] = useState<string>("1");
   const [inputDaycountMax, setInputDaycountMax] = useState<string>("1");
@@ -169,20 +169,17 @@ const FeedPage = () => {
   );
 
   const handleInputAddrSi = (si: string): void => {
-    setToggleSi(false);
     setInputAddrSi(si);
     setInputAddrGun("선택");
     setInputAddrGu("선택");
   };
 
   const handleInputAddrGun = (gun: string): void => {
-    setToggleGun(false);
     setInputAddrGun(gun);
     setInputAddrGu("선택");
   };
 
   const handleInputAddrGu = (gu: string): void => {
-    setToggleGu(false);
     setInputAddrGu(gu);
   };
 
@@ -265,7 +262,7 @@ const FeedPage = () => {
             <p>대표지역</p>
             <div className="feedpage__contents__search-bar-address-all">
               <span className="feedpage__contents__search-bar-address-si">
-                <p onClick={() => setToggleSi(!toggleSi)}>{inputAddrSi}</p>
+                <p>{inputAddrSi}</p>
                 {toggleSi ? (
                   <ul>
                     {addrListSi &&
@@ -291,9 +288,7 @@ const FeedPage = () => {
                 <>
                   <h6>{">"}</h6>
                   <span className="feedpage__contents__search-bar-address-gun">
-                    <span onClick={() => setToggleGun(!toggleGun)}>
-                      {inputAddrGun}
-                    </span>
+                    <span>{inputAddrGun}</span>
                     {toggleGun ? (
                       <ul>
                         {addrListGun &&
@@ -321,9 +316,7 @@ const FeedPage = () => {
                 <>
                   <h6>{">"}</h6>
                   <span className={`feedpage__contents__search-bar-address-gu`}>
-                    <span onClick={() => setToggleGu(!toggleGu)}>
-                      {inputAddrGu}
-                    </span>
+                    <span>{inputAddrGu}</span>
                     {toggleGu ? (
                       <ul>
                         {addrListGu &&

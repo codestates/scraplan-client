@@ -596,10 +596,10 @@ body {
               z-index: 900;
               position: relative;
               list-style: none;
-              margin-top: 1.2rem;
+              margin-top: 0.3rem;
               width: 150%;
               li {
-                padding: 0.4rem 2rem;
+                padding: 0.4rem 1rem;
                 &:hover {
                   background-color: #eee;
                 }
@@ -619,6 +619,12 @@ body {
           height: 2rem;
           border-radius: 3px;
           margin-right: 1rem;
+          ul {
+            display: none;
+          }
+          &:hover ul {
+            display: block;
+          }
         }
         &__reset-btn {
           font-size: 0.8rem;
@@ -1340,10 +1346,10 @@ body {
               z-index: 900;
               position: relative;
               list-style: none;
-              margin-top: 1.2rem;
+              margin-top: 0.3rem;
               width: 150%;
               li {
-                padding: 0.4rem 2rem;
+                padding: 0.4rem 1rem;
                 &:hover {
                   background-color: #eee;
                 }
@@ -1363,6 +1369,12 @@ body {
           height: 2rem;
           border-radius: 3px;
           margin-right: 1rem;
+          ul {
+            display: none;
+          }
+          &:hover ul {
+            display: block;
+          }
         }
         &__reset-btn {
           font-size: 0.8rem;
