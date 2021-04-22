@@ -58,6 +58,7 @@ const PlanPage = () => {
 
   useEffect(() => {
     setPlanId(Number(location.pathname.split("/")[2]));
+    dispatch(getCurationCards([]));
   }, []);
 
   // v3 스크립트 동적으로 로드
@@ -561,7 +562,7 @@ const PlanPage = () => {
   // curation 에서 + 버튼 클릭시 plan으로 정보를 넘겨주는 함수
   const handleAddToPlan = (props: any, e: Event) => {
     e.stopPropagation();
-    const {
+    let {
       curationCardId,
       theme,
       title,
@@ -570,6 +571,10 @@ const PlanPage = () => {
       avgTime,
       feedbackCnt,
     } = props;
+
+    if (avgTime === 0) {
+      avgTime = 1;
+    }
 
     let max =
       planCardsByDay &&
@@ -597,22 +602,27 @@ const PlanPage = () => {
           Number((avgTime % 1).toFixed(2)) * 100) /
           60,
       );
-
-    dispatch(
-      getPlanCardsByDay([
-        ...planCardsByDay.slice(0, currentDay - 1),
-        planCardsByDay[currentDay - 1].concat({
-          day: currentDay,
-          startTime: max.endTime,
-          endTime: endHour + ":" + endMin,
-          comment: title,
-          theme,
-          coordinates: curationCoordinates,
-          address: curationAddr,
-        }),
-        ...planCardsByDay.slice(currentDay),
-      ]),
-    );
+    if (endHour >= 24) {
+      setModalComment(`다음날 일정에 추가해주세요`);
+      setModalType("alertModal");
+      setOpenModal(true);
+    } else {
+      dispatch(
+        getPlanCardsByDay([
+          ...planCardsByDay.slice(0, currentDay - 1),
+          planCardsByDay[currentDay - 1].concat({
+            day: currentDay,
+            startTime: max.endTime,
+            endTime: endHour + ":" + endMin,
+            comment: title,
+            theme,
+            coordinates: curationCoordinates,
+            address: curationAddr,
+          }),
+          ...planCardsByDay.slice(currentDay),
+        ]),
+      );
+    }
   };
 
   return (

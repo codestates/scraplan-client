@@ -590,7 +590,6 @@ const PlanList = ({
             <div className="planlist__contents__search-bar-address">
               <p>대표지역</p>
               <div className="planlist__contents__search-bar-address-all">
-                {/* <p>{`${inputAddrSi}   >`}</p> */}
                 <span className="planlist__contents__search-bar-address-si">
                   {`${inputAddrSi}   >`}
                   {toggleSi ? (
@@ -616,7 +615,6 @@ const PlanList = ({
                   <></>
                 ) : (
                   <>
-                    {/* <h6>{">"}</h6> */}
                     <span className="planlist__contents__search-bar-address-gun">
                       <span>{`${inputAddrGun}   >`}</span>
                       {toggleGun ? (
@@ -645,7 +643,6 @@ const PlanList = ({
                   <></>
                 ) : (
                   <>
-                    {/* <h6>{">"}</h6> */}
                     <span
                       className={`planlist__contents__search-bar-address-gu`}
                     >

@@ -181,18 +181,6 @@ const AddPlan = ({
     }
     // 1. plan 추가일 경우
     if (type === "addPlan" && currentDay) {
-      // let max = planCards.reduce(
-      //   (plan: any, cur: any) => {
-      //     return Number(cur.day) === Number(currentDay) &&
-      //       Number(cur.endTime.split(":")[0]) * 60 +
-      //         Number(cur.endTime.split(":")[1]) >
-      //         Number(plan.endTime.split(":")[0]) * 60 +
-      //           Number(plan.endTime.split(":")[1])
-      //       ? cur
-      //       : plan;
-      //   },
-      //   { day: currentDay, endTime: "10:00" },
-      // );
       let max =
         planCardsByDay &&
         planCardsByDay[currentDay - 1].reduce(
@@ -219,25 +207,29 @@ const AddPlan = ({
             Number(requestTime.split(":")[1])) /
             60,
         );
-
-      dispatch(
-        getPlanCardsByDay([
-          ...planCardsByDay.slice(0, currentDay - 1),
-          planCardsByDay[currentDay - 1].concat({
-            day: currentDay,
-            startTime: max.endTime,
-            endTime: endHour + ":" + endMin,
-            comment: inputTitle,
-            theme: requestTheme,
-            coordinates: [
-              Number(forRequestLatLng[0]),
-              Number(forRequestLatLng[1]),
-            ],
-            address: forRequestAddress,
-          }),
-          ...planCardsByDay.slice(currentDay),
-        ]),
-      );
+      if (endHour >= 24) {
+        setModalComment("다음날 일정에 추가해주세요 ");
+        setOpenModal(true);
+      } else {
+        dispatch(
+          getPlanCardsByDay([
+            ...planCardsByDay.slice(0, currentDay - 1),
+            planCardsByDay[currentDay - 1].concat({
+              day: currentDay,
+              startTime: max.endTime,
+              endTime: endHour + ":" + endMin,
+              comment: inputTitle,
+              theme: requestTheme,
+              coordinates: [
+                Number(forRequestLatLng[0]),
+                Number(forRequestLatLng[1]),
+              ],
+              address: forRequestAddress,
+            }),
+            ...planCardsByDay.slice(currentDay),
+          ]),
+        );
+      }
       handleCloseBtn();
     }
     // 2. curation 요청일 경우
@@ -268,6 +260,7 @@ const AddPlan = ({
       })
         .then((res) => res.json())
         .then((body) => {
+          handleCloseBtn();
           switch (body.message) {
             case "successfully added":
               setModalComment("요청이 정상 처리되었습니다. 👏🏻");
