@@ -13,6 +13,7 @@ export const GET_GOOGLE_TOKEN = "GET_GOOGLE_TOKEN" as const;
 export const GET_PLANS = "GET_PLANS" as const;
 export const GET_PLAN_CARDS = "GET_PLAN_CARDS" as const;
 export const GET_PLAN_CARDS_BY_DAY = "GET_PLAN_CARDS_BY_DAY" as const;
+export const GET_NON_MEMBER_PLAN_CARDS = "GET_NON_MEMBER_PLAN_CARDS" as const;
 
 // Curation Action
 export const GET_CURATIONS = "GET_CURATIONS" as const;
@@ -34,6 +35,7 @@ export type Action =
   | ReturnType<typeof getPlans>
   | ReturnType<typeof getPlanCards>
   | ReturnType<typeof getPlanCardsByDay>
+  | ReturnType<typeof getNonMemberPlanCards>
   | ReturnType<typeof getCurations>
   | ReturnType<typeof getCurationCards>
   | ReturnType<typeof getCurationsRequests>
@@ -129,6 +131,15 @@ export const getPlanCards = (data: any) => {
 export const getPlanCardsByDay = (data: any) => {
   return {
     type: GET_PLAN_CARDS_BY_DAY,
+    payload: {
+      data,
+    },
+  };
+};
+
+export const getNonMemberPlanCards = (data: any) => {
+  return {
+    type: GET_NON_MEMBER_PLAN_CARDS,
     payload: {
       data,
     },

@@ -2,7 +2,12 @@ import React, { useCallback, useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { RootState } from "../../reducers";
-import { getPlanCards, getPlanCardsByDay, signIn } from "../../actions";
+import {
+  getNonMemberPlanCards,
+  getPlanCards,
+  getPlanCardsByDay,
+  signIn,
+} from "../../actions";
 import AddPlan from "./AddPlan";
 import PlanTimeline from "./PlanTimeline";
 import Modal from "../UI/Modal";
@@ -41,6 +46,7 @@ const PlanList = ({
     planReducer: {
       planList: { isValid, isMember, planCards },
       planCardsByDay,
+      nonMemberPlanCards,
     },
   } = state;
 
@@ -135,8 +141,13 @@ const PlanList = ({
           }
         })
         .catch((err) => console.error(err));
+    } else if (nonMemberPlanCards) {
+      // 비회원이 저장하기 클릭 시 임시 저장
+      dispatch(getPlanCards({ planCards: nonMemberPlanCards }));
+      dispatch(getNonMemberPlanCards([]));
     } else {
-      // newplan
+      // 이상한 path variable 일 시, newplan으로 통일
+      history.push("/planpage/newplan");
       dispatch(
         getPlanCards({
           isMember: token.length > 0 ? true : false,
@@ -277,6 +288,7 @@ const PlanList = ({
     dispatch(getPlanCards({ planCards: finalPlanCards, isMember, isValid }));
     if (token === "") {
       // isMember === false -> 로그인창
+      dispatch(getNonMemberPlanCards(finalPlanCards));
       setSignInModalOpen(true);
       // token 확인
 
@@ -504,7 +516,7 @@ const PlanList = ({
     // Parameters to pass to OAuth 2.0 endpoint.
     const params: { [key: string]: string | any } = {
       client_id: process.env.REACT_APP_CLIENT_ID,
-      redirect_uri: `${process.env.REACT_APP_CLIENT_URL}${currentPage}`,
+      redirect_uri: `${process.env.REACT_APP_CLIENT_URL}/planpage/newplan`,
       response_type: "token",
       scope:
         "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
