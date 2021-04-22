@@ -14,8 +14,6 @@ import Signin from "../User/Signin";
 import Signup from "../User/Signup";
 import "./UI.scss";
 import Modal from "./Modal";
-require("dotenv").config();
-
 interface NavbarProps {
   currentPage?: string;
 }

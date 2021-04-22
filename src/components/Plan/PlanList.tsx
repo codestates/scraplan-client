@@ -68,9 +68,9 @@ const PlanList = ({
   const [inputAddrGun, setInputAddrGun] = useState<string>("선택");
   const [inputAddrGu, setInputAddrGu] = useState<string>("선택");
 
-  const [toggleSi, setToggleSi] = useState<boolean>(false);
-  const [toggleGun, setToggleGun] = useState<boolean>(false);
-  const [toggleGu, setToggleGu] = useState<boolean>(false);
+  const [toggleSi, setToggleSi] = useState<boolean>(true);
+  const [toggleGun, setToggleGun] = useState<boolean>(true);
+  const [toggleGu, setToggleGu] = useState<boolean>(true);
 
   const [addrList, setAddrList] = useState<any>(mapdata || {});
   const [addrListSi, setAddrListSi] = useState<string[] | undefined>();
@@ -392,6 +392,9 @@ const PlanList = ({
                 case "successfully edited":
                   setModalComment("수정이 완료되었습니다 👏🏻");
                   handleModalOpen();
+                  setTimeout(() => {
+                    history.push(`/planpage/${planId}`);
+                  }, 1000);
                   break;
                 case "Nothing Changed":
                   setModalComment("변경사항이 없습니다 😥");
@@ -460,20 +463,17 @@ const PlanList = ({
   };
 
   const handleInputAddrSi = (si: string): void => {
-    setToggleSi(false);
     setInputAddrSi(si);
     setInputAddrGun("선택");
     setInputAddrGu("선택");
   };
 
   const handleInputAddrGun = (gun: string): void => {
-    setToggleGun(false);
     setInputAddrGun(gun);
     setInputAddrGu("선택");
   };
 
   const handleInputAddrGu = (gu: string): void => {
-    setToggleGu(false);
     setInputAddrGu(gu);
   };
 
@@ -620,9 +620,9 @@ const PlanList = ({
               <p>대표지역</p>
               <div className="planlist__contents__search-bar-address-all">
                 <span className="planlist__contents__search-bar-address-si">
-                  <p onClick={() => setToggleSi(!toggleSi)}>{inputAddrSi}</p>
+                  {`${inputAddrSi}   >`}
                   {toggleSi ? (
-                    <ul>
+                    <ul className="planlist__contents__search-bar-address-si__list">
                       {addrListSi &&
                         addrListSi.map((si, idx) => {
                           return (
@@ -644,11 +644,8 @@ const PlanList = ({
                   <></>
                 ) : (
                   <>
-                    <h6>{">"}</h6>
                     <span className="planlist__contents__search-bar-address-gun">
-                      <span onClick={() => setToggleGun(!toggleGun)}>
-                        {inputAddrGun}
-                      </span>
+                      <span>{`${inputAddrGun}   >`}</span>
                       {toggleGun ? (
                         <ul>
                           {addrListGun &&
@@ -675,13 +672,10 @@ const PlanList = ({
                   <></>
                 ) : (
                   <>
-                    <h6>{">"}</h6>
                     <span
                       className={`planlist__contents__search-bar-address-gu`}
                     >
-                      <span onClick={() => setToggleGu(!toggleGu)}>
-                        {inputAddrGu}
-                      </span>
+                      <span>{inputAddrGu}</span>
                       {toggleGu ? (
                         <ul>
                           {addrListGu &&

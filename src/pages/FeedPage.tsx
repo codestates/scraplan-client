@@ -14,7 +14,7 @@ const FeedPage = () => {
   const dispatch = useDispatch();
   const userState = useSelector((state: RootState) => state.userReducer);
 
-  const [planList, setPlanList] = useState([
+  const [planList, setPlanList] = useState<any>([
     {
       id: 0,
       title: "2박3일 울산여행",
@@ -24,6 +24,10 @@ const FeedPage = () => {
       representAddr: "울산광역시",
     },
   ]);
+
+  const [planFetching, setPlanFetching] = useState<boolean>(false);
+  const [scrollPlanPage, setScrollPlanPage] = useState<number>(1);
+
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [modalComment, setModalComment] = useState<string>("");
 
@@ -34,9 +38,9 @@ const FeedPage = () => {
   const [inputAddrGun, setInputAddrGun] = useState<string>("선택");
   const [inputAddrGu, setInputAddrGu] = useState<string>("선택");
 
-  const [toggleSi, setToggleSi] = useState<boolean>(false);
-  const [toggleGun, setToggleGun] = useState<boolean>(false);
-  const [toggleGu, setToggleGu] = useState<boolean>(false);
+  const [toggleSi, setToggleSi] = useState<boolean>(true);
+  const [toggleGun, setToggleGun] = useState<boolean>(true);
+  const [toggleGu, setToggleGu] = useState<boolean>(true);
 
   const [inputDaycountMin, setInputDaycountMin] = useState<string>("1");
   const [inputDaycountMax, setInputDaycountMax] = useState<string>("1");
@@ -77,6 +81,51 @@ const FeedPage = () => {
     }
   }, [inputAddrGun]);
 
+  useEffect(() => {
+    window.addEventListener("scroll", handlePlanScroll);
+    return () => {
+      window.removeEventListener("scroll", handlePlanScroll);
+    };
+  });
+
+  const handlePlanScroll = () => {
+    const scrollHeight = document.documentElement.scrollHeight;
+    const scrollTop = document.documentElement.scrollTop;
+    const clientHeight = document.documentElement.clientHeight;
+
+    if (scrollTop + clientHeight >= scrollHeight && planFetching) {
+      fetchMorePlanList();
+    }
+  };
+
+  const fetchMorePlanList = () => {
+    if (scrollPlanPage > 0) {
+      fetch(
+        `${process.env.REACT_APP_SERVER_URL}/plans/${scrollPlanPage}?writer=${nickname}&email=${email}`,
+        {
+          method: "GET",
+          headers: {
+            authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            credentials: "include",
+          },
+        },
+      )
+        .then((res) => res.json())
+        .then((body) => {
+          if (body.plans.length === 0) {
+            setScrollPlanPage(0);
+            setPlanFetching(false);
+          } else {
+            dispatch(getPlans([...planList, ...body.plans]));
+            setPlanList([...planList, ...body.plans]);
+            setScrollPlanPage(scrollPlanPage + 1);
+          }
+        })
+        .catch((err) => console.error(err));
+    }
+  };
+
   const handleGetAllPlans = () => {
     fetch(`${process.env.REACT_APP_SERVER_URL}/plans/${1}`, {
       method: "GET",
@@ -89,6 +138,8 @@ const FeedPage = () => {
       .then((body) => {
         dispatch(getPlans(body.plans));
         setPlanList(body.plans);
+        setPlanFetching(true);
+        setScrollPlanPage(scrollPlanPage + 1);
       })
       .catch((err) => console.error(err));
   };
@@ -118,20 +169,17 @@ const FeedPage = () => {
   );
 
   const handleInputAddrSi = (si: string): void => {
-    setToggleSi(false);
     setInputAddrSi(si);
     setInputAddrGun("선택");
     setInputAddrGu("선택");
   };
 
   const handleInputAddrGun = (gun: string): void => {
-    setToggleGun(false);
     setInputAddrGun(gun);
     setInputAddrGu("선택");
   };
 
   const handleInputAddrGu = (gu: string): void => {
-    setToggleGu(false);
     setInputAddrGu(gu);
   };
 
@@ -214,7 +262,7 @@ const FeedPage = () => {
             <p>대표지역</p>
             <div className="feedpage__contents__search-bar-address-all">
               <span className="feedpage__contents__search-bar-address-si">
-                <p onClick={() => setToggleSi(!toggleSi)}>{inputAddrSi}</p>
+                <p>{inputAddrSi}</p>
                 {toggleSi ? (
                   <ul>
                     {addrListSi &&
@@ -240,9 +288,7 @@ const FeedPage = () => {
                 <>
                   <h6>{">"}</h6>
                   <span className="feedpage__contents__search-bar-address-gun">
-                    <span onClick={() => setToggleGun(!toggleGun)}>
-                      {inputAddrGun}
-                    </span>
+                    <span>{inputAddrGun}</span>
                     {toggleGun ? (
                       <ul>
                         {addrListGun &&
@@ -270,9 +316,7 @@ const FeedPage = () => {
                 <>
                   <h6>{">"}</h6>
                   <span className={`feedpage__contents__search-bar-address-gu`}>
-                    <span onClick={() => setToggleGu(!toggleGu)}>
-                      {inputAddrGu}
-                    </span>
+                    <span>{inputAddrGu}</span>
                     {toggleGu ? (
                       <ul>
                         {addrListGu &&
@@ -332,7 +376,7 @@ const FeedPage = () => {
           </div>
         </div>
         <div className="feedpage__contents__plans">
-          {planList.map((plan, idx) => {
+          {planList.map((plan: any, idx: number) => {
             return (
               <PlanSummary
                 key={idx}

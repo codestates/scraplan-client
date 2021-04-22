@@ -81,9 +81,11 @@ const CurationManagement = () => {
       setCurationResolved(curationReducer.curationRequestsResolved);
       setInputTitle(requestTitle);
       setInputKeyword(address);
+      setSearchLatLng(coordinates.coordinates);
       setInputDesc(requestComment);
       setInputTheme(requestTheme);
       setSearchMode(false);
+      moveKakaoMap(searchLatLng[0], searchLatLng[1]);
     }
   }, []);
 
@@ -113,23 +115,27 @@ const CurationManagement = () => {
 
   useEffect(() => {
     if (curMarker) curMarker.setMap(null);
-    fetch(
-      `${
-        process.env.REACT_APP_SERVER_URL
-      }/curations?coordinates=${encodeURIComponent(JSON.stringify(mapBounds))}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          credentials: "include",
+    if (mapBounds) {
+      fetch(
+        `${
+          process.env.REACT_APP_SERVER_URL
+        }/curations?coordinates=${encodeURIComponent(
+          JSON.stringify(mapBounds),
+        )}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            credentials: "include",
+          },
         },
-      },
-    )
-      .then((res) => res.json())
-      .then((body) => {
-        setMarkerList(body);
-      })
-      .catch((err) => console.error(err));
+      )
+        .then((res) => res.json())
+        .then((body) => {
+          setMarkerList(body);
+        })
+        .catch((err) => console.error(err));
+    }
   }, [mapBounds]);
 
   useEffect(() => {
@@ -146,7 +152,7 @@ const CurationManagement = () => {
   }, [searchLatLng, inputKeyword]);
 
   const makeMarker = () => {
-    for (var i = 0; i < markerList.length; i++) {
+    for (let i = 0; i < markerList.length; i++) {
       let markerImage = new window.kakao.maps.MarkerImage(
         `/images/marker/theme0.png`,
         new window.kakao.maps.Size(54, 58),
@@ -178,7 +184,7 @@ const CurationManagement = () => {
 
   const makeCurMarker = () => {
     let markerImage = new window.kakao.maps.MarkerImage(
-      `/images/marker/theme5.png`,
+      `/images/marker/location.png`,
       new window.kakao.maps.Size(54, 58),
       { offset: new window.kakao.maps.Point(20, 58) },
     );
@@ -193,6 +199,7 @@ const CurationManagement = () => {
     });
     setCurMarker(marker);
     marker.setMap(map);
+    moveKakaoMap(searchLatLng[0], searchLatLng[1]);
   };
 
   const loadKakaoMap = () => {
@@ -238,9 +245,11 @@ const CurationManagement = () => {
   };
 
   const moveKakaoMap = (lat: number, lng: number) => {
-    var moveLatLon = new window.kakao.maps.LatLng(lat, lng);
-    map.panTo(moveLatLon);
-    setLatLng([Number(lat), Number(lng)]);
+    if (Object.keys(map).length > 0) {
+      let moveLatLon = new window.kakao.maps.LatLng(lat, lng);
+      map.panTo(moveLatLon);
+      setLatLng([Number(lat), Number(lng)]);
+    }
   };
 
   const handleClickMarker = (

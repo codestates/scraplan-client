@@ -53,6 +53,7 @@ const PlanTimeline = ({
           x: 0,
           h: endHour * 4 + endMin / 15 - startHour * 4 - startMin / 15, // 높이
           y: startHour * 4 + startMin / 15, // 위치
+          maxH: 24,
           i: idx.toString(),
           moved: false,
           static: false,
@@ -152,6 +153,7 @@ const PlanTimeline = ({
                 giveThemeIndexToParent={(themeIndex) =>
                   handleChangeTheme(themeIndex, idx)
                 }
+                readonly={true}
               />
               <SetTime
                 startTime={startTime}
@@ -163,7 +165,7 @@ const PlanTimeline = ({
                 className="plancard__delete-btn"
                 onClick={(e) => handleDeletePlancard(e, idx)}
               >
-                ⓧ
+                𝖷
               </button>
             </div>
           );

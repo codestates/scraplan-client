@@ -118,11 +118,11 @@ const MainPage = () => {
         </button>
         <button
           className="move-to-top__btn"
-          onClick={() => {
-            topRef.current.scrollIntoView({
-              behavior: "smooth",
-            });
-          }}
+          // onClick={() => {
+          //   topRef.current.scrollIntoView({
+          //     behavior: "smooth",
+          //   });
+          // }}
         >
           <img src="/images/top.gif" alt="" />
           <p>맨위로</p>
@@ -130,11 +130,11 @@ const MainPage = () => {
         <div
           className="mainpage__page"
           ref={topRef}
-          onClick={() => {
-            firstRef.current.scrollIntoView({
-              behavior: "smooth",
-            });
-          }}
+          // onClick={() => {
+          //   firstRef.current.scrollIntoView({
+          //     behavior: "smooth",
+          //   });
+          // }}
         >
           <div className="mainpage__body">
             <div className="mainpage__texts">
@@ -166,11 +166,11 @@ const MainPage = () => {
         <div
           className="mainpage__page"
           ref={firstRef}
-          onClick={() => {
-            secondRef.current.scrollIntoView({
-              behavior: "smooth",
-            });
-          }}
+          // onClick={() => {
+          //   secondRef.current.scrollIntoView({
+          //     behavior: "smooth",
+          //   });
+          // }}
         >
           <div className="mainpage__body">
             <img className="left-img" src="/images/mainpage/step1.png" alt="" />
@@ -194,11 +194,11 @@ const MainPage = () => {
         <div
           className="mainpage__page second-step"
           ref={secondRef}
-          onClick={() => {
-            thirdRef.current.scrollIntoView({
-              behavior: "smooth",
-            });
-          }}
+          // onClick={() => {
+          //   thirdRef.current.scrollIntoView({
+          //     behavior: "smooth",
+          //   });
+          // }}
         >
           <div className="mainpage__body">
             <div className="mainpage__texts">
@@ -235,11 +235,11 @@ const MainPage = () => {
         <div
           className="mainpage__page third-step"
           ref={thirdRef}
-          onClick={() => {
-            fourthRef.current.scrollIntoView({
-              behavior: "smooth",
-            });
-          }}
+          // onClick={() => {
+          //   fourthRef.current.scrollIntoView({
+          //     behavior: "smooth",
+          //   });
+          // }}
         >
           <div className="mainpage__body">
             <img className="left-img" src="/images/mainpage/step3.png" alt="" />
@@ -271,11 +271,11 @@ const MainPage = () => {
         <div
           className="mainpage__page fourth-step"
           ref={fourthRef}
-          onClick={() => {
-            fifthRef.current.scrollIntoView({
-              behavior: "smooth",
-            });
-          }}
+          // onClick={() => {
+          //   fifthRef.current.scrollIntoView({
+          //     behavior: "smooth",
+          //   });
+          // }}
         >
           <div className="mainpage__body">
             <div className="mainpage__texts">
@@ -311,12 +311,12 @@ const MainPage = () => {
         </div>
         <div
           className="mainpage__page fifth-step"
-          onClick={() => {
-            footerRef.current.scrollIntoView({
-              behavior: "smooth",
-            });
-          }}
-          ref={fifthRef}
+          // onClick={() => {
+          //   footerRef.current.scrollIntoView({
+          //     behavior: "smooth",
+          //   });
+          // }}
+          // ref={fifthRef}
         >
           <div className="mainpage__body">
             <div className="mainpage__texts left-text">
@@ -342,11 +342,11 @@ const MainPage = () => {
         </div>
         <div
           className="mainpage__footer"
-          onClick={() => {
-            topRef.current.scrollIntoView({
-              behavior: "smooth",
-            });
-          }}
+          // onClick={() => {
+          //   topRef.current.scrollIntoView({
+          //     behavior: "smooth",
+          //   });
+          // }}
           ref={footerRef}
         >
           {/* <img
