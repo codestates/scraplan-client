@@ -14,6 +14,7 @@ import PlanTimeline from "./PlanTimeline";
 import Modal from "../UI/Modal";
 import Signin from "../User/Signin";
 import mapdata from "../../data/mapdata.json";
+import { createSolutionBuilderWithWatch } from "typescript";
 
 interface ForAddPlanProps {
   LatLng?: number[];
@@ -24,6 +25,7 @@ interface ForAddPlanProps {
   setCurrentDay: any;
   moveToTheNextDay: () => void;
   moveToThePrevDay: () => void;
+  setViewOnlyMine: any;
 }
 
 const PlanList = ({
@@ -35,6 +37,7 @@ const PlanList = ({
   setCurrentDay,
   moveToTheNextDay,
   moveToThePrevDay,
+  setViewOnlyMine,
 }: ForAddPlanProps) => {
   const dispatch = useDispatch();
   const location = useLocation() as any;
@@ -112,6 +115,7 @@ const PlanList = ({
             );
             dispatch(getPlanCardsByDay([]));
           } else {
+            setViewOnlyMine(true);
             const planCards = body.planCards.map((plan: any) => {
               return Object.assign({}, plan, {
                 coordinates: plan.coordinates.coordinates,
@@ -509,17 +513,12 @@ const PlanList = ({
     }
   };
 
-  // day는 그대로 입력하면 됨
-  // ex) day 1에 그대로 1 기입 -> filterByDay[0] = Day1의 리스트들
-  const handleShowPlanlistThatDay = (day: number) => {};
-
   const handleDayList = () => {
-    setShowDayList(true);
-    handleShowPlanlistThatDay(1);
+    setShowDayList(!showDayList);
   };
 
   const handleSelectDay = (day: number) => {
-    handleShowPlanlistThatDay(day + 1);
+    setCurrentDay(day);
     setShowDayList(false);
   };
 
@@ -719,7 +718,7 @@ const PlanList = ({
                   {dayCount.map((day, idx) => {
                     return (
                       <li
-                        onClick={() => handleSelectDay(idx)}
+                        onClick={() => handleSelectDay(idx + 1)}
                         key={idx}
                       >{`Day ${day}`}</li>
                     );

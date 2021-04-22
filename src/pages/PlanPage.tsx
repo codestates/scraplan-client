@@ -7,6 +7,7 @@ import PlanList from "../components/Plan/PlanList";
 import { getCurationCards, getPlanCards, getPlanCardsByDay } from "../actions";
 import Modal from "../components/UI/Modal";
 import AddPlan from "../components/Plan/AddPlan";
+import { useLocation } from "react-router";
 
 declare global {
   interface Window {
@@ -26,7 +27,7 @@ const PlanPage = () => {
     },
   } = state;
   const dispatch = useDispatch();
-
+  const location = useLocation();
   const [LatLng, setLatLng] = useState<number[]>([
     37.5139795454969,
     127.048963363388,
@@ -643,6 +644,7 @@ const PlanPage = () => {
         setCurrentDay={setCurrentDay}
         moveToTheNextDay={moveToTheNextDay}
         moveToThePrevDay={moveToThePrevDay}
+        setViewOnlyMine={setViewOnlyMine}
       />
       <Modal
         open={openModal}
