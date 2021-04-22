@@ -71,25 +71,27 @@ const PlanPage = () => {
   // marker request
   // 지도가 이동할 때 (mapBounds의 값이 변할 때)서버에 mapBounds를 보낸다.
   useEffect(() => {
-    fetch(
-      `${
-        process.env.REACT_APP_SERVER_URL
-      }/curations?coordinates=${encodeURIComponent(
-        JSON.stringify(mapBounds),
-      )}&theme=${selectTheme}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          credentials: "include",
+    if (mapBounds) {
+      fetch(
+        `${
+          process.env.REACT_APP_SERVER_URL
+        }/curations?coordinates=${encodeURIComponent(
+          JSON.stringify(mapBounds),
+        )}&theme=${selectTheme}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            credentials: "include",
+          },
         },
-      },
-    )
-      .then((res) => res.json())
-      .then((body) => {
-        setMarkerList(body);
-      })
-      .catch((err) => console.error(err));
+      )
+        .then((res) => res.json())
+        .then((body) => {
+          setMarkerList(body);
+        })
+        .catch((err) => console.error(err));
+    }
   }, [mapBounds, selectTheme]);
 
   // keyword request

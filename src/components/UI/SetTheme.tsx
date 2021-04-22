@@ -7,8 +7,14 @@ interface ThemeProps {
   themeIndex?: number;
   type?: string;
   giveThemeIndexToParent?: (index: number) => void;
+  readonly?: boolean;
 }
-const SetTheme = ({ themeIndex, type, giveThemeIndexToParent }: ThemeProps) => {
+const SetTheme = ({
+  themeIndex,
+  type,
+  giveThemeIndexToParent,
+  readonly,
+}: ThemeProps) => {
   const themeList =
     type === "feedback"
       ? ["😡", "🤔", "😃"]
@@ -16,7 +22,6 @@ const SetTheme = ({ themeIndex, type, giveThemeIndexToParent }: ThemeProps) => {
   const [currentThemeIndex, setCurrentThemeIndex] = useState<number>(
     themeIndex || 2,
   );
-  // const [currentThemeIndex, setCurrentThemeIndex] = useState<number>(0);
   const [isSelectTheme, setIsSelectTheme] = useState<boolean>(false);
   const refTheme = useRef<HTMLInputElement | null>(null);
 
@@ -25,6 +30,12 @@ const SetTheme = ({ themeIndex, type, giveThemeIndexToParent }: ThemeProps) => {
       if (e.key === "Escape") setIsSelectTheme(false);
     });
   }, [isSelectTheme]);
+
+  useEffect(() => {
+    if (themeIndex) {
+      setCurrentThemeIndex(themeIndex);
+    }
+  }, [themeIndex]);
 
   const handleSelectTheme = (e: React.MouseEvent<HTMLElement>) => {
     const selectThemeIndex = themeList.findIndex(
@@ -45,28 +56,33 @@ const SetTheme = ({ themeIndex, type, giveThemeIndexToParent }: ThemeProps) => {
       >
         <div>{themeList[currentThemeIndex]}</div>
       </div>
-
-      {isSelectTheme ? (
-        <span
-          className={`set-theme__select-btn ${isSelectTheme ? "" : "hidden"} ${
-            type === "feedback" ? "feedback" : ""
-          }`}
-        >
-          {themeList.map((theme, index) => {
-            return (
-              <div
-                className="selectTheme"
-                onClick={handleSelectTheme}
-                ref={refTheme}
-                key={index}
-              >
-                <div className="selectTheme-pick">{theme}</div>
-              </div>
-            );
-          })}
-        </span>
-      ) : (
+      {readonly ? (
         <></>
+      ) : (
+        <>
+          {isSelectTheme ? (
+            <span
+              className={`set-theme__select-btn ${
+                isSelectTheme ? "" : "hidden"
+              } ${type === "feedback" ? "feedback" : ""}`}
+            >
+              {themeList.map((theme, index) => {
+                return (
+                  <div
+                    className="selectTheme"
+                    onClick={handleSelectTheme}
+                    ref={refTheme}
+                    key={index}
+                  >
+                    <div className="selectTheme-pick">{theme}</div>
+                  </div>
+                );
+              })}
+            </span>
+          ) : (
+            <></>
+          )}
+        </>
       )}
     </div>
   );
