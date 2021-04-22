@@ -99,6 +99,7 @@ const PlanList = ({
                 isMember: token.length > 0 ? true : false,
                 isValid: false,
                 planCards: [],
+                plan: {},
               }),
             );
             dispatch(getPlanCardsByDay([]));
@@ -135,11 +136,13 @@ const PlanList = ({
         .catch((err) => console.error(err));
     } else {
       // newplan
+      console.log("웨 초기화가 안될까..");
       dispatch(
         getPlanCards({
           isMember: token.length > 0 ? true : false,
           isValid: false,
           planCards: [],
+          plan: {},
         }),
       );
       dispatch(getPlanCardsByDay([]));

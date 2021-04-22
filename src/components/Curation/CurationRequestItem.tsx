@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../reducers";
-import { signIn,getCurationsRequests } from "../../actions";
+import { signIn, getCurationsRequests } from "../../actions";
 
 import Modal from "../UI/Modal";
 import "./Curation.scss";
@@ -20,7 +20,6 @@ type CurationRequestItemProps = {
 const CurationRequestItem = ({ props }: any) => {
   const dispatch = useDispatch();
   const userState = useSelector((state: RootState) => state.userReducer);
-  const dispatch = useDispatch();
   const statusCode = ["대기중", "처리중", "승인", "요청취소"];
   //0, 1, 2, 3 -> pending, processing, resolved, rejected
   const {
@@ -40,7 +39,6 @@ const CurationRequestItem = ({ props }: any) => {
   const [showmore, setShowmore] = useState<boolean>(false);
   const [modalComment, setModalComment] = useState<string>("");
   const [openModal, setOpenModal] = useState<boolean>(false);
-
 
   const handleShowmoreBtn = (): void => {
     setShowmore(!showmore);
