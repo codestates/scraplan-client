@@ -44,7 +44,24 @@ const Navbar = (props: NavbarProps) => {
     handleModalOpen();
   };
   const handleAcceptActionToModal = () => {
-    handleGoogleSign(`${currentPage}`, `signup/${inputNicknameModal}`);
+    if (window.location.hash !== "") {
+      const googleData = decodeURIComponent(window.location.hash).split("&");
+
+      let newHashData = "";
+      for (const el of googleData) {
+        const parsedData = el.split("=");
+        if (
+          (parsedData[0] === "#state" || parsedData[0] === "state") &&
+          parsedData[1].indexOf("signup") > -1
+        ) {
+          //state 변경
+          newHashData += `${parsedData[0]}=signup/${inputNicknameModal}&`;
+        } else newHashData += el + "&";
+      }
+      window.location.hash = newHashData.slice(0, newHashData.length - 2);
+    } else {
+      handleGoogleSign(`${currentPage}`, `signup/${inputNicknameModal}`);
+    }
   };
   // 여기까지 작성
   useEffect(() => {
@@ -105,6 +122,7 @@ const Navbar = (props: NavbarProps) => {
           .then((res) => res.json())
           .then((body) => {
             if (body.message === "Successfully signedup") {
+              closeSignUpModal();
               googleSignIn(hashData);
               return;
             } else if (body.message === "Already exists email") {
