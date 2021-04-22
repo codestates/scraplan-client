@@ -6,11 +6,10 @@ import {
   getCurationsRequestsResolved,
 } from "../../actions";
 import "./Admin.scss";
+import CurationAdminRequestItem from "../../components/Curation/CurationAdminRequestItem";
 
 const CurationRequest = ({ setMenu }: any) => {
   const dispatch = useDispatch();
-  const statusCode = ["대기중", "처리중", "승인완료", "미승인"];
-  //0, 1, 2, 3 -> pending, processing, resolved, rejected
   const state = useSelector((state: RootState) => state);
   const {
     userReducer: {
@@ -20,11 +19,28 @@ const CurationRequest = ({ setMenu }: any) => {
   } = state;
 
   const [selectedMenu, setSelectedMenu] = useState<number | null>(null);
-  const [filteredRequests, setFilteredRequests] = useState(curationRequests);
+  // const [filteredRequests, setFilteredRequests] = useState(curationRequests);
+
+  const [curationsRequestsList, setCurationsRequestsList] = useState<any>([]);
+  const [
+    curationsRequestsFetching,
+    setcurationsRequestsFetching,
+  ] = useState<boolean>(false);
+  const [
+    scrollcurationsRequestsPage,
+    setScrollcurationsRequestsPage,
+  ] = useState<number>(1);
 
   useEffect(() => {
     getAllCurationRequests();
   }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  });
 
   const getAllCurationRequests = () => {
     fetch(
@@ -43,6 +59,55 @@ const CurationRequest = ({ setMenu }: any) => {
       .then((res) => res.json())
       .then((body) => {
         dispatch(getCurationsRequests(body.curationRequests));
+        setCurationsRequestsList(body.curationRequests);
+        setcurationsRequestsFetching(true);
+        setScrollcurationsRequestsPage(scrollcurationsRequestsPage + 1);
+      })
+      .catch((err) => console.error(err));
+  };
+
+  const handleScroll = () => {
+    const scrollHeight = document.documentElement.scrollHeight;
+    const scrollTop = document.documentElement.scrollTop;
+    const clientHeight = document.documentElement.clientHeight;
+
+    if (scrollTop + clientHeight >= scrollHeight && curationsRequestsFetching) {
+      fetchMoreCurationRequestsList();
+    }
+  };
+
+  const fetchMoreCurationRequestsList = () => {
+    fetch(
+      `${
+        process.env.REACT_APP_SERVER_URL
+      }/curation-requests/${email}/?isAdmin=${true}&pagenation=${scrollcurationsRequestsPage}`,
+      {
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          credentials: "include",
+        },
+      },
+    )
+      .then((res) => res.json())
+      .then((body) => {
+        if (body.curationRequests.length === 0) {
+          setScrollcurationsRequestsPage(0);
+          setcurationsRequestsFetching(false);
+        } else {
+          dispatch(
+            getCurationsRequests([
+              ...curationsRequestsList,
+              ...body.curationRequests,
+            ]),
+          );
+          setCurationsRequestsList([
+            ...curationsRequestsList,
+            ...body.curationRequests,
+          ]);
+          setScrollcurationsRequestsPage(scrollcurationsRequestsPage + 1);
+        }
       })
       .catch((err) => console.error(err));
   };
@@ -132,60 +197,15 @@ const CurationRequest = ({ setMenu }: any) => {
           <p>상태변경</p>
         </div>
         <ul className="curation-request__table__contents">
-          {curationRequests &&
-            curationRequests.length > 0 &&
-            curationRequests.map((item: any) => {
-              const [showmore, setShowmore] = useState<boolean>(false);
-              const {
-                id,
-                requester,
-                coordinates,
-                address,
-                requestTitle,
-                requestComment,
-                requestTheme,
-                status,
-              } = item;
+          {curationsRequestsList &&
+            curationsRequestsList.length > 0 &&
+            curationsRequestsList.map((item: any) => {
               return (
-                <li
-                  className="curation-request__table__contents__item"
-                  onClick={() => setShowmore(!showmore)}
-                >
-                  <div className="curation-request__table__contents__item-desc">
-                    <p>{statusCode[status]}</p>
-                    <p>{id}</p>
-                    <p>{requester}</p>
-                    <p>{requestTitle}</p>
-                    <select
-                      onChange={(e) => {
-                        handleRequestUpdate(id, Number(e.target.value));
-                      }}
-                    >
-                      <option value={0} selected={status === 0 ? true : false}>
-                        대기중
-                      </option>
-                      <option value={1} selected={status !== 0 ? true : false}>
-                        확인중
-                      </option>
-                    </select>
-                  </div>
-                  {showmore ? (
-                    <div className="curation-request__table__contents__item-showmore">
-                      <p>{`신청이유 : ${requestComment}`}</p>
-                      <p>{`주소 : ${address}`}</p>
-                      <div className="showmore-btns">
-                        <button onClick={() => handleRequestResolved(item)}>
-                          승인
-                        </button>
-                        <button onClick={() => handleRequestUpdate(id, 3)}>
-                          거절
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <></>
-                  )}
-                </li>
+                <CurationAdminRequestItem
+                  item={item}
+                  handleRequestUpdate={handleRequestUpdate}
+                  handleRequestResolved={handleRequestResolved}
+                />
               );
             })}
         </ul>

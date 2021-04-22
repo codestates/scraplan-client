@@ -20,7 +20,9 @@ const MyPage = () => {
   const [userNickname, setUserNickname] = useState<string>("");
 
   const [curMenu, setCurMenu] = useState<string>("myPlans");
-  const [planList, setPlanList] = useState([]);
+  const [planList, setPlanList] = useState<any>([]);
+  const [planFetching, setPlanFetching] = useState(false);
+  const [scrollPlanPage, setScrollPlanPage] = useState<number>(1);
 
   const [curationsRequestsList, setCurationsRequestsList] = useState([
     {
@@ -34,6 +36,13 @@ const MyPage = () => {
       status: 0,
     },
   ]);
+  const [curationsRequestsFetching, setcurationsRequestsFetching] = useState(
+    false,
+  );
+  const [
+    scrollcurationsRequestsPage,
+    setScrollcurationsRequestsPage,
+  ] = useState<number>(1);
 
   const [inputAddrSi, setInputAddrSi] = useState<string>("선택");
   const [inputAddrGun, setInputAddrGun] = useState<string>("선택");
@@ -98,6 +107,8 @@ const MyPage = () => {
       .then((body) => {
         dispatch(getCurationsRequests(body.curationRequests));
         setCurationsRequestsList(body.curationRequests);
+        setcurationsRequestsFetching(true);
+        setScrollcurationsRequestsPage(scrollcurationsRequestsPage + 1);
       })
       .catch((err) => console.error(err));
   }, []);
@@ -120,8 +131,93 @@ const MyPage = () => {
     }
   }, [inputAddrGun]);
 
-  const handleMenuBtn = (menu: string): void => {
-    setCurMenu(menu);
+  useEffect(() => {
+    window.addEventListener("scroll", handlePlanScroll);
+    return () => {
+      window.removeEventListener("scroll", handlePlanScroll);
+    };
+  });
+
+  const handlePlanScroll = () => {
+    const scrollHeight = document.documentElement.scrollHeight;
+    const scrollTop = document.documentElement.scrollTop;
+    const clientHeight = document.documentElement.clientHeight;
+
+    if (
+      curMenu === "myPlans" &&
+      scrollTop + clientHeight >= scrollHeight &&
+      planFetching
+    ) {
+      fetchMorePlanList();
+    } else if (
+      curMenu === "myCurationRequest" &&
+      scrollTop + clientHeight >= scrollHeight &&
+      curationsRequestsFetching
+    ) {
+      fetchMoreCurationRequestsList();
+    }
+  };
+
+  const fetchMorePlanList = () => {
+    if (scrollPlanPage !== 0) {
+      fetch(
+        `${process.env.REACT_APP_SERVER_URL}/plans/${scrollPlanPage}?writer=${nickname}&email=${email}`,
+        {
+          method: "GET",
+          headers: {
+            authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            credentials: "include",
+          },
+        },
+      )
+        .then((res) => res.json())
+        .then((body) => {
+          if (body.plans.length === 0) {
+            setScrollPlanPage(0);
+            setPlanFetching(false);
+          } else {
+            dispatch(getPlans([...planList, ...body.plans]));
+            setPlanList([...planList, ...body.plans]);
+            setScrollPlanPage(scrollPlanPage + 1);
+          }
+        })
+        .catch((err) => console.error(err));
+    }
+  };
+
+  const fetchMoreCurationRequestsList = () => {
+    fetch(
+      `${process.env.REACT_APP_SERVER_URL}/curation-requests/${email}/?pagenation=${scrollcurationsRequestsPage}`,
+      {
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          credentials: "include",
+        },
+      },
+    )
+      .then((res) => res.json())
+      .then((body) => {
+        if (body.curationRequests.length === 0) {
+          setScrollcurationsRequestsPage(0);
+          setcurationsRequestsFetching(false);
+        } else {
+          dispatch(
+            getCurationsRequests([
+              ...curationsRequestsList,
+              ...body.curationRequests,
+            ]),
+          );
+          setCurationsRequestsList([
+            ...curationsRequestsList,
+            ...body.curationRequests,
+          ]);
+          setScrollcurationsRequestsPage(scrollcurationsRequestsPage + 1);
+        }
+      })
+      .catch((err) => console.error(err));
   };
 
   const handleModalOpen = () => {
@@ -186,6 +282,8 @@ const MyPage = () => {
       .then((body) => {
         dispatch(getPlans(body.plans));
         setPlanList(body.plans);
+        setPlanFetching(true);
+        setScrollPlanPage(scrollPlanPage + 1);
       })
       .catch((err) => console.error(err));
   };
@@ -251,8 +349,8 @@ const MyPage = () => {
           </button>
         </div>
         <div className="mypage__menus">
-          <button onClick={() => handleMenuBtn("myPlans")}>내 일정 관리</button>
-          <button onClick={() => handleMenuBtn("myCurationRequest")}>
+          <button onClick={() => setCurMenu("myPlans")}>내 일정 관리</button>
+          <button onClick={() => setCurMenu("myCurationRequest")}>
             큐레이션 요청
           </button>
         </div>
@@ -406,7 +504,7 @@ const MyPage = () => {
               </div>
               {planList &&
                 planList.length > 0 &&
-                planList.map((plan, idx) => {
+                planList.map((plan: any, idx: number) => {
                   const {
                     id,
                     title,
