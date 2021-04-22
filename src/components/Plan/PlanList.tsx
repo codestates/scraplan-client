@@ -656,12 +656,6 @@ const PlanList = ({
                     </span>
                   </>
                 )}
-                {/* <button
-                  className="planlist__contents__search-bar-address__reset-btn"
-                  onClick={handleAddrReset}
-                >
-                  초기화
-                </button> */}
               </div>
             </div>
           </span>
@@ -724,8 +718,6 @@ const PlanList = ({
                     <li className="oneday" key={idx + 1}>
                       <PlanTimeline
                         day={idx + 1}
-                        saveBtnClicked={saveBtnClicked}
-                        setSaveBtnClicked={setSaveBtnClicked}
                         handleSavePlanBtn={handleSavePlanBtn}
                         filterByDay={filterByDay}
                         setFilterByDay={setFilterByDay}
@@ -740,9 +732,7 @@ const PlanList = ({
           <div className="planlist__save">
             <button
               className="planlist__save__button"
-              onClick={() => {
-                setSaveBtnClicked(true);
-              }}
+              onClick={handleSavePlanBtn}
             >
               저장하기
             </button>
