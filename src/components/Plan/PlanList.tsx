@@ -109,32 +109,34 @@ const PlanList = ({
                 coordinates: plan.coordinates.coordinates,
               });
             });
-
-          });
-          const { title, representAddr } = body.plan;
-          setInputTitle(title);
-          setPublicToggleChecked(!body.plan.public);
-          setInputAddrSi(representAddr.split("-")[0]);
-          setInputAddrGun(
-            representAddr.split("-")[1] ? representAddr.split("-")[1] : "선택",
-          );
-          setInputAddrGu(
-            representAddr.split("-")[2] ? representAddr.split("-")[2] : "선택",
-          );
-          dispatch(
-            getPlanCards({
-              isMember: body.isMember,
-              isValid: body.isValid,
-              planCards,
-              plan: body.plan,
-            }),
-          );
-
+            const { title, representAddr } = body.plan;
+            setInputTitle(title);
+            setPublicToggleChecked(!body.plan.public);
+            setInputAddrSi(representAddr.split("-")[0]);
+            setInputAddrGun(
+              representAddr.split("-")[1]
+                ? representAddr.split("-")[1]
+                : "선택",
+            );
+            setInputAddrGu(
+              representAddr.split("-")[2]
+                ? representAddr.split("-")[2]
+                : "선택",
+            );
+            dispatch(
+              getPlanCards({
+                isMember: body.isMember,
+                isValid: body.isValid,
+                planCards,
+                plan: body.plan,
+              }),
+            );
+          }
         })
         .catch((err) => console.error(err));
     } else {
       // newplan
-      console.log("웨 초기화가 안될까..");
+      //console.log("웨 초기화가 안될까..왜 주석을 안했을까.....");
       dispatch(
         getPlanCards({
           isMember: token.length > 0 ? true : false,
