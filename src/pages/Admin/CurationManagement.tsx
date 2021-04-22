@@ -113,23 +113,27 @@ const CurationManagement = () => {
 
   useEffect(() => {
     if (curMarker) curMarker.setMap(null);
-    fetch(
-      `${
-        process.env.REACT_APP_SERVER_URL
-      }/curations?coordinates=${encodeURIComponent(JSON.stringify(mapBounds))}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          credentials: "include",
+    if (mapBounds) {
+      fetch(
+        `${
+          process.env.REACT_APP_SERVER_URL
+        }/curations?coordinates=${encodeURIComponent(
+          JSON.stringify(mapBounds),
+        )}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            credentials: "include",
+          },
         },
-      },
-    )
-      .then((res) => res.json())
-      .then((body) => {
-        setMarkerList(body);
-      })
-      .catch((err) => console.error(err));
+      )
+        .then((res) => res.json())
+        .then((body) => {
+          setMarkerList(body);
+        })
+        .catch((err) => console.error(err));
+    }
   }, [mapBounds]);
 
   useEffect(() => {
