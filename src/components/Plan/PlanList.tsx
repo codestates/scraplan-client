@@ -753,7 +753,7 @@ const PlanList = ({
               className="planlist__save__button"
               onClick={handleSavePlanBtn}
             >
-              저장하기
+              {isValid ? "수정하기" : "저장하기"}
             </button>
           </div>
         </div>
