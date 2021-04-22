@@ -63,6 +63,8 @@ const PlanTimeline = ({
 
   const onLayoutChange = (layout) => {
     if (
+      layoutState &&
+      layoutState.length !== 0 &&
       planCardsByDay &&
       planCardsByDay[day - 1] &&
       layout &&

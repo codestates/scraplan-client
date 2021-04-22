@@ -14,6 +14,7 @@ export const GET_PLANS = "GET_PLANS" as const;
 export const GET_PLAN_CARDS = "GET_PLAN_CARDS" as const;
 export const GET_PLAN_CARDS_BY_DAY = "GET_PLAN_CARDS_BY_DAY" as const;
 export const GET_NON_MEMBER_PLAN_CARDS = "GET_NON_MEMBER_PLAN_CARDS" as const;
+export const IS_NON_MEMBER_SAVE = "IS_NON_MEMBER_SAVE" as const;
 
 // Curation Action
 export const GET_CURATIONS = "GET_CURATIONS" as const;
@@ -36,6 +37,7 @@ export type Action =
   | ReturnType<typeof getPlanCards>
   | ReturnType<typeof getPlanCardsByDay>
   | ReturnType<typeof getNonMemberPlanCards>
+  | ReturnType<typeof isNonMemberSave>
   | ReturnType<typeof getCurations>
   | ReturnType<typeof getCurationCards>
   | ReturnType<typeof getCurationsRequests>
@@ -140,6 +142,15 @@ export const getPlanCardsByDay = (data: any) => {
 export const getNonMemberPlanCards = (data: any) => {
   return {
     type: GET_NON_MEMBER_PLAN_CARDS,
+    payload: {
+      data,
+    },
+  };
+};
+
+export const isNonMemberSave = (data: boolean) => {
+  return {
+    type: IS_NON_MEMBER_SAVE,
     payload: {
       data,
     },

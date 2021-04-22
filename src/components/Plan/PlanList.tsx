@@ -7,6 +7,7 @@ import {
   getPlanCards,
   getPlanCardsByDay,
   signIn,
+  isNonMemberSave,
 } from "../../actions";
 import AddPlan from "./AddPlan";
 import PlanTimeline from "./PlanTimeline";
@@ -47,6 +48,7 @@ const PlanList = ({
       planList: { isValid, isMember, planCards },
       planCardsByDay,
       nonMemberPlanCards,
+      nonMemberSave,
     },
   } = state;
 
@@ -140,13 +142,27 @@ const PlanList = ({
           }
         })
         .catch((err) => console.error(err));
-    } else if (nonMemberPlanCards) {
-      // 비회원이 저장하기 클릭 시 임시 저장
-      dispatch(getPlanCards({ planCards: nonMemberPlanCards }));
-      dispatch(getNonMemberPlanCards([]));
+    } else if (nonMemberSave) {
+      // 비회원이 저장하기 클릭 시 로그인 창 팝업
+      // 구글 로그인 시 form 제출 후 정보들이 초기화되는 걸 방지
+      dispatch(getPlanCardsByDay([...planCardsByDay, 1]));
+      dispatch(getPlanCards({ planCards: planCardsByDay.flat() }));
+      setInputTitle(nonMemberPlanCards.title);
+      setInputAddrSi(nonMemberPlanCards.si);
+      setInputAddrGun(nonMemberPlanCards.gun);
+      setInputAddrGu(nonMemberPlanCards.gu);
+      dispatch(
+        getNonMemberPlanCards({
+          // planCards: [],
+          title: null,
+          si: null,
+          gun: null,
+          gu: null,
+        }),
+      );
+      dispatch(isNonMemberSave(false));
     } else {
       // 이상한 path variable 일 시, newplan으로 통일
-      history.push("/planpage/newplan");
       dispatch(
         getPlanCards({
           isMember: token.length > 0 ? true : false,
@@ -159,12 +175,18 @@ const PlanList = ({
     }
   }, []);
 
+  // 비 회원을 위한 지속적인 값 업데이트
   useEffect(() => {
-    if (!SignInModalOpen) {
-      if (token !== "") {
-      }
+    if (nonMemberSave) {
+      const nonMemberPlanlist = {
+        title: inputTitle,
+        si: inputAddrSi,
+        gun: inputAddrGun,
+        gu: inputAddrGu,
+      };
+      dispatch(getNonMemberPlanCards(nonMemberPlanlist));
     }
-  }, [SignInModalOpen]);
+  }, [nonMemberSave]);
 
   // 최초 로딩시 - 데이터 day별로 분류하기
   useEffect(() => {
@@ -195,6 +217,7 @@ const PlanList = ({
       return result;
     };
     // Day별로 분류된 Planlist
+
     if (planCards) {
       const filter = dayfilter(planCards);
       // dayCount 초기값
@@ -278,7 +301,6 @@ const PlanList = ({
     }
 
     let finalPlanCards = planCardsByDay.flat();
-    // console.log("저장하기", finalPlanCards, isMember, isValid);
     if (finalPlanCards.length === 0) {
       setModalComment("일정을 하나이상 추가해주세요.");
       handleModalOpen();
@@ -287,7 +309,7 @@ const PlanList = ({
     dispatch(getPlanCards({ planCards: finalPlanCards, isMember, isValid }));
     if (token === "") {
       // isMember === false -> 로그인창
-      dispatch(getNonMemberPlanCards(finalPlanCards));
+      dispatch(isNonMemberSave(true));
       setSignInModalOpen(true);
       // token 확인
 
@@ -489,9 +511,7 @@ const PlanList = ({
 
   // day는 그대로 입력하면 됨
   // ex) day 1에 그대로 1 기입 -> filterByDay[0] = Day1의 리스트들
-  const handleShowPlanlistThatDay = (day: number) => {
-    // console.log("어떻게 나오나?", filterByDay[day - 1]);
-  };
+  const handleShowPlanlistThatDay = (day: number) => {};
 
   const handleDayList = () => {
     setShowDayList(true);
@@ -536,9 +556,6 @@ const PlanList = ({
     document.body.appendChild(form);
     form.submit();
   };
-
-  // console.log("planList 렌더링 planCarsByDay", planCardsByDay);
-  // console.log("planList 렌더링 CurrentDay", currentDay);
 
   // 지역 정하기 => input list 사용
   return (

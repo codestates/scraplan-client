@@ -3,6 +3,7 @@ import {
   GET_PLAN_CARDS,
   GET_PLAN_CARDS_BY_DAY,
   GET_NON_MEMBER_PLAN_CARDS,
+  IS_NON_MEMBER_SAVE,
 } from "../actions/index";
 import { initialState, State } from "./initialState";
 import { Action } from "../actions/index";
@@ -13,7 +14,6 @@ const planReducer = (state: State = initialState, action: Action): State => {
       return Object.assign({}, state, {
         plans: action.payload.data,
       });
-
     case GET_PLAN_CARDS:
       return Object.assign({}, state, {
         planList: action.payload.data,
@@ -22,11 +22,15 @@ const planReducer = (state: State = initialState, action: Action): State => {
       return Object.assign({}, state, {
         planCardsByDay: action.payload.data,
       });
-
     case GET_NON_MEMBER_PLAN_CARDS:
       return Object.assign({}, state, {
         nonMemberPlanCards: action.payload.data,
       });
+    case IS_NON_MEMBER_SAVE:
+      return Object.assign({}, state, {
+        nonMemberSave: action.payload.data,
+      });
+
     default:
       return state;
   }
