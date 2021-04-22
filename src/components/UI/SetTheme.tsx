@@ -14,7 +14,7 @@ const SetTheme = ({ themeIndex, type, giveThemeIndexToParent }: ThemeProps) => {
       ? ["😡", "🤔", "😃"]
       : ["🍽", "☕️", "🕹", "🚴🏻", "🚗", "🤔"];
   const [currentThemeIndex, setCurrentThemeIndex] = useState<number>(
-    themeIndex || 0,
+    themeIndex || 2,
   );
   // const [currentThemeIndex, setCurrentThemeIndex] = useState<number>(0);
   const [isSelectTheme, setIsSelectTheme] = useState<boolean>(false);
