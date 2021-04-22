@@ -141,8 +141,10 @@ const PlanSummary = (props: PlanSummaryProps) => {
           <span className="plansummary__contents__plan__title">{title}</span>
           <p className="plansummary__contents__plan__info">
             {dayCount === 1
-              ? `${representAddr}   |   하루일정`
-              : `${representAddr}   |   ${dayCount - 1 + "박"} ${dayCount}일`}
+              ? `${representAddr.split("-").join(" ")}   |   하루일정`
+              : `${representAddr.split("-").join(" ")}   |   ${
+                  dayCount - 1 + "박"
+                } ${dayCount}일`}
           </p>
           <span className="plansummary__contents__plan__description">
             {desc}
