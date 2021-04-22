@@ -110,31 +110,33 @@ const PlanList = ({
               });
             });
 
-          });
-          const { title, representAddr } = body.plan;
-          setInputTitle(title);
-          setPublicToggleChecked(!body.plan.public);
-          setInputAddrSi(representAddr.split("-")[0]);
-          setInputAddrGun(
-            representAddr.split("-")[1] ? representAddr.split("-")[1] : "선택",
-          );
-          setInputAddrGu(
-            representAddr.split("-")[2] ? representAddr.split("-")[2] : "선택",
-          );
-          dispatch(
-            getPlanCards({
-              isMember: body.isMember,
-              isValid: body.isValid,
-              planCards,
-              plan: body.plan,
-            }),
-          );
-
+            const { title, representAddr } = body.plan;
+            setInputTitle(title);
+            setPublicToggleChecked(!body.plan.public);
+            setInputAddrSi(representAddr.split("-")[0]);
+            setInputAddrGun(
+              representAddr.split("-")[1]
+                ? representAddr.split("-")[1]
+                : "선택",
+            );
+            setInputAddrGu(
+              representAddr.split("-")[2]
+                ? representAddr.split("-")[2]
+                : "선택",
+            );
+            dispatch(
+              getPlanCards({
+                isMember: body.isMember,
+                isValid: body.isValid,
+                planCards,
+                plan: body.plan,
+              }),
+            );
+          }
         })
         .catch((err) => console.error(err));
     } else {
       // newplan
-      console.log("웨 초기화가 안될까..");
       dispatch(
         getPlanCards({
           isMember: token.length > 0 ? true : false,
@@ -673,12 +675,6 @@ const PlanList = ({
                     </span>
                   </>
                 )}
-                {/* <button
-                  className="planlist__contents__search-bar-address__reset-btn"
-                  onClick={handleAddrReset}
-                >
-                  초기화
-                </button> */}
               </div>
             </div>
           </span>
@@ -741,8 +737,6 @@ const PlanList = ({
                     <li className="oneday" key={idx + 1}>
                       <PlanTimeline
                         day={idx + 1}
-                        saveBtnClicked={saveBtnClicked}
-                        setSaveBtnClicked={setSaveBtnClicked}
                         handleSavePlanBtn={handleSavePlanBtn}
                         filterByDay={filterByDay}
                         setFilterByDay={setFilterByDay}
@@ -757,9 +751,7 @@ const PlanList = ({
           <div className="planlist__save">
             <button
               className="planlist__save__button"
-              onClick={() => {
-                setSaveBtnClicked(true);
-              }}
+              onClick={handleSavePlanBtn}
             >
               {isValid ? "수정하기" : "저장하기"}
             </button>
