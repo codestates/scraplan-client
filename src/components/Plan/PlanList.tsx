@@ -358,6 +358,9 @@ const PlanList = ({
                 case "successfully edited":
                   setModalComment("수정이 완료되었습니다 👏🏻");
                   handleModalOpen();
+                  setTimeout(() => {
+                    history.push(`/planpage/${planId}`);
+                  }, 1000);
                   break;
                 case "Nothing Changed":
                   setModalComment("변경사항이 없습니다 😥");

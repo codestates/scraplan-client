@@ -150,6 +150,7 @@ const PlanTimeline = ({
                 giveThemeIndexToParent={(themeIndex) =>
                   handleChangeTheme(themeIndex, idx)
                 }
+                readonly={true}
               />
               <SetTime
                 startTime={startTime}
@@ -161,7 +162,7 @@ const PlanTimeline = ({
                 className="plancard__delete-btn"
                 onClick={(e) => handleDeletePlancard(e, idx)}
               >
-                ⓧ
+                𝖷
               </button>
             </div>
           );
