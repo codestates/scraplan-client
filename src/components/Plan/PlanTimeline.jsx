@@ -12,8 +12,6 @@ const ReactGridLayout = WidthProvider(RGL);
 
 const PlanTimeline = ({
   day,
-  saveBtnClicked,
-  setSaveBtnClicked,
   handleSavePlanBtn,
   filterByDay,
   setFilterByDay,
@@ -37,13 +35,6 @@ const PlanTimeline = ({
   useEffect(() => {
     setLayoutState(generateLayout());
   }, [planCardsByDay]);
-
-  useEffect(() => {
-    if (saveBtnClicked) {
-      handleSaveBtn();
-      setSaveBtnClicked(false);
-    }
-  }, [saveBtnClicked]);
 
   const generateLayout = () => {
     if (
@@ -102,11 +93,6 @@ const PlanTimeline = ({
         ]),
       );
     }
-  };
-
-  // Timeline에 있는 일정들을 PlanCards 데이터로 변환
-  const handleSaveBtn = () => {
-    handleSavePlanBtn();
   };
 
   return (

@@ -136,7 +136,6 @@ const PlanList = ({
         .catch((err) => console.error(err));
     } else {
       // newplan
-      //console.log("웨 초기화가 안될까..왜 주석을 안했을까.....");
       dispatch(
         getPlanCards({
           isMember: token.length > 0 ? true : false,
@@ -675,12 +674,6 @@ const PlanList = ({
                     </span>
                   </>
                 )}
-                {/* <button
-                  className="planlist__contents__search-bar-address__reset-btn"
-                  onClick={handleAddrReset}
-                >
-                  초기화
-                </button> */}
               </div>
             </div>
           </span>
@@ -743,8 +736,6 @@ const PlanList = ({
                     <li className="oneday" key={idx + 1}>
                       <PlanTimeline
                         day={idx + 1}
-                        saveBtnClicked={saveBtnClicked}
-                        setSaveBtnClicked={setSaveBtnClicked}
                         handleSavePlanBtn={handleSavePlanBtn}
                         filterByDay={filterByDay}
                         setFilterByDay={setFilterByDay}
@@ -759,11 +750,9 @@ const PlanList = ({
           <div className="planlist__save">
             <button
               className="planlist__save__button"
-              onClick={() => {
-                setSaveBtnClicked(true);
-              }}
+              onClick={handleSavePlanBtn}
             >
-              저장하기
+              {isValid ? "수정하기" : "저장하기"}
             </button>
           </div>
         </div>
