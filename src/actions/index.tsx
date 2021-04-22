@@ -55,6 +55,7 @@ export const signIn = (token: string, email: string, nickname: "") => {
     payload: {
       token,
       email,
+      nickname,
     },
   };
 };
