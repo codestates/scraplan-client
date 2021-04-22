@@ -761,7 +761,7 @@ const PlanList = ({
                 setSaveBtnClicked(true);
               }}
             >
-              저장하기
+              {isValid ? "수정하기" : "저장하기"}
             </button>
           </div>
         </div>
