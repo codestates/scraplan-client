@@ -14,7 +14,7 @@ Scraplan은 지도를 기반으로 **해당 장소의 즐길거리**를 큐레�
 ![bg자산 36@288x-8](https://user-images.githubusercontent.com/63178953/115839185-5d559f80-a455-11eb-9271-88f490c0ed5a.png)
 
 ## 🔧 사용 스택 및 스택 아키텍처 
-<img width="800" alt="스크린샷 2021-03-25 오후 3 43 02" src="https://user-images.githubusercontent.com/74640917/115838282-77db4900-a454-11eb-993a-c33823ca64d4.png">
+![image](https://user-images.githubusercontent.com/74640917/115865253-0c54a400-a473-11eb-83a0-9cc0e516fcb6.png)
 
 ## Front End
 ### 요약
