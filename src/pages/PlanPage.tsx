@@ -73,7 +73,7 @@ const PlanPage = () => {
   // marker request
   // 지도가 이동할 때 (mapBounds의 값이 변할 때)서버에 mapBounds를 보낸다.
   useEffect(() => {
-    if (mapBounds) {
+    if (mapBounds && !viewOnlyMine) {
       fetch(
         `${
           process.env.REACT_APP_SERVER_URL
@@ -155,9 +155,15 @@ const PlanPage = () => {
   // 큐레이션 마커 초기 실행
   useEffect(() => {
     if (!viewOnlyMine) {
+      // 전체 보기인 경우
       viewCurationMarker();
+    } else {
+      // 내 일정만 보기인 경우
+      for (let i = 0; i < curationMarkers.length; i++) {
+        curationMarkers[i].setMap(null);
+      }
     }
-  }, [markerList]);
+  }, [markerList, viewOnlyMine]);
 
   // 일정 전용 마커 초기 실행
   useEffect(() => {
@@ -185,9 +191,7 @@ const PlanPage = () => {
   // 큐레이션 마커 제작
   const [curationMarkers, setCurationMarkers] = useState<any[]>([]);
   const viewCurationMarker = () => {
-    if (myPlanMarkers.length > 0) {
-      deleteMarkers();
-    }
+    deleteMarkers();
     const markers: any[] = [];
     for (var i = 0; i < markerList.length; i++) {
       let markerImage = new window.kakao.maps.MarkerImage(
@@ -405,7 +409,7 @@ const PlanPage = () => {
       searchLatLng[1],
     );
     const image = new window.kakao.maps.MarkerImage(
-      `/images/marker/theme0.png`,
+      `/images/marker/location.png`,
       new window.kakao.maps.Size(54, 58),
       { offset: new window.kakao.maps.Point(20, 58) },
     );
@@ -452,7 +456,6 @@ const PlanPage = () => {
           [bounds.qa, bounds.pa],
           [bounds.ha, bounds.oa],
         ]);
-        viewCurationMarker();
       });
       // level(zoom) event controller
       let zoomControl = new window.kakao.maps.ZoomControl();
@@ -467,7 +470,6 @@ const PlanPage = () => {
         ]);
         //format => ga {ha: 126.56714657186055, qa: 33.40906146511531, oa: 126.59384131033772, pa: 33.42485772749098}
       });
-      viewCurationMarker();
     }
   };
 

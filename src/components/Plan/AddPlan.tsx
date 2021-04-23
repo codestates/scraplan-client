@@ -268,11 +268,12 @@ const AddPlan = ({
               break;
             case "Expired token":
             case "Invalid token":
+              break;
             case "Expired token or Not matched inform":
               dispatch(signIn("", email, ""));
               break;
             default:
-              setModalComment("정보가 부족합니다 😨");
+              setModalComment("로그인을 하지 않았거나, 정보가 부족합니다 😨");
               handleModalOpen();
               break;
           }
