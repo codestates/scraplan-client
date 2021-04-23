@@ -118,11 +118,11 @@ const MainPage = () => {
         </button>
         <button
           className="move-to-top__btn"
-          // onClick={() => {
-          //   topRef.current.scrollIntoView({
-          //     behavior: "smooth",
-          //   });
-          // }}
+          onClick={() => {
+            topRef.current.scrollIntoView({
+              behavior: "smooth",
+            });
+          }}
         >
           <img src="/images/top.gif" alt="" />
           <p>맨위로</p>
@@ -149,7 +149,7 @@ const MainPage = () => {
               </div>
               <div className="mainpage__btns">
                 <button onClick={() => history.push("/planpage/newplan")}>
-                  바로시작하기
+                  일정 만들기
                 </button>
                 <button onClick={() => history.push("/feedpage")}>
                   먼저구경하기
@@ -215,11 +215,11 @@ const MainPage = () => {
               </div>
               <div className="mainpage__next-btn">
                 <button
-                  onClick={() => {
-                    thirdRef.current.scrollIntoView({
-                      behavior: "smooth",
-                    });
-                  }}
+                // onClick={() => {
+                //   thirdRef.current.scrollIntoView({
+                //     behavior: "smooth",
+                //   });
+                // }}
                 >
                   next
                 </button>
@@ -256,11 +256,11 @@ const MainPage = () => {
               </div>
               <div className="mainpage__next-btn">
                 <button
-                  onClick={() => {
-                    fourthRef.current.scrollIntoView({
-                      behavior: "smooth",
-                    });
-                  }}
+                // onClick={() => {
+                //   fourthRef.current.scrollIntoView({
+                //     behavior: "smooth",
+                //   });
+                // }}
                 >
                   next
                 </button>
@@ -292,11 +292,11 @@ const MainPage = () => {
               </div>
               <div className="mainpage__next-btn">
                 <button
-                  onClick={() => {
-                    fifthRef.current.scrollIntoView({
-                      behavior: "smooth",
-                    });
-                  }}
+                // onClick={() => {
+                //   fifthRef.current.scrollIntoView({
+                //     behavior: "smooth",
+                //   });
+                // }}
                 >
                   next
                 </button>

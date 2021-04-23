@@ -14,7 +14,6 @@ import PlanTimeline from "./PlanTimeline";
 import Modal from "../UI/Modal";
 import Signin from "../User/Signin";
 import mapdata from "../../data/mapdata.json";
-import { createSolutionBuilderWithWatch } from "typescript";
 
 interface ForAddPlanProps {
   LatLng?: number[];
@@ -149,15 +148,15 @@ const PlanList = ({
     } else if (nonMemberSave) {
       // 비회원이 저장하기 클릭 시 로그인 창 팝업
       // 구글 로그인 시 form 제출 후 정보들이 초기화되는 걸 방지
-      dispatch(getPlanCardsByDay([...planCardsByDay, 1]));
-      dispatch(getPlanCards({ planCards: planCardsByDay.flat() }));
+      console.log("비회원에서 회원됨");
+      // dispatch(getPlanCardsByDay([...planCardsByDay]));
       setInputTitle(nonMemberPlanCards.title);
       setInputAddrSi(nonMemberPlanCards.si);
       setInputAddrGun(nonMemberPlanCards.gun);
       setInputAddrGu(nonMemberPlanCards.gu);
+      dispatch(getPlanCards({ planCards: [...planCardsByDay.flat()] }));
       dispatch(
         getNonMemberPlanCards({
-          // planCards: [],
           title: null,
           si: null,
           gun: null,
@@ -556,6 +555,16 @@ const PlanList = ({
     form.submit();
   };
 
+  // console.log("planList 렌더링 planCarsByDay", planCardsByDay);
+  // console.log("planList 렌더링 CurrentDay", currentDay);
+
+  const gridRef = useRef();
+
+  // useEffect(() => {
+  //   let scroll = document.getElementById("plan-grid");
+  //   if (scroll !== null) scroll.scrollTop = 1;
+  // }, []);
+
   // 지역 정하기 => input list 사용
   return (
     <div className="planlist">
@@ -735,7 +744,11 @@ const PlanList = ({
               </button>
             </div>
             <div className="planlist__dailyplan__plancards">
-              <div className="planlist__dailyplan__plancards__grid">
+              <div
+                className="planlist__dailyplan__plancards__grid"
+                id="plan-grid"
+                // ref={gridRef}
+              >
                 {Array(48)
                   .fill(true)
                   .map((grid, idx) => {

@@ -8,6 +8,7 @@ import {
   signIn,
   getNonMemberPlanCards,
   isNonMemberSave,
+  getPlanCards,
 } from "../../actions";
 
 import Signin from "../User/Signin";
@@ -22,10 +23,18 @@ const Navbar = (props: NavbarProps) => {
   const { currentPage } = props;
   const dispatch = useDispatch();
   const history = useHistory();
-  const userState = useSelector((state: RootState) => state.userReducer);
+  const state = useSelector((state: RootState) => state);
   const {
-    user: { token, email },
-  } = userState;
+    userReducer: {
+      user: { token, email, nickname },
+    },
+    planReducer: {
+      planList: { isValid, isMember, planCards },
+      planCardsByDay,
+      nonMemberPlanCards,
+      nonMemberSave,
+    },
+  } = state;
 
   const [SignInModalOpen, setSignInModalOpen] = useState<boolean>(false);
   const [SignUpModalOpen, setSignUpModalOpen] = useState<boolean>(false);
@@ -190,16 +199,9 @@ const Navbar = (props: NavbarProps) => {
     if (location.pathname.indexOf("planpage") === 1 && token === "") {
       dispatch(isNonMemberSave(true));
       setSignInModalOpen(true);
+      let finalPlanCards = planCardsByDay.flat();
+      dispatch(getPlanCards({ planCards: finalPlanCards, isMember, isValid }));
     } else {
-      // dispatch(
-      //   getNonMemberPlanCards({
-      //     planCards: [],
-      //     title: null,
-      //     si: null,
-      //     gun: null,
-      //     gu: null,
-      //   }),
-      // );
       setSignInModalOpen(true);
     }
   };
