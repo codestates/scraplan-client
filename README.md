@@ -10,3 +10,5 @@ Scraplan은 지도를 기반으로 **해당 장소의 즐길거리**를 큐레�
 <br>
 <br>
 <img width="600" alt="스크린샷 2021-03-25 오후 3 43 02" src="https://user-images.githubusercontent.com/63178953/115836551-93ddeb00-a452-11eb-9327-e4e92a80b4f6.png">
+
+![stacks](https://user-images.githubusercontent.com/74640917/115838282-77db4900-a454-11eb-993a-c33823ca64d4.png)
