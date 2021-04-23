@@ -13,6 +13,8 @@ export type State = {
     plan: any;
   };
   planCardsByDay: any;
+  nonMemberPlanCards: any;
+  nonMemberSave: boolean;
   curations: any;
   curationCards: any;
   curationRequests: any;
@@ -38,6 +40,14 @@ export const initialState: State = {
     planCards: [],
   },
   planCardsByDay: [],
+  nonMemberPlanCards: {
+    planCards: [],
+    title: null,
+    si: null,
+    gun: null,
+    gu: null,
+  },
+  nonMemberSave: false,
   // Curation
   curations: {},
   curationCards: {

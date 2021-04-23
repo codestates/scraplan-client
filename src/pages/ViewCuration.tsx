@@ -99,7 +99,6 @@ const ViewCuration = (props: ViewCurationProps) => {
   //   }
   // }, [handleScroll]);
 
-  console.log(feedbackList);
   useEffect(() => {
     if (feedbackPage > 0 && fetchingFeedback) {
       fetchMoreFeedbacks();
