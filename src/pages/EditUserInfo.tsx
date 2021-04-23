@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { userEditInfo, withdraw } from "../actions";
+import { getGoogleToken, userEditInfo, withdraw } from "../actions";
 import Navbar from "../components/UI/Navbar";
 import Modal from "../components/UI/Modal";
 import { RootState } from "../reducers";
@@ -10,13 +10,14 @@ const EditUserInfo = () => {
   const userState = useSelector((state: RootState) => state.userReducer);
   const {
     user: { token, email, nickname },
+    googleToken,
   } = userState;
   const dispatch = useDispatch();
   const history = useHistory();
 
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [modalComment, setModalComment] = useState<string>("");
-
+  const [modalType, setModalType] = useState<string>("");
   const [inputNickname, setInputNickname] = useState<string>("");
   const [inputPassword, setInputPassword] = useState<string>("");
   const [inputPasswordCheck, setInputPasswordCheck] = useState<string>("");
@@ -78,9 +79,9 @@ const EditUserInfo = () => {
   // 유효성 검사
   const checkValidPassword = useCallback(
     (password) => {
-      if (!/^[a-zA-Z0-9]{8,20}$/.test(password)) {
+      if (!/^(?=.*[a-zA-Z])((?=.*\d)|(?=.*\W)).{6,20}$/.test(password)) {
         setEditDenyMessage(
-          "비밀번호는 숫자와 영문자 조합으로 8~20자리를 사용해야 합니다.",
+          "영문자 + 숫자/특수문자 조합으로 8~20자리를 사용해야 합니다.",
         );
         return false;
       }
@@ -118,14 +119,34 @@ const EditUserInfo = () => {
   // 회원정보 수정
   const handleUserEditInfo = () => {
     // 비밀번호 조건이 만족 시 요청되는 것
-    if (handleCompleteInput()) {
+    if (googleToken.length > 1) {
       setAcceptActionType("edit");
+      setModalType("yesNoModal");
+      setModalComment("회원정보를 수정하시겠습니까?");
+      handleModalOpen();
+    } else if (handleCompleteInput()) {
+      setAcceptActionType("edit");
+      setModalType("yesNoModal");
       setModalComment("회원정보를 수정하시겠습니까?");
       handleModalOpen();
     }
   };
   // 수정 - 모달창에서 예를 눌렀을 때 실행되는 함수
   const handleAcceptUserEditInfo = () => {
+    handleModalClose();
+    let body;
+    if (googleToken.length > 1) {
+      body = JSON.stringify({
+        email,
+        nickname: inputNickname,
+      });
+    } else {
+      body = JSON.stringify({
+        email,
+        nickname: inputNickname,
+        password: inputPassword,
+      });
+    }
     fetch(`${process.env.REACT_APP_SERVER_URL}/user/edit-info`, {
       method: "PATCH",
       headers: {
@@ -133,11 +154,7 @@ const EditUserInfo = () => {
         "Content-Type": "application/json",
         credentials: "include",
       },
-      body: JSON.stringify({
-        email,
-        nickname: inputNickname,
-        password: inputPassword,
-      }),
+      body,
     })
       .then((res) => res.json())
       .then((body) => {
@@ -145,10 +162,23 @@ const EditUserInfo = () => {
           setInputPassword("");
           setInputPasswordCheck("");
           dispatch(userEditInfo(body.accessToken, email, inputNickname));
-          handleModalClose();
-          history.push("/mypage");
-        } else {
-          handleModalClose();
+          setModalType("alertModal");
+          setModalComment("회원 정보 변경이 완료되었습니다.");
+          handleModalOpen();
+          setTimeout(() => {
+            history.push("/mypage");
+          }, 1000);
+        } else if (body.message === "Insufficient info") {
+          setEditDenyMessage("정보를 입력해주세요.");
+        } else if (body.message === "Password is wrong!") {
+          refPassword.current?.focus();
+          setEditDenyMessage("비밀번호가 틀렸습니다.");
+        } else if (body.message === "Expired token" || "Invalid token") {
+          refPassword.current?.focus();
+          setEditDenyMessage("재 로그인 후 신청해주세요.");
+        } else if (body.message === "Already exists nickname") {
+          refNickName.current?.focus();
+          setEditDenyMessage("존재하는 닉네임입니다.");
         }
       })
       .catch((err) => console.log(err));
@@ -156,43 +186,68 @@ const EditUserInfo = () => {
   // 회원 탈퇴
   const handleWithDrawal = () => {
     // 서버에 요청 후 비밀번호를 비교해서 같으면 탈퇴 가능
-    if (withdrawalHidden) {
+    if (withdrawalHidden && googleToken.length <= 1) {
       setWithdrawalHidden(false);
       return;
     }
-    if (inputWithdrawal === "") {
+    if (inputWithdrawal === "" && googleToken.length <= 1) {
       setWithdrawalDenyMessage("비밀번호를 입력해주세요.");
       return;
     }
     setWithdrawalDenyMessage("");
-    setModalComment("정말... 떠나시나요...?");
+    setModalType("yesNoModal");
+    setModalComment("정말 탈퇴하시겠습니까?");
     setAcceptActionType("withdrawal");
     handleModalOpen();
     return;
   };
   // 탈퇴 - 모달창에서 예를 눌렀을 때 실행되는 함수
   const handleAcceptWithdrawal = () => {
-    fetch(`${process.env.REACT_APP_SERVER_URL}/sign/withdraw`, {
+    handleModalClose();
+    let body;
+    let api;
+    if (googleToken.length > 1) {
+      body = JSON.stringify({
+        email,
+        hashData: googleToken,
+      });
+      api = "/google-sign/withdraw";
+    } else {
+      body = JSON.stringify({
+        email,
+        password: inputWithdrawal,
+      });
+      api = "/sign/withdraw";
+    }
+    fetch(`${process.env.REACT_APP_SERVER_URL}${api}`, {
       method: "DELETE",
       headers: {
         authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
         credentials: "include",
       },
-      body: JSON.stringify({
-        email,
-        password: inputWithdrawal,
-      }),
+      body,
     })
       .then((res) => res.json())
       .then((body) => {
-        if (body.message) {
+        if (body.message === "Successfully processed") {
           dispatch(withdraw());
-          history.push("/");
-        } else {
-          handleModalClose();
+          dispatch(getGoogleToken(""));
+          setModalType("alertModal");
+          setModalComment("탈퇴가 완료되었습니다.");
+          handleModalOpen();
+          setTimeout(() => {
+            history.push("/");
+          }, 1000);
+        } else if (body.message === "Insufficient info") {
           refWithdrawal.current?.focus();
-          setWithdrawalDenyMessage("비밀번호를 확인해주세요.");
+          setWithdrawalDenyMessage("정보가 부족합니다.");
+        } else if (body.message === "Password is wrong!") {
+          refWithdrawal.current?.focus();
+          setWithdrawalDenyMessage("비밀번호가 틀렸습니다.");
+        } else if (body.message === "Expired token" || "Invalid token") {
+          refWithdrawal.current?.focus();
+          setWithdrawalDenyMessage("재 로그인 후 신청해주세요.");
         }
       })
       .catch((err) => console.log(err));
@@ -202,7 +257,7 @@ const EditUserInfo = () => {
     <>
       <Navbar currentPage="/edituserinfo" />
       <Modal
-        modalType={"yesNoModal"}
+        modalType={modalType}
         open={openModal}
         close={handleModalClose}
         comment={modalComment}
@@ -246,31 +301,39 @@ const EditUserInfo = () => {
                   onKeyPress={handleMoveTopassword}
                 />
               </li>
-              <li className="edit-userinfo__form__item">
-                <p className="edit-userinfo__form__item__label">새 비밀번호</p>
-                <input
-                  className="edit-userinfo__form__item__input-password"
-                  type="password"
-                  placeholder="변경할 비밀번호를 입력해주세요."
-                  value={inputPassword}
-                  onChange={handleChangePassword}
-                  ref={refPassword}
-                  onKeyPress={handleMoveTopasswordCheck}
-                />
-              </li>
-              <li className="edit-userinfo__form__item">
-                <p className="edit-userinfo__form__item__label">
-                  비밀번호 확인
-                </p>
-                <input
-                  className="edit-userinfo__form__item__input-passwordcheck"
-                  type="password"
-                  placeholder="비밀번호 확인"
-                  value={inputPasswordCheck}
-                  onChange={handleChangePasswordCheck}
-                  ref={refPasswordCheck}
-                />
-              </li>
+              {googleToken.length > 1 ? (
+                <></>
+              ) : (
+                <>
+                  <li className="edit-userinfo__form__item">
+                    <p className="edit-userinfo__form__item__label">
+                      새 비밀번호
+                    </p>
+                    <input
+                      className="edit-userinfo__form__item__input-password"
+                      type="password"
+                      placeholder="변경할 비밀번호를 입력해주세요."
+                      value={inputPassword}
+                      onChange={handleChangePassword}
+                      ref={refPassword}
+                      onKeyPress={handleMoveTopasswordCheck}
+                    />
+                  </li>
+                  <li className="edit-userinfo__form__item">
+                    <p className="edit-userinfo__form__item__label">
+                      비밀번호 확인
+                    </p>
+                    <input
+                      className="edit-userinfo__form__item__input-passwordcheck"
+                      type="password"
+                      placeholder="비밀번호 확인"
+                      value={inputPasswordCheck}
+                      onChange={handleChangePasswordCheck}
+                      ref={refPasswordCheck}
+                    />
+                  </li>
+                </>
+              )}
               <div className="edit-userinfo__form__list__deny-message">
                 {editDenyMessage}
               </div>
@@ -289,22 +352,26 @@ const EditUserInfo = () => {
             <p className="edit-userinfo__form__withdrawal-message">
               탈퇴를 할 시, 복구가 불가능합니다.
             </p>
-            <div
-              className={
-                !withdrawalHidden
-                  ? "edit-userinfo__form__withdrawal__form"
-                  : "hidden"
-              }
-            >
-              <p>비밀번호</p>
-              <input
-                type="password"
-                placeholder="비밀번호 입력"
-                value={inputWithdrawal}
-                onChange={handleChangeWithdrwal}
-                ref={refWithdrawal}
-              />
-            </div>
+            {googleToken.length > 1 ? (
+              <></>
+            ) : (
+              <div
+                className={
+                  !withdrawalHidden
+                    ? "edit-userinfo__form__withdrawal__form"
+                    : "hidden"
+                }
+              >
+                <p>비밀번호</p>
+                <input
+                  type="password"
+                  placeholder="비밀번호 입력"
+                  value={inputWithdrawal}
+                  onChange={handleChangeWithdrwal}
+                  ref={refWithdrawal}
+                />
+              </div>
+            )}
             <div className="edit-userinfo__form__withdrawal__submit">
               <button
                 className="edit-userinfo__form__withdrawal__submit__withdrawal-btn"

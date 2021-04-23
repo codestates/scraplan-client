@@ -315,10 +315,10 @@ body {
         position: relative;
         padding: 0;
         &__deny-message {
-          position: absolute;
+          position: relative;
           font-size: 0.5rem;
           color: $main;
-          top: 16rem;
+          top: 2rem;
         }
         li {
           list-style: none;
