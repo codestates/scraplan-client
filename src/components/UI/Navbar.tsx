@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../reducers";
-import { useHistory } from "react-router-dom";
-import { signOut, getGoogleToken, signIn } from "../../actions";
+import { useHistory, useLocation } from "react-router-dom";
+import {
+  signOut,
+  getGoogleToken,
+  signIn,
+  getNonMemberPlanCards,
+  isNonMemberSave,
+} from "../../actions";
 
 import Signin from "../User/Signin";
 import Signup from "../User/Signup";
@@ -29,6 +35,8 @@ const Navbar = (props: NavbarProps) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [modalType, setModalType] = useState<string>("");
   const [modalComment, setModalComment] = useState<string>("");
+
+  const location = useLocation() as any;
 
   const handleModalOpen = () => {
     setOpenModal(true);
@@ -78,8 +86,12 @@ const Navbar = (props: NavbarProps) => {
             dispatch(signIn(body.accessToken, body.email, body.nickname));
             history.push(`${currentPage}`);
             return;
-          } else {
+          } else if (body.message === "None exists user") {
             history.push(`${currentPage}`);
+            handleSigninBtn();
+            setModalComment("해당 유저가 존재하지 않습니다.");
+            setModalType("alertModal");
+            handleModalOpen();
             return;
           }
         })
@@ -104,7 +116,6 @@ const Navbar = (props: NavbarProps) => {
           nickname = splited[1].slice(7);
         }
       }
-
       if (state === "signup") {
         fetch(`${process.env.REACT_APP_SERVER_URL}/google-sign/up`, {
           method: "POST",
@@ -176,10 +187,38 @@ const Navbar = (props: NavbarProps) => {
     history.push("/");
   };
   const handleSigninBtn = () => {
-    setSignInModalOpen(true);
+    if (location.pathname.indexOf("planpage") === 1 && token === "") {
+      dispatch(isNonMemberSave(true));
+      setSignInModalOpen(true);
+    } else {
+      // dispatch(
+      //   getNonMemberPlanCards({
+      //     planCards: [],
+      //     title: null,
+      //     si: null,
+      //     gun: null,
+      //     gu: null,
+      //   }),
+      // );
+      setSignInModalOpen(true);
+    }
   };
   const handleSignupBtn = () => {
-    setSignUpModalOpen(true);
+    if (location.pathname.indexOf("planpage") === 1 && token === "") {
+      dispatch(isNonMemberSave(true));
+      setSignUpModalOpen(true);
+    } else {
+      // dispatch(
+      //   getNonMemberPlanCards({
+      //     planCards: [],
+      //     title: null,
+      //     si: null,
+      //     gun: null,
+      //     gu: null,
+      //   }),
+      // );
+      setSignUpModalOpen(true);
+    }
   };
   const handleMyPageBtn = () => {
     history.push("/mypage");
