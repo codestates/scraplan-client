@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
 import Feedback from "../components/Curation/Feedback";
 import SetTheme from "../components/UI/SetTheme";
 import SetTime from "../components/UI/SetTime";
+import scrollEventListener from "../hooks/scrollEventListener";
 
 interface ViewCurationProps {
   open: boolean;
@@ -45,24 +46,36 @@ const ViewCuration = (props: ViewCurationProps) => {
   const [inputFeedbackTimes, setInputFeedbackTimes] = useState<number>(1);
   const [inputFeedbackComment, setInputFeedbackComment] = useState<string>("");
 
-  const [feedbackList, setFeedbackList] = useState([]);
+  const [feedbackList, setFeedbackList] = useState<any[]>([]);
+  const [feedbackPage, setFeedbackPage] = useState<number>(1);
+  const [fetchingFeedback, setFetchchingFeedbback] = useState<boolean>(true);
+
+  const endOfFeedback = useRef() as any;
 
   useEffect(() => {
-    fetch(
-      `${process.env.REACT_APP_SERVER_URL}/curation-card-feedbacks/${curationCardId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          credentials: "include",
+    if (fetchingFeedback) {
+      fetch(
+        `${process.env.REACT_APP_SERVER_URL}/curation-card-feedbacks/${curationCardId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            credentials: "include",
+          },
         },
-      },
-    )
-      .then((res) => res.json())
-      .then((body) => {
-        setFeedbackList(body);
-      })
-      .catch((err) => console.error(err));
+      )
+        .then((res) => res.json())
+        .then((body) => {
+          if (body.length === 0) {
+            setFetchchingFeedbback(false);
+            setFeedbackPage(0);
+          } else {
+            setFeedbackList(body);
+            setFeedbackPage(feedbackPage + 1);
+          }
+        })
+        .catch((err) => console.error(err));
+    }
   }, [open]);
 
   useEffect(() => {
@@ -70,6 +83,28 @@ const ViewCuration = (props: ViewCurationProps) => {
       if (e.key === "Escape") close();
     });
   }, [open]);
+
+  // const handleScroll = useCallback(([entry]) => {
+  //   if (entry.isIntersecting && fetchingFeedback) {
+  //     fetchMoreFeedbacks();
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   let observer: any;
+  //   if (endOfFeedback.current) {
+  //     observer = new IntersectionObserver(handleScroll, { threshold: 1 });
+  //     observer.observe(endOfFeedback.current);
+  //     return () => observer && observer.disconnect();
+  //   }
+  // }, [handleScroll]);
+
+  console.log(feedbackList);
+  useEffect(() => {
+    if (feedbackPage > 0 && fetchingFeedback) {
+      fetchMoreFeedbacks();
+    }
+  }, [feedbackList]);
 
   const handleChangeFeedbackComment = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -113,6 +148,32 @@ const ViewCuration = (props: ViewCurationProps) => {
           .catch((err) => console.error(err));
       })
       .catch((err) => console.error(err));
+  };
+
+  const fetchMoreFeedbacks = () => {
+    if (feedbackPage > 0 && fetchingFeedback) {
+      fetch(
+        `${process.env.REACT_APP_SERVER_URL}/curation-card-feedbacks/${curationCardId}/?pagenation=${feedbackPage}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            credentials: "include",
+          },
+        },
+      )
+        .then((res) => res.json())
+        .then((body) => {
+          if (body.length === 0) {
+            setFetchchingFeedbback(false);
+            setFeedbackPage(0);
+          } else {
+            setFeedbackList([...feedbackList, ...body]);
+            setFeedbackPage(feedbackPage + 1);
+          }
+        })
+        .catch((err) => console.error(err));
+    }
   };
 
   const handleGetRequestTheme = (themeIndex: number) => {
@@ -196,7 +257,11 @@ const ViewCuration = (props: ViewCurationProps) => {
                     </button>
                   </div>
                 </div>
-                <div className="viewcuration__contents__feedback__lists">
+                <div
+                  className="viewcuration__contents__feedback__lists"
+                  ref={endOfFeedback}
+                  // {...scrollEventListener(fetchMoreFeedbacks, 1)}
+                >
                   {feedbackList &&
                     feedbackList.length > 0 &&
                     feedbackList.map((feedback, idx) => {

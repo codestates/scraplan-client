@@ -528,6 +528,13 @@ const PlanList = ({
   // console.log("planList 렌더링 planCarsByDay", planCardsByDay);
   // console.log("planList 렌더링 CurrentDay", currentDay);
 
+  const gridRef = useRef();
+
+  useEffect(() => {
+    let scroll = document.getElementById("plan-grid");
+    if (scroll !== null) scroll.scrollTop = 1;
+  }, []);
+
   // 지역 정하기 => input list 사용
   return (
     <div className="planlist">
@@ -707,7 +714,11 @@ const PlanList = ({
               </button>
             </div>
             <div className="planlist__dailyplan__plancards">
-              <div className="planlist__dailyplan__plancards__grid">
+              <div
+                className="planlist__dailyplan__plancards__grid"
+                id="plan-grid"
+                // ref={gridRef}
+              >
                 {Array(48)
                   .fill(true)
                   .map((grid, idx) => {

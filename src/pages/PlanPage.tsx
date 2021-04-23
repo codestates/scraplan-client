@@ -191,8 +191,8 @@ const PlanPage = () => {
     for (var i = 0; i < markerList.length; i++) {
       let markerImage = new window.kakao.maps.MarkerImage(
         `/images/marker/theme0.png`,
-        new window.kakao.maps.Size(54, 58),
-        { offset: new window.kakao.maps.Point(20, 58) },
+        new window.kakao.maps.Size(48, 48),
+        { offset: new window.kakao.maps.Point(20, 50) },
       );
       let position = new window.kakao.maps.LatLng(
         markerList[i].coordinates.coordinates[0],

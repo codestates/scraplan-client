@@ -1,7 +1,7 @@
 import { useRef, useEffect, useCallback } from "react";
 
-const scrollEventListener = (dom: any, func?: any, threshold?: number) => {
-  // const dom = useRef();
+const scrollEventListener = (func?: any, threshold?: number) => {
+  const dom = useRef() as React.MutableRefObject<HTMLInputElement>;
 
   const handleScroll = useCallback(([entry]) => {
     if (entry.isIntersecting) {
@@ -17,6 +17,7 @@ const scrollEventListener = (dom: any, func?: any, threshold?: number) => {
       return () => observer && observer.disconnect();
     }
   }, [handleScroll]);
+
   return {
     ref: dom,
   };
