@@ -359,14 +359,46 @@ const MainPage = () => {
           </div>
           <div className="mainpage__footer__section">
             <p>About Us</p>
-            <span>Read.me</span>
-            <span>Repository</span>
+            <span
+              onClick={() =>
+                (window.location.href =
+                  "https://github.com/codestates/scraplan-client/wiki")
+              }
+            >
+              Scraplan Wiki
+            </span>
+            <span
+              onClick={() =>
+                (window.location.href =
+                  "https://github.com/codestates/scraplan-client")
+              }
+            >
+              Repository
+            </span>
           </div>
           <div className="mainpage__footer__section">
             <p>Contact</p>
-            <span>Juhye Kim @github</span>
-            <span>Jewon Yeon @github</span>
-            <span>Yubin Jang @github</span>
+            <span
+              onClick={() =>
+                (window.location.href = "https://github.com/Juhye-Kim")
+              }
+            >
+              Juhye Kim @github
+            </span>
+            <span
+              onClick={() =>
+                (window.location.href = "https://github.com/JewonYeon")
+              }
+            >
+              Jewon Yeon @github
+            </span>
+            <span
+              onClick={() =>
+                (window.location.href = "https://github.com/yubin-j")
+              }
+            >
+              Yubin Jang @github
+            </span>
           </div>
         </div>
       </div>

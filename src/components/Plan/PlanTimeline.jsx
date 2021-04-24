@@ -113,7 +113,7 @@ const PlanTimeline = ({
         compactType: null,
         preventCollision: true,
         transformScale: 1,
-        width: 240,
+        width: 270,
       }}
     >
       {planCardsByDay &&
@@ -129,10 +129,10 @@ const PlanTimeline = ({
             address,
           } = plancard;
 
-          const handleChangeTheme = (themeIndex, cardIdx) => {
-            planCardsByDay[day - 1][cardIdx].theme = themeIndex;
-            dispatch(getPlanCardsByDay([...planCardsByDay]));
-          };
+          // const handleChangeTheme = (themeIndex, cardIdx) => {
+          //   planCardsByDay[day - 1][cardIdx].theme = themeIndex;
+          //   dispatch(getPlanCardsByDay([...planCardsByDay]));
+          // };
 
           const handleDeletePlancard = (e, cardIdx) => {
             dispatch(
@@ -145,27 +145,32 @@ const PlanTimeline = ({
               ]),
             );
           };
-
           return (
             <div className="plancard" key={idx}>
-              <SetTheme
+              {/* <SetTheme
                 themeIndex={theme}
                 giveThemeIndexToParent={(themeIndex) =>
                   handleChangeTheme(themeIndex, idx)
                 }
                 readonly={true}
-              />
+              /> */}
+              <div className="set-theme">
+                <div className="set-theme__img">
+                  <div>{["🍽", "☕️", "🕹", "🚴🏻", "🚗", "🤔"][theme]}</div>
+                </div>
+              </div>
               <SetTime
                 startTime={startTime}
                 endTime={endTime}
                 readonly={true}
               />
               <div className="plancard__title">{comment}</div>
+              <div className="plancard__address">{address}</div>
               <button
                 className="plancard__delete-btn"
                 onClick={(e) => handleDeletePlancard(e, idx)}
               >
-                𝖷
+                삭제
               </button>
             </div>
           );
