@@ -32,7 +32,7 @@ export const initialState: State = {
   },
   googleToken: "",
   // Plan
-  plans: {},
+  plans: [],
   planList: {
     plan: {},
     isValid: false,

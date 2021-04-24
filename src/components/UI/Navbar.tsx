@@ -93,6 +93,7 @@ const Navbar = (props: NavbarProps) => {
         .then((body) => {
           if (body.accessToken) {
             dispatch(signIn(body.accessToken, body.email, body.nickname));
+            dispatch(getGoogleToken(hashData));
             history.push(`${currentPage}`);
             return;
           } else if (body.message === "None exists user") {
@@ -178,6 +179,7 @@ const Navbar = (props: NavbarProps) => {
   useEffect(() => {
     if (token.length === 0 && email.length !== 0) {
       dispatch(signOut());
+      dispatch(getGoogleToken(""));
       setModalComment("접속 시간이 초과되었습니다.다시 로그인 해주세요.");
       setModalType("alertModal");
       handleModalOpen();
