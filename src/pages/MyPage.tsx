@@ -319,6 +319,38 @@ const MyPage = () => {
     }
   };
 
+  useEffect(() => {
+    animation().init();
+  });
+
+  const animation = () => {
+    let items: any, winH: number;
+
+    const initModule = () => {
+      items = document.querySelectorAll(".plansummary");
+      winH = window.innerHeight;
+      _addEventHandlers();
+    };
+
+    const _addEventHandlers = () => {
+      window.addEventListener("scroll", _checkPosition);
+      window.addEventListener("load", _checkPosition);
+      window.addEventListener("resize", initModule);
+    };
+
+    const _checkPosition = () => {
+      for (let i = 0; i < items.length; i++) {
+        let posFromTop = items[i].getBoundingClientRect().top;
+        if (winH > posFromTop) {
+          items[i].classList.add("fade-in");
+        }
+      }
+    };
+    return {
+      init: initModule,
+    };
+  };
+
   return (
     <>
       <Navbar currentPage="/mypage" />
@@ -341,7 +373,7 @@ const MyPage = () => {
               history.push("/edituserinfo");
             }}
           >
-            <span>내 정보</span>
+            <span>내 정보 수정</span>
             <img src="/images/user.png" alt="" />
           </button>
         </div>

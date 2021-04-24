@@ -474,8 +474,8 @@ body {
     }
     &__edit-btn {
       background-color: $light;
-      height: 2rem;
-      width: 6rem;
+      height: 2.3rem;
+      width: 8rem;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -682,9 +682,10 @@ body {
         align-items: center;
         justify-content: center;
         margin: 1rem;
-        width: 20rem;
-        height: 190px;
-        border: 2px dashed $light;
+        border-radius: 6px;
+        width: 14rem;
+        height: 280px;
+        border: 2px dashed #ccc;
         img {
           height: 1rem;
           opacity: 0.6;
@@ -1572,6 +1573,18 @@ body {
   }
 }
 
+.fade-in {
+  animation: fade-in 1s;
+}
+
+@keyframes fade-in {
+  from {
+    margin-top: 2rem;
+  }
+  to {
+  }
+}
+
 .curation__info {
   width: 220px;
   text-align: center;
@@ -1580,4 +1593,5 @@ body {
   background-color: $main;
   color: white;
   outline: 2px solid $main;
+
 }

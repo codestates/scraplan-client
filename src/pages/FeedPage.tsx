@@ -151,10 +151,6 @@ const FeedPage = () => {
     setOpenModal(false);
   };
 
-  const closeSignInModal = () => {
-    setSignInModalOpen(false);
-  };
-
   const handleChangeDaycountMin = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setInputDaycountMin(e.target?.value);
@@ -223,6 +219,38 @@ const FeedPage = () => {
   };
   const handleCreateMyPlan = () => {
     history.push("/planpage/newplan");
+  };
+
+  useEffect(() => {
+    animation().init();
+  });
+
+  const animation = () => {
+    let items: any, winH: number;
+
+    const initModule = () => {
+      items = document.querySelectorAll(".plansummary");
+      winH = window.innerHeight;
+      _addEventHandlers();
+    };
+
+    const _addEventHandlers = () => {
+      window.addEventListener("scroll", _checkPosition);
+      window.addEventListener("load", _checkPosition);
+      window.addEventListener("resize", initModule);
+    };
+
+    const _checkPosition = () => {
+      for (let i = 0; i < items.length; i++) {
+        let posFromTop = items[i].getBoundingClientRect().top;
+        if (winH > posFromTop) {
+          items[i].classList.add("fade-in");
+        }
+      }
+    };
+    return {
+      init: initModule,
+    };
   };
 
   return (

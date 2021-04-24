@@ -8,6 +8,7 @@ import { getCurationCards, getPlanCards, getPlanCardsByDay } from "../actions";
 import Modal from "../components/UI/Modal";
 import AddPlan from "../components/Plan/AddPlan";
 import { useLocation } from "react-router";
+import Loading from "../components/UI/Loading";
 
 declare global {
   interface Window {
@@ -57,6 +58,14 @@ const PlanPage = () => {
   const [selectTheme, setSelectTheme] = useState<number>(-1);
   const [currentDay, setCurrentDay] = useState<number>(1);
 
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1500);
+  }, []);
   useEffect(() => {
     setPlanId(Number(location.pathname.split("/")[2]));
     dispatch(getCurationCards([]));
@@ -67,7 +76,6 @@ const PlanPage = () => {
     window.kakao.maps.load(() => {
       loadKakaoMap();
     });
-    // }, [viewOnlyMine, planCardsByDay, currentDay, selectTheme, LatLng]);
   }, []);
 
   // marker request
@@ -646,6 +654,7 @@ const PlanPage = () => {
 
   return (
     <div className="planpage">
+      {loading ? <Loading></Loading> : <></>}
       <Navbar currentPage="/planpage/newplan" />
       <CurationList
         addEventFunc={handleAddToPlan}
