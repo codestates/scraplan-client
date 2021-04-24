@@ -1536,6 +1536,7 @@ body {
 
 .infoWindow {
   position: absolute;
+  width: 200px;
   bottom: -1.5rem;
   left: -2rem;
   width: 230px;
@@ -1565,6 +1566,10 @@ body {
   .address {
     color: #aaa;
     font-size: 0.5rem;
+    margin-bottom: 0.2rem;
+    width: 100%;
+    text-align: right;
+    padding-right: 0.5rem;
   }
 }
 
@@ -1578,4 +1583,15 @@ body {
   }
   to {
   }
+}
+
+.curation__info {
+  width: 220px;
+  text-align: center;
+  padding: 0.25rem;
+  border: 1px solid $main;
+  background-color: $main;
+  color: white;
+  outline: 2px solid $main;
+
 }
