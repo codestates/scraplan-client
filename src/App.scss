@@ -1523,24 +1523,56 @@ body {
 
 .infoWindow {
   position: absolute;
+  width: 200px;
   bottom: -1.5rem;
   left: -1.5rem;
-  width: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: #f3f2f2;
+  z-index: 999;
   border-radius: 0.5rem;
-  border: 2px solid $main;
-  background-color: white;
+  .title {
+    display: flex;
+    width: 200px;
+    height: 1.8rem;
+  }
+  .day {
+    margin-right: 2rem;
+    background-color: $main;
+    color: white;
+    font-weight: 400;
+    text-align: center;
+    width: 4rem;
+    border-radius: 0.5rem 0 0.5rem 0;
+  }
   .time {
+    position: relative;
+    top: 0.3rem;
+    font-weight: 500;
     font-size: 0.8rem;
   }
-  .title {
+  .plan {
     font-size: 1rem;
     font-weight: 600;
+    margin: 0.5rem 0 0.5rem 0;
   }
   .address {
     color: $lightdark;
     font-size: 0.5rem;
+    margin-bottom: 0.2rem;
+    width: 100%;
+    text-align: right;
+    padding-right: 0.5rem;
   }
+}
+
+.curation__info {
+  width: 220px;
+  text-align: center;
+  padding: 0.25rem;
+  border: 1px solid $main;
+  background-color: $main;
+  color: white;
+  outline: 2px solid $main;
 }

@@ -175,12 +175,6 @@ const PlanPage = () => {
     }
   }, [planCardsByDay, currentDay, viewOnlyMine]);
 
-  useEffect(() => {
-    if (map && planCardsByDay.length > 0 && mapBounds) {
-      focusMyPlan();
-    }
-  }, [currentDay]);
-
   // 검색 전용 마커 초기 실행
   useEffect(() => {
     if (map && mapBounds) {
@@ -194,19 +188,18 @@ const PlanPage = () => {
     deleteMarkers();
     const markers: any[] = [];
     for (var i = 0; i < markerList.length; i++) {
-      let markerImage = new window.kakao.maps.MarkerImage(
+      const markerImage = new window.kakao.maps.MarkerImage(
         `/images/marker/theme0.png`,
         new window.kakao.maps.Size(48, 48),
         { offset: new window.kakao.maps.Point(20, 50) },
       );
-      let position = new window.kakao.maps.LatLng(
+      const position = new window.kakao.maps.LatLng(
         markerList[i].coordinates.coordinates[0],
         markerList[i].coordinates.coordinates[1],
       );
-      let marker = new window.kakao.maps.Marker({
+      const marker = new window.kakao.maps.Marker({
         map,
         position,
-        title: markerList[i].address,
         image: markerImage,
       });
       ((marker, curationId, curationAddr, curationCoordinates) => {
@@ -219,6 +212,24 @@ const PlanPage = () => {
         markerList[i].address,
         markerList[i].coordinates.coordinates,
       );
+
+      const iwContent = `<div class="curation__info";>${markerList[i].address}</div>`; // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+
+      // 인포윈도우를 생성합니다
+      const infowindow = new window.kakao.maps.InfoWindow({
+        content: iwContent,
+        zIndex: 999,
+      });
+
+      // 마커에 마우스오버 이벤트를 등록합니다
+      window.kakao.maps.event.addListener(marker, "mouseover", function () {
+        infowindow.open(map, marker);
+      });
+
+      // 마커에 마우스아웃 이벤트를 등록합니다
+      window.kakao.maps.event.addListener(marker, "mouseout", function () {
+        infowindow.close();
+      });
       marker.setMap(map);
       markers.push(marker);
     }
@@ -312,6 +323,7 @@ const PlanPage = () => {
         // myPlanBounds.extend(position);
         const marker = new window.kakao.maps.Marker({
           position,
+          zIndex: 100,
         });
         const customOverlayContent = document.createElement("div");
         const innerOverlayContent = document.createElement("div");
@@ -322,11 +334,13 @@ const PlanPage = () => {
         const customOverlay = new window.kakao.maps.CustomOverlay({
           position,
           content: customOverlayContent,
+          zIndex: 101,
         });
 
         const iwContent =
           "<div class='infoWindow'>" +
-          `<div class='day'>${currentDay}일차</div>` +
+          "<div class='title'>" +
+          `<div class='day'>Day ${currentDay}</div>` +
           `<div class='time'>${
             sortByPlan[i].startTime.split(":")[1] === "0"
               ? `${sortByPlan[i].startTime.split(":")[0]}:00`
@@ -336,13 +350,15 @@ const PlanPage = () => {
               ? `${sortByPlan[i].endTime.split(":")[0]}:00`
               : sortByPlan[i].endTime
           }</div>` +
-          `<div class='title'>${sortByPlan[i].comment}</div>` +
+          "</div>" +
+          `<div class='plan'>${sortByPlan[i].comment}</div>` +
           `<div class='address'>${sortByPlan[i].address}</div>` +
           "</div>";
 
         // 마커에 표시할 인포윈도우를 생성합니다
         const infowindow = new window.kakao.maps.InfoWindow({
           content: iwContent, // 인포윈도우에 표시할 내용
+          zIndex: 999,
         });
 
         customOverlayContent.addEventListener("mouseover", function () {
