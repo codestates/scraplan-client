@@ -276,9 +276,9 @@ const PlanList = ({
     setOpenAddRequest(false);
   }, [openAddRequest]);
 
-  const handleListState = useCallback(() => {
-    setOpenList(!openList);
-  }, [openList]);
+  // const handleListState = useCallback(() => {
+  //   setOpenList(!openList);
+  // }, [openList]);
 
   const handleInputTitle = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -588,17 +588,17 @@ const PlanList = ({
         moveKakaoMap={moveKakaoMap}
         currentDay={currentDay}
       />
-      <div className="planlist__toggle" onClick={handleListState}>
+      {/* <div className="planlist__toggle" onClick={handleListState}>
         <img src="/images/prev-pink.png"></img>
-      </div>
-      <div className={`planlist__wrapper ${openList ? "" : "disappear"}`}>
+      </div> */}
+      <div className={`planlist__wrapper `}>
         <div className="planlist__content">
           <div className="planlist__title">
             <input
               className="planlist__title__input"
               value={inputTitle}
               onChange={handleInputTitle}
-              placeholder="제목을 입력하세요"
+              placeholder="👋🏻 일정이름을 지어주세요"
             />
             <p className="planlist__public-toggle__switch-text">
               {publicToggleChecked ? "🔒" : "🔓"}
@@ -628,7 +628,7 @@ const PlanList = ({
               <p>대표지역</p>
               <div className="planlist__contents__search-bar-address-all">
                 <span className="planlist__contents__search-bar-address-si">
-                  {`${inputAddrSi}   >`}
+                  {`${inputAddrSi} >`}
                   {toggleSi ? (
                     <ul className="planlist__contents__search-bar-address-si__list">
                       {addrListSi &&
@@ -653,7 +653,7 @@ const PlanList = ({
                 ) : (
                   <>
                     <span className="planlist__contents__search-bar-address-gun">
-                      <span>{`${inputAddrGun}   >`}</span>
+                      <span>{`${inputAddrGun} >`}</span>
                       {toggleGun ? (
                         <ul>
                           {addrListGun &&
@@ -683,7 +683,7 @@ const PlanList = ({
                     <span
                       className={`planlist__contents__search-bar-address-gu`}
                     >
-                      <span>{inputAddrGu}</span>
+                      <span>{`${inputAddrGu} `}</span>
                       {toggleGu ? (
                         <ul>
                           {addrListGu &&
@@ -707,6 +707,7 @@ const PlanList = ({
                 )}
               </div>
             </div>
+            <p>일정표</p>
           </span>
           <div className="planlist__dailyplan">
             <div className="planlist__dailyplan__top-bar">
@@ -720,7 +721,7 @@ const PlanList = ({
                 className="planlist__dailyplan__top-bar__select-day"
                 onClick={handleDayList}
               >
-                {`Day ${dayCount[currentDay - 1]}`}
+                {`${dayCount[currentDay - 1]}일차`}
               </div>
               {showDayList ? (
                 <ul className="daylist">
@@ -729,7 +730,7 @@ const PlanList = ({
                       <li
                         onClick={() => handleSelectDay(idx + 1)}
                         key={idx}
-                      >{`Day ${day}`}</li>
+                      >{`${day}일차`}</li>
                     );
                   })}
                 </ul>

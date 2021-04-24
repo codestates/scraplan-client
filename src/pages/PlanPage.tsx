@@ -658,10 +658,10 @@ const PlanPage = () => {
             className="planpage__layout__options__option"
             onClick={handleViewState}
           >
-            {viewOnlyMine ? "👀" : "🗺"}
+            {viewOnlyMine ? "🗺" : "👀"}
           </button>
           <span className="planpage__layout__options__option-desc">
-            {viewOnlyMine ? "전체 보러가기" : "내 일정만 보러가기"}
+            {viewOnlyMine ? "큐레이션 함께보기" : "내 일정만 볼래요!"}
           </span>
           <button
             className="planpage__layout__options__option"

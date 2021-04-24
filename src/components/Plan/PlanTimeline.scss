@@ -1,17 +1,17 @@
 .react-grid-layout {
   position: relative;
   top: -3638px;
-  left: 3rem;
+  left: 2rem;
   transition: height 200ms ease;
   height: 12rem;
-  width: 240px;
+  width: 270px;
   pointer-events: none;
 }
 .react-grid-item {
-  transition: all 200ms ease;
+  // transition: all 200ms ease;
   transition-property: left, top;
   cursor: pointer;
-  width: 220px;
+  width: 270px;
   pointer-events: auto;
 }
 .react-grid-item img {

@@ -113,7 +113,7 @@ const PlanTimeline = ({
         compactType: null,
         preventCollision: true,
         transformScale: 1,
-        width: 240,
+        width: 270,
       }}
     >
       {planCardsByDay &&
@@ -161,11 +161,12 @@ const PlanTimeline = ({
                 readonly={true}
               />
               <div className="plancard__title">{comment}</div>
+              <div className="plancard__address">{address}</div>
               <button
                 className="plancard__delete-btn"
                 onClick={(e) => handleDeletePlancard(e, idx)}
               >
-                𝖷
+                🗑
               </button>
             </div>
           );
