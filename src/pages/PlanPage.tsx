@@ -196,7 +196,7 @@ const PlanPage = () => {
     for (var i = 0; i < markerList.length; i++) {
       let markerImage = new window.kakao.maps.MarkerImage(
         `/images/marker/theme0.png`,
-        new window.kakao.maps.Size(48, 48),
+        new window.kakao.maps.Size(48, 59),
         { offset: new window.kakao.maps.Point(20, 50) },
       );
       let position = new window.kakao.maps.LatLng(
@@ -331,7 +331,7 @@ const PlanPage = () => {
             sortByPlan[i].startTime.split(":")[1] === "0"
               ? `${sortByPlan[i].startTime.split(":")[0]}:00`
               : sortByPlan[i].startTime
-          } ~ ${
+          } -${
             sortByPlan[i].endTime.split(":")[1] === "0"
               ? `${sortByPlan[i].endTime.split(":")[0]}:00`
               : sortByPlan[i].endTime
@@ -366,9 +366,9 @@ const PlanPage = () => {
       const polyline = new window.kakao.maps.Polyline({
         endArrow: true,
         path: linePath, // 선을 구성하는 좌표배열 입니다
-        strokeWeight: 5, // 선의 두께 입니다
-        strokeColor: "blue", // 선의 색깔입니다
-        strokeOpacity: 0.5, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+        strokeWeight: 4, // 선의 두께 입니다
+        strokeColor: "#248cfa", // 선의 색깔입니다
+        strokeOpacity: 0.9, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
         strokeStyle: "dashed", // 선의 스타일입니다
       });
       polyline.setMap(map);
@@ -410,7 +410,7 @@ const PlanPage = () => {
     );
     const image = new window.kakao.maps.MarkerImage(
       `/images/marker/location.png`,
-      new window.kakao.maps.Size(54, 58),
+      new window.kakao.maps.Size(50, 58),
       { offset: new window.kakao.maps.Point(20, 58) },
     );
     const marker = new window.kakao.maps.Marker({

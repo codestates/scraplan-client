@@ -129,10 +129,10 @@ const PlanTimeline = ({
             address,
           } = plancard;
 
-          const handleChangeTheme = (themeIndex, cardIdx) => {
-            planCardsByDay[day - 1][cardIdx].theme = themeIndex;
-            dispatch(getPlanCardsByDay([...planCardsByDay]));
-          };
+          // const handleChangeTheme = (themeIndex, cardIdx) => {
+          //   planCardsByDay[day - 1][cardIdx].theme = themeIndex;
+          //   dispatch(getPlanCardsByDay([...planCardsByDay]));
+          // };
 
           const handleDeletePlancard = (e, cardIdx) => {
             dispatch(
@@ -145,16 +145,20 @@ const PlanTimeline = ({
               ]),
             );
           };
-
           return (
             <div className="plancard" key={idx}>
-              <SetTheme
+              {/* <SetTheme
                 themeIndex={theme}
                 giveThemeIndexToParent={(themeIndex) =>
                   handleChangeTheme(themeIndex, idx)
                 }
                 readonly={true}
-              />
+              /> */}
+              <div className="set-theme">
+                <div className="set-theme__img">
+                  <div>{["🍽", "☕️", "🕹", "🚴🏻", "🚗", "🤔"][theme]}</div>
+                </div>
+              </div>
               <SetTime
                 startTime={startTime}
                 endTime={endTime}
@@ -166,7 +170,7 @@ const PlanTimeline = ({
                 className="plancard__delete-btn"
                 onClick={(e) => handleDeletePlancard(e, idx)}
               >
-                🗑
+                삭제
               </button>
             </div>
           );

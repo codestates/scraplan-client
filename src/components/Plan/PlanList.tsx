@@ -148,7 +148,6 @@ const PlanList = ({
     } else if (nonMemberSave) {
       // 비회원이 저장하기 클릭 시 로그인 창 팝업
       // 구글 로그인 시 form 제출 후 정보들이 초기화되는 걸 방지
-      console.log("비회원에서 회원됨");
       // dispatch(getPlanCardsByDay([...planCardsByDay]));
       setInputTitle(nonMemberPlanCards.title);
       setInputAddrSi(nonMemberPlanCards.si);
@@ -591,7 +590,7 @@ const PlanList = ({
       {/* <div className="planlist__toggle" onClick={handleListState}>
         <img src="/images/prev-pink.png"></img>
       </div> */}
-      <div className={`planlist__wrapper `}>
+      <div className={`planlist__wrapper`}>
         <div className="planlist__content">
           <div className="planlist__title">
             <input
