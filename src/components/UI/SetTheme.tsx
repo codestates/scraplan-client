@@ -1,4 +1,3 @@
-import { set } from "lodash";
 import React, { useRef, useState, useEffect } from "react";
 
 // props로 plancard 데이터를 받는다.

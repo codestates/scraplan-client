@@ -3,7 +3,28 @@ $dark: #191919;
 $mediumdark: rgba(0, 0, 0, 0.7);
 $light: #f7f7f9;
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap");
-
+@font-face {
+  font-family: "S-CoreDream-4Regular";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-4Regular.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "S-CoreDream-3Light";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff")
+    format("woff");
+}
+@font-face {
+  font-family: "S-CoreDream-7ExtraBold";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-7ExtraBold.woff")
+    format("woff");
+}
+@font-face {
+  font-family: "S-CoreDream-5Medium";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-5Medium.woff")
+    format("woff");
+}
 * {
   box-sizing: border-box;
 }
@@ -13,34 +34,35 @@ $light: #f7f7f9;
   display: flex;
   align-items: center;
   position: absolute;
-  top: 64px;
+  top: 59px;
   bottom: 0px;
   right: 0px;
   z-index: 995;
-  &__toggle {
-    z-index: 995;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.5rem;
-    height: 4rem;
-    border-radius: 0.5rem 0 0 0.5rem;
-    background-color: #f7f7f9;
-    box-shadow: -3px 0px 3px 1px rgba(0, 0, 0, 0.1);
-    img {
-      height: 1rem;
-    }
-  }
+  // &__toggle {
+  //   z-index: 995;
+  //   display: flex;
+  //   align-items: center;
+  //   justify-content: center;
+  //   width: 1.5rem;
+  //   height: 4rem;
+  //   border-radius: 0.5rem 0 0 0.5rem;
+  //   background-color: #f7f7f9;
+  //   box-shadow: -3px 0px 3px 1px rgba(0, 0, 0, 0.1);
+  //   img {
+  //     height: 1rem;
+  //   }
+  // }
   .disappear {
     animation: disappear-planlist 1s forwards;
   }
   &__wrapper {
+    border-radius: 12px 0 0 12px;
     background-color: #fff;
-    background-color: $light;
     width: 23rem;
     height: 100%;
     padding: 2rem 1rem 3rem 1.2rem;
-    animation: appear-planlist 1s;
+    border: 2px solid $light;
+    box-shadow: 0px 2px 3px 1px rgba(0, 0, 0, 0.1);
     .planlist__content {
       height: 100%;
       padding: 1rem;
@@ -50,24 +72,28 @@ $light: #f7f7f9;
         height: 5vh;
         margin-bottom: 1rem;
         &__input {
-          font-size: 1.1rem;
-          font-weight: 700;
+          font-family: "S-CoreDream-7ExtraBold";
+          color: #666;
+          font-size: 1.2rem;
+          font-weight: 600;
           width: 13rem;
+          overflow: hidden;
           padding: 0.4rem 0;
-          border-bottom: $light 1.6px solid;
+          border-bottom: rgba(0, 0, 0, 0) 2px solid;
           background-color: rgba(0, 0, 0, 0);
           &::placeholder {
+            font-size: 1.1rem;
             color: #ccc;
           }
           &:focus {
-            border-bottom: 1px solid #ebabb2;
+            border-bottom: 2px solid #ccc;
           }
         }
       }
       .planlist__public-toggle__switch-text {
         position: absolute;
         left: 15.8rem;
-        top: 2.8rem;
+        top: 3rem;
         font-size: 1rem;
         width: 3rem;
         text-align: center;
@@ -100,7 +126,8 @@ $light: #f7f7f9;
           position: absolute;
           left: 1.2px;
           top: 1px;
-          background-color: rgb(214, 206, 148);
+          background-color: rgb(235, 227, 173);
+          // background-color: #f7c4ca;
           transition: all 0.2s linear;
           border-radius: 50%;
           height: 1rem;
@@ -113,8 +140,11 @@ $light: #f7f7f9;
         }
       }
       .planlist__represent-address {
-        font-size: 0.8rem;
-        font-weight: 500;
+        font-size: 0.7rem;
+        font-weight: 600;
+        p {
+          color: #aaa;
+        }
         .planlist__contents__search-bar {
           &-address {
             display: flex;
@@ -122,21 +152,23 @@ $light: #f7f7f9;
             flex-wrap: wrap;
             margin-bottom: 1rem;
             &-all {
-              border: 2px solid #ddd;
+              border: 1.6px solid #eee;
               display: flex;
               align-items: center;
-              border-radius: 4px;
+              border-radius: 3px;
               background-color: $light;
-              height: 2.2rem;
+              height: 3rem;
               min-width: 3rem;
               padding: 0.2rem 1rem;
               margin-top: 0.5rem;
               * {
-                color: #777;
+                color: #aaa;
+                font-family: "S-CoreDream-5Medium";
               }
               span {
-                font-size: 0.75rem;
-                height: 1.2rem;
+                font-size: 0.8rem;
+                height: 0.8rem;
+                font-weight: 500;
                 min-width: 2rem;
                 text-align: start;
                 ul {
@@ -164,15 +196,15 @@ $light: #f7f7f9;
             &-si,
             &-gun,
             &-gu {
-              font-size: 0.9rem;
+              font-size: 0.85rem;
               min-width: 3rem;
               cursor: pointer;
               width: auto;
               text-align: center;
-              background-color: $light;
-              height: 2.8rem;
+              // background-color: $light;
+              height: 3rem;
               border-radius: 3px;
-              margin-right: 1rem;
+              margin-right: 0.5rem;
               ul {
                 display: none;
               }
@@ -181,7 +213,6 @@ $light: #f7f7f9;
                 display: block;
               }
             }
-
             &__reset-btn {
               font-size: 0.7rem;
               font-weight: 500;
@@ -200,35 +231,59 @@ $light: #f7f7f9;
         flex-direction: column;
         overflow-x: visible;
         height: 75%;
+        border-radius: 12px;
         &__top-bar {
+          height: 2rem;
           position: relative;
           display: flex;
+          align-items: center;
+          border-radius: 4px;
           justify-content: center;
           margin-bottom: 1.4rem;
-          margin-top: 1.8rem;
+          margin-top: 0.5rem;
           &__select-day {
-            margin: 0 1.7rem;
+            font-family: "S-CoreDream-5Medium";
+            margin: 0 1.2rem;
+            cursor: pointer;
             font-size: 1.1rem;
-            font-weight: 700;
+            font-weight: 600;
+            color: #f8949f;
+            &:hover {
+              background-color: #eee;
+            }
+            padding: 0.4rem 1.2rem;
+            vertical-align: center;
+            border-radius: 8px;
           }
           ul {
             top: 2rem;
-            font-size: 1rem;
+            font-size: 0.9rem;
+            max-height: 6rem;
+            overflow-y: scroll;
+            background-color: #fff;
+            border: 1px solid #ccc;
             position: absolute;
-            border: 1px solid $main;
+            border-radius: 4px;
             z-index: 999;
+            color: #aaa;
             li {
+              padding: 0.2rem 1rem;
               list-style: none;
+              cursor: pointer;
+              &:hover {
+                background-color: #eee;
+              }
             }
           }
           &__prev,
           &__next {
+            font-family: "S-CoreDream-7ExtraBold";
             font-size: 0.9rem;
-            font-weight: 700;
-            padding: 0rem 0.4rem;
-            border-radius: 8px;
-            background-color: #eee;
-            color: #aaa;
+            font-weight: 900;
+            padding: 0.1rem 0.5rem;
+            border-radius: 10px;
+            // color: #aaa;
+            color: #f8949f;
             &:hover {
               color: $main;
               background-color: #ffe8eb;
@@ -250,7 +305,7 @@ $light: #f7f7f9;
             .oneday {
               position: relative;
               list-style: none;
-              margin-right: 60px;
+              margin-right: 30px;
             }
           }
           &__grid {
@@ -258,14 +313,14 @@ $light: #f7f7f9;
             top: 1rem;
             width: 270px;
             div {
-              border-bottom: 1px solid rgb(231, 229, 229);
+              border-bottom: 1px dashed rgba(238, 238, 238, 0.856);
               position: relative;
               height: 68px;
               margin-top: 8px;
               font-size: 0.7rem;
               span {
                 color: #bac0c8;
-                padding: 0.2rem 0.5rem;
+                padding: 0rem 0.5rem;
                 border-radius: 5rem;
               }
             }
@@ -278,17 +333,16 @@ $light: #f7f7f9;
           z-index: 996;
           text-align: center;
           vertical-align: middle;
-          height: 2rem;
-          width: 6rem;
+          height: 2.6rem;
+          width: 18.5rem;
           border-radius: 3px;
-          margin-top: 2rem;
-          margin-bottom: 0.5rem;
-          background-color: $main;
+          margin-bottom: 1rem;
+          background-color: #fd7d8e;
           color: #fff;
           font-size: 0.8rem;
-          font-weight: 400;
+          font-weight: 600;
           &:hover {
-            background-color: #b3535b;
+            background-color: $main;
             transition: all ease 0.3s;
           }
         }
@@ -306,7 +360,6 @@ $light: #f7f7f9;
     margin-right: -326px;
   }
 }
-
 @keyframes appear-planlist {
   from {
     margin-right: -326px;
@@ -366,26 +419,6 @@ $light: #f7f7f9;
       width: 270px;
       height: 2rem;
     }
-    // &__copied {
-    //   opacity: 0;
-    //   width: 0rem;
-    //   position: absolute;
-    //   background-color: rgba(255, 122, 122, 0.3);
-    //   overflow: hidden;
-    //   white-space: nowrap;
-    //   font-size: 0.75rem;
-    //   font-weight: 500;
-    //   padding: 0.2rem 0.3rem;
-    //   margin-top: 9rem;
-    //   margin-left: 10rem;
-    //   text-align: center;
-    //   border-radius: 3px;
-    // }
-    // .show {
-    //   opacity: 1;
-    //   width: 11rem;
-    //   transition: all 3s ease;
-    // }
     &__showmore {
       cursor: pointer;
       box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.1);
@@ -499,34 +532,78 @@ $light: #f7f7f9;
 
 // Plan Card
 .plancard {
-  width: 200px;
+  width: 270px;
   display: flex;
   background-color: rgba(255, 255, 255, 0.75);
-  // border-radius: 3px;
-  box-shadow: 0px 0px 2px 0.2px rgba(0, 0, 0, 0.2);
-  border-left: 4px solid $main;
+  border-radius: 6px;
+  background-color: #ffffff;
+  border: 2px solid #eee;
+  &:hover {
+    background-color: #fff6f7;
+  }
+  &:hover .set-time {
+    display: none;
+  }
   &__title {
-    color: #525762;
+    font-family: "S-CoreDream-4Regular";
+    color: #666;
     height: 1.2rem;
     vertical-align: center;
-    position: relative;
+    position: absolute;
     top: 8%;
-    font-size: 0.75rem;
-    font-weight: 500;
-    margin-top: 0.1rem;
-    margin-left: 6.6rem;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+    margin-left: 3rem;
   }
+  &__address {
+    display: none;
+  }
+  // &:hover &__address {
+  //   display: block;
+  //   position: absolute;
+  //   font-size: 0.75rem;
+  //   font-weight: 400;
+  //   color: #666;
+  //   background-color: #ffd9dd;
+  //   border-radius: 3px;
+  //   padding: 0.2rem 0.5rem;
+  //   right: 1rem;
+  //   top: 2rem;
+  // }
   .set-theme {
     margin-left: 1rem;
     top: 8%;
+    > div {
+      border: none;
+      // margin-left: 0.1rem;
+      // background-color: #ffe6e8;
+      background-color: rgba(0, 0, 0, 0);
+      &:hover {
+        background-color: rgba(0, 0, 0, 0);
+      }
+    }
   }
   .set-time {
-    margin-top: 0.1rem;
-    margin-left: 1rem;
+    position: relative;
+    margin-left: 10rem;
     top: 8%;
+    &__text {
+      background-color: rgba(0, 0, 0, 0);
+      &__currentTime,
+      &__unit {
+        font-family: "S-CoreDream-5Medium";
+        font-weight: 600;
+        color: #ff949d;
+      }
+    }
   }
   &__delete-btn {
     display: none;
+    background-color: #fff6f7;
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    font-size: 0.7rem;
   }
 }
 
