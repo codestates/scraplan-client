@@ -138,25 +138,28 @@ const PlanSummary = (props: PlanSummaryProps) => {
       />
       <div className="plansummary">
         <div className="plansummary__contents__plan">
-          <span className="plansummary__contents__plan__title">{title}</span>
-          <p className="plansummary__contents__plan__info">
-            {dayCount === 1
-              ? `${representAddr.split("-").join(" ")}   |   하루일정`
-              : `${representAddr.split("-").join(" ")}   |   ${
-                  dayCount - 1 + "박"
-                } ${dayCount}일`}
-          </p>
-          <span className="plansummary__contents__plan__description">
-            {desc}
-          </span>
-          <div className="plansummary__contents__plan__showmore">
-            <img src="/images/next.png" alt="" />
-            <p
-              className="plansummary__contents__plan__showmore-text"
-              onClick={handleClickShowmore}
-            >
-              일정보러가기
-            </p>
+          <div className="plansummary__contents__plan__img">
+            <img
+              src={`https://source.unsplash.com/random?${Math.floor(
+                Math.random() * 100,
+              )}/1600x900?blue,water`}
+              alt=""
+            />
+          </div>
+          <p className="plansummary__contents__plan__title">{title}</p>
+          <div className="plansummary__contents__plan__info">
+            <div className="plansummary__contents__plan__info-addr">
+              <img src="images/pin.png" alt="" />
+              <p>{representAddr.split("-").join(" ")}</p>
+            </div>
+            <div className="plansummary__contents__plan__info-daycount">
+              <img src="/images/clock.png" alt="" />
+              <p>
+                {dayCount === 1
+                  ? `하루일정`
+                  : `${dayCount - 1 + "박"} ${dayCount}일`}
+              </p>
+            </div>
           </div>
           <div className="plansummary__contents__plan-hover">
             {nickname === writer ? (
@@ -169,23 +172,12 @@ const PlanSummary = (props: PlanSummaryProps) => {
             ) : (
               <></>
             )}
-
-            <div
-              className="plansummary__contents__plan-hover__share-btn"
-              onClick={handleToggleShareBtn}
-            >
-              <img src="images/share.png" alt=""></img>
-              <div
-                className={`plansummary__share-btn__list ${
-                  toggleShareBtn ? "" : "hidden"
-                }`}
-              >
-                <button className="kakao-link" onClick={handleShareKakao}>
-                  카톡으로 공유하기
-                </button>
-                <button onClick={handleShareUrl}>URL로 공유하기</button>
-              </div>
-            </div>
+          </div>
+          <div className="plansummary__contents__plan__share-btn">
+            <button onClick={handleShareUrl}>URL로 공유</button>
+            <button className=" kakao-link" onClick={handleShareKakao}>
+              카톡으로 공유
+            </button>
           </div>
         </div>
       </div>

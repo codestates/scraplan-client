@@ -371,161 +371,121 @@ $light: #f7f7f9;
 
 // Plan Summary
 .plansummary {
-  width: 20rem;
-  height: 190px;
+  width: 14rem;
+  height: 280px;
   margin: 1rem;
-  border-radius: 3px;
-  box-shadow: 0px 1px 4px 1px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
   &__contents__plan {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    margin-bottom: 0.4rem;
-    width: 360px;
-    height: 200px;
+    width: 14rem;
+    height: 280px;
     border-radius: 3px;
     z-index: 1;
+    &__img {
+      width: 100%;
+      height: 40%;
+      background-color: #eee;
+      img {
+        box-shadow: inset 0 0 0 1000px #ff335f75;
+        height: 100%;
+        width: 100%;
+      }
+    }
     &__title {
-      width: 280px;
-      position: absolute;
-      margin-bottom: 6.5rem;
-      margin-left: 2.5rem;
-      font-size: 1.03rem;
+      width: 100%;
+      height: 2rem;
+      font-family: "S-CoreDream-7ExtraBold";
+      margin: 1.5rem 1rem 0 1.2rem;
+      font-size: 1.05rem;
       font-weight: 600;
       white-space: nowrap;
-      overflow: hidden;
       text-overflow: ellipsis;
     }
     &__info {
-      width: 270px;
-      position: absolute;
-      margin-bottom: 3.8rem;
-      margin-left: 2.5rem;
-      font-size: 0.75rem;
-      font-weight: 600;
+      width: 100%;
+      margin: 1rem 1rem 0 1.2rem;
       opacity: 0.7;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    &__description {
-      position: absolute;
-      margin-top: 1.5rem;
-      margin-left: 2.5rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      font-size: 0.8rem;
-      width: 270px;
-      height: 2rem;
-    }
-    &__showmore {
-      cursor: pointer;
-      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.1);
-      width: 2rem;
-      height: 2rem;
-      border-radius: 1.1rem;
-      margin-left: 2.3rem;
-      margin-top: 6rem;
-      display: flex;
-      overflow: hidden;
-      flex-wrap: nowrap;
-      align-items: center;
+      height: 30%;
+      &-addr,
+      &-daycount {
+        font-size: 0.75rem;
+        display: flex;
+        align-items: center;
+        font-weight: 400;
+        margin-bottom: 0.2rem;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
       img {
-        margin: 0.75rem;
-        width: 0.7rem;
         height: 0.7rem;
+        width: auto;
         opacity: 0.7;
-      }
-      p {
-        color: #555;
-        opacity: 0;
-        font-size: 0.85rem;
-        font-weight: 500;
-        margin-bottom: 0.1rem;
-        margin-right: 0.7rem;
+        margin-right: 0.5rem;
       }
     }
-  }
-  &:hover .plansummary__contents__plan__showmore {
-    width: 8rem;
-    border-radius: 4rem;
-    transition: 0.3s all ease;
-    background-color: #fddde1;
-  }
-  &:hover .plansummary__contents__plan__showmore-text {
-    opacity: 1;
-    transition: 0.5s all ease;
-    transition-delay: 0.2s;
-  }
-  &__contents__plan:hover &__contents__plan-hover {
-    display: block;
-  }
-  //바꾸기
-  &__contents__plan-hover {
-    // display: none;
-    display: block;
-    position: absolute;
-    width: 60px;
-    height: 170px;
-    &__share-btn {
-      cursor: pointer;
-      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.1);
-      width: 2rem;
-      height: 2rem;
-      border-radius: 1.1rem;
-      position: absolute;
-      top: 7.2rem;
-      left: 16rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      &:hover {
-        background-color: #f8f8f8;
-      }
-      img {
-        opacity: 0.7;
-        width: 0.8rem;
-        height: 0.8rem;
-      }
-      &-hover {
-        position: absolute;
-        margin-right: 3rem;
-      }
-      div {
-        position: absolute;
-        left: 2.5rem;
-        top: 0.8rem;
-        width: 8rem;
-        border: 1px solid #ccc;
-        border-radius: 3px;
-        button {
-          padding: 0.2rem 0.5rem;
-          width: 100%;
-          text-align: left;
-          border-bottom: 1px solid #eee;
-          &:hover {
-            background-color: rgba(238, 238, 238, 0.7);
-          }
+    .plansummary__contents__plan__share-btn {
+      margin-top: 1.5rem;
+      button {
+        width: 7rem;
+        height: 2.5rem;
+        border-top: 1px solid #eee;
+        font-size: 0.75rem;
+        &:nth-child(1) {
+          border-radius: 0 0 0 6px;
+          border-right: 1px solid #eee;
+        }
+        &:nth-child(2) {
+          border-radius: 0 0 6px 0;
+        }
+        &:hover {
+          background-color: $main;
+          color: #fff;
+          font-weight: 500;
         }
       }
     }
+  }
+  // &:hover .plansummary__contents__plan__showmore {
+  //   width: 8rem;
+  //   border-radius: 4rem;
+  //   transition: 0.3s all ease;
+  //   background-color: #fddde1;
+  // }
+  // &:hover .plansummary__contents__plan__showmore-text {
+  //   opacity: 1;
+  //   transition: 0.5s all ease;
+  //   transition-delay: 0.2s;
+  // }
+  &__contents__plan:hover &__contents__plan-hover {
+    display: block;
+  }
+  // //바꾸기
+  &__contents__plan-hover {
+    position: absolute;
+    display: none;
+    width: 60px;
+    height: 170px;
     &__cancel-btn {
       background-color: #fff;
       position: absolute;
       cursor: pointer;
-      width: 2rem;
-      height: 2rem;
+      width: 1.5rem;
+      height: 1.5rem;
       border-radius: 50%;
       top: 0.5rem;
-      left: 16.2rem;
+      left: 12rem;
       font-weight: 500;
       font-size: 1.1rem;
       opacity: 0.6;
       &:hover {
         color: $main;
-        background-color: #f3667234;
       }
+    }
+    &:hover &__cancel-btn {
+      display: block;
     }
   }
 }
