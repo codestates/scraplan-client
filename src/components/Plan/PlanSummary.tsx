@@ -73,9 +73,8 @@ const PlanSummary = (props: PlanSummaryProps) => {
       objectType: "feed",
       content: {
         title,
-        description: desc || "Scraplan과 함께 일정을 계획해요!",
-        imageUrl:
-          "http://mud-kage.kakao.co.kr/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg",
+        description: desc || `${nickname}님이 일정을 공유했어요!`,
+        imageUrl: "http://photo.scraplan.com/asdf%40asdf.asdf%2F2.png",
         link: {
           mobileWebUrl: `${process.env.REACT_APP_CLIENT_URL}/planpage/${id}`,
           androidExecParams: "test",
