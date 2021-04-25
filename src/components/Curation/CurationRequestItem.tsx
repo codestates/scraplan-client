@@ -97,7 +97,7 @@ const CurationRequestItem = ({ props }: any) => {
             className="mypage__contents__req-table__item__details__texts"
             onClick={handleShowmoreBtn}
           >
-            <p>31232</p>
+            <p>No. {id}</p>
             <p>
               <span className="mypage__contents__req-table__item__details__texts-status">
                 {statusCode[status]}

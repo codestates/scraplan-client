@@ -201,7 +201,7 @@ $light: #e8e8e8;
   flex-direction: column;
   padding: 0.6rem;
   border-radius: 4px;
-  box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.1);
   div {
     display: flex;
     align-items: center;
@@ -212,8 +212,9 @@ $light: #e8e8e8;
     border-radius: 8px;
   }
   &__time {
+    color: $main;
     font-size: 0.75rem;
-    font-weight: 500;
+    font-weight: 600;
     padding: 0 0.2rem;
     text-align: center;
     border-radius: 6px;
@@ -222,6 +223,7 @@ $light: #e8e8e8;
     font-size: 0.8rem;
     font-weight: 400;
     max-height: 80px;
+    padding: 0 0.2rem;
     overflow-y: hidden;
     // text-overflow: ellipsis;
     word-wrap: break-word;

@@ -84,21 +84,6 @@ const ViewCuration = (props: ViewCurationProps) => {
     });
   }, [open]);
 
-  // const handleScroll = useCallback(([entry]) => {
-  //   if (entry.isIntersecting && fetchingFeedback) {
-  //     fetchMoreFeedbacks();
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   let observer: any;
-  //   if (endOfFeedback.current) {
-  //     observer = new IntersectionObserver(handleScroll, { threshold: 1 });
-  //     observer.observe(endOfFeedback.current);
-  //     return () => observer && observer.disconnect();
-  //   }
-  // }, [handleScroll]);
-
   useEffect(() => {
     if (feedbackPage > 0 && fetchingFeedback) {
       fetchMoreFeedbacks();
@@ -237,9 +222,14 @@ const ViewCuration = (props: ViewCurationProps) => {
               <div className="viewcuration__contents__feedback">
                 <div className="viewcuration__contents__feedback__top-bar">
                   <p>
-                    어떻게 <br />
-                    생각하시나요?
+                    여러분의 <br />
+                    의견을 남겨주세요!
                   </p>
+                  <span>
+                    이모지로 느낀점을 표현하고,
+                    <br />
+                    얼마나 머물렀는지도 알려주세요 :)
+                  </span>
                   <div className="viewcuration__contents__feedback__top-bar__form">
                     <SetTheme
                       type="feedback"
@@ -248,18 +238,15 @@ const ViewCuration = (props: ViewCurationProps) => {
                     <SetTime giveTimeToParent={handleGetRequestTime} />
                     <input
                       type="text"
-                      placeholder="피드백을 입력해주세요"
+                      placeholder="한줄 의견을 남겨주세요"
                       onChange={handleChangeFeedbackComment}
                     />
-                    <button onClick={handleCreateCurationFeedback}>
-                      남기기
-                    </button>
+                    <button onClick={handleCreateCurationFeedback}>등록</button>
                   </div>
                 </div>
                 <div
                   className="viewcuration__contents__feedback__lists"
                   ref={endOfFeedback}
-                  // {...scrollEventListener(fetchMoreFeedbacks, 1)}
                 >
                   {feedbackList &&
                     feedbackList.length > 0 &&

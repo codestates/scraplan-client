@@ -362,8 +362,10 @@ const MyPage = () => {
       />
       <div className="mypage">
         <div className="mypage__header">
-          <div className="mypage__header__title">마이페이지</div>
-          <p className="mypage__header__nickname">{userNickname}</p>
+          {/* <div className="mypage__header__title">마이페이지</div> */}
+          <p className="mypage__header__nickname">
+            {userNickname}님, 안녕하세요!
+          </p>
           <p className="mypage__header__email">
             {email === "" ? "guest@scraplan.com" : email}
           </p>
@@ -378,16 +380,24 @@ const MyPage = () => {
           </button>
         </div>
         <div className="mypage__menus">
-          <button onClick={() => setCurMenu("myPlans")}>내 일정 관리</button>
-          <button onClick={() => setCurMenu("myCurationRequest")}>
+          <button
+            className={curMenu === "myPlans" ? "focused" : ""}
+            onClick={() => setCurMenu("myPlans")}
+          >
+            내 일정 관리
+          </button>
+          <button
+            className={curMenu !== "myPlans" ? "focused" : ""}
+            onClick={() => setCurMenu("myCurationRequest")}
+          >
             큐레이션 요청
           </button>
         </div>
         {curMenu === "myPlans" ? (
           <div className="mypage__contents">
-            <div className="mypage__contents__title">
-              <p className="mypage__contents__title-text">내 일정 관리하기</p>
-              <button
+            {/* <div className="mypage__contents__title"> */}
+            {/* <p className="mypage__contents__title-text">내 일정 관리하기</p> */}
+            {/* <button
                 className="mypage__contents__title__feedpage-btn"
                 onClick={() => {
                   history.push("/feedpage");
@@ -395,8 +405,8 @@ const MyPage = () => {
               >
                 <span>다른 일정 구경하기</span>
                 <img src="/images/next.png" alt="" />
-              </button>
-            </div>
+              </button> */}
+            {/* </div> */}
             <div className="mypage__contents__search-bar">
               <div className="mypage__contents__search-bar-address">
                 <p>대표지역</p>
@@ -555,11 +565,15 @@ const MyPage = () => {
           </div>
         ) : (
           <div className="mypage__contents">
-            <div className="mypage__contents__title">
-              <p className="mypage__contents__title-text">큐레이션 요청 확인</p>
-            </div>
             <div className="mypage__contents__notice-img">
-              <img src="" alt="" />
+              <img src="/images/curation-banner.jpg" alt="" />
+              <p>
+                추천하고 싶은 장소가 있나요? <br />
+                큐레이션 등록 신청을 해보세요! 💻
+              </p>
+              <span>
+                큐레이션은 일정만들기 상단의 ✚ 버튼을 눌러 신청할 수 있습니다.
+              </span>
             </div>
             <div className="mypage__contents__req-table">
               <div className="mypage__contents__req-table__top-bar">
@@ -567,9 +581,10 @@ const MyPage = () => {
                 <p>상태</p>
                 <p>제목</p>
               </div>
-              {curationsRequestsList.map((item, idx) => {
-                return <CurationRequestItem key={idx} props={item} />;
-              })}
+              {curationsRequestsList &&
+                curationsRequestsList.map((item, idx) => {
+                  return <CurationRequestItem key={idx} props={item} />;
+                })}
             </div>
           </div>
         )}
