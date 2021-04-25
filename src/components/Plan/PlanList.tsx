@@ -275,10 +275,6 @@ const PlanList = ({
     setOpenAddRequest(false);
   }, [openAddRequest]);
 
-  // const handleListState = useCallback(() => {
-  //   setOpenList(!openList);
-  // }, [openList]);
-
   const handleInputTitle = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setInputTitle(e.target.value);

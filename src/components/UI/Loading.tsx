@@ -3,7 +3,7 @@ const Loading = () => {
   return (
     <div className="loading">
       <div className="loading__wrapper">
-        <img src="/images/loading.gif" alt="" />
+        {/* <img src="/images/loading.gif" alt="" /> */}
       </div>
       <div className="loading__outsider"></div>
     </div>

@@ -1075,7 +1075,7 @@ body {
     &__top-bar {
       width: 100%;
       height: 16%;
-      padding: 1rem 1rem;
+      padding: 1.5rem 1rem;
       border-bottom: 2px solid #eee;
       &__wrapper {
         position: relative;
@@ -1095,7 +1095,7 @@ body {
           }
         }
         h1 {
-          font-size: 1.6rem;
+          font-size: 1.5rem;
           margin-right: 0.5rem;
         }
         h4 {
@@ -1118,7 +1118,7 @@ body {
         display: flex;
         flex-direction: column;
         &__title {
-          font-size: 1.2rem;
+          font-size: 1.1rem;
           font-weight: 600;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -1158,7 +1158,7 @@ body {
           }
         }
         &__photo {
-          height: 70%;
+          height: 60%;
           // border: 1px solid #ccc;
           margin-top: 2rem;
           max-height: 20rem;
@@ -1643,4 +1643,131 @@ body {
   outline: 2px solid #f6707b;
   font-size: 0.8rem;
   border-radius: 2px;
+}
+
+// Tutorial
+
+.tutorial {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  &__outsider {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: $mediumdark;
+  }
+  &__wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #eee;
+    width: 76vw;
+    height: 80vh;
+    border-radius: 4px;
+    overflow: hidden;
+    button {
+      z-index: 999;
+    }
+    .tutorial__close-btn {
+      position: absolute;
+      background-color: rgba(0, 0, 0, 0);
+      font-size: 1rem;
+      font-weight: 600;
+      width: 2rem;
+      height: 2rem;
+      border: 0;
+      outline: 0;
+      border-radius: 50%;
+      top: 2rem;
+      right: 2rem;
+      &:hover {
+        background-color: #ddd;
+        color: $main;
+        transition: all ease 0.2s;
+      }
+    }
+    .tutorial__prev-btn {
+      bottom: 40%;
+      left: 4rem;
+    }
+    .tutorial__next-btn {
+      bottom: 40%;
+      right: 4rem;
+    }
+    .tutorial__prev-btn,
+    .tutorial__next-btn {
+      position: absolute;
+      background-color: rgba(0, 0, 0, 0);
+      font-size: 1rem;
+      font-weight: 600;
+      width: 2rem;
+      height: 2rem;
+      border: 0;
+      outline: 0;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.1);
+      width: 2.5rem;
+      height: 2.5rem;
+      img {
+        width: 1.2rem;
+        height: 1.2rem;
+      }
+    }
+    .tutorial__img {
+      width: 500%;
+      height: 100%;
+      &-list {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+      }
+      &-item {
+        position: relative;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        img {
+          width: 55%;
+        }
+      }
+      .tip {
+        img {
+          width: 82%;
+        }
+      }
+    }
+  }
+}
+
+.show {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: show-modal 0.4s;
+}
+
+@keyframes show-modal {
+  from {
+    opacity: 0.3;
+    margin-top: 50px;
+  }
+  to {
+    opacity: 1;
+    margin-top: 0;
+  }
 }
