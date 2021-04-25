@@ -81,7 +81,7 @@ const CurationManagement = () => {
       setCurationResolved(curationReducer.curationRequestsResolved);
       setInputTitle(requestTitle);
       setInputKeyword(address);
-      setSearchLatLng(coordinates.coordinates);
+      setSearchLatLng(coordinates && coordinates.coordinates);
       setInputDesc(requestComment);
       setInputTheme(requestTheme);
       setSearchMode(false);
