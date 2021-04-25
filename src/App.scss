@@ -70,14 +70,21 @@ body {
     }
   }
   &__page {
+    opacity: 0;
+    animation: mainpage-fade-out 1.4s;
     display: flex;
     flex-direction: column;
     height: 100vh;
     width: 100vw;
     padding: 12vw;
   }
+  .active {
+    opacity: 1;
+    animation: mainpage-fade-in 1.4s;
+  }
   &__body {
     display: flex;
+    position: relative;
   }
   &__texts {
     display: flex;
@@ -124,6 +131,37 @@ body {
     border-radius: 5px;
     font-weight: 500;
   }
+  .step1-marker {
+    width: 2vw;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+  }
+  .marker-0 {
+    top: 15vw;
+    left: 27vw;
+    animation: marker0-fade-in 1s;
+    opacity: 1;
+  }
+  .marker-1 {
+    top: 12vw;
+    left: 21vw;
+    animation: marker1-fade-in 2s;
+    opacity: 1;
+  }
+  .marker-2 {
+    top: 18vw;
+    left: 12vw;
+    animation: marker0-fade-in 3s;
+    opacity: 1;
+  }
+  .marker-3 {
+    top: 11vw;
+    left: 10vw;
+    animation: marker0-fade-in 1.5s;
+    opacity: 1;
+  }
   .left-img {
     width: 35vw;
     height: max-content;
@@ -161,6 +199,44 @@ body {
         }
       }
     }
+  }
+}
+
+@keyframes mainpage-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.7, 0.7);
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes marker0-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.7, 0.7);
+  }
+  50% {
+    transform: scale(1.5, 1.5);
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes marker1-fade-in {
+  from {
+    opacity: 0;
+  }
+  30% {
+    opacity: 0;
+    transform: scale(0.7, 0.7);
+  }
+  75% {
+    transform: scale(1.5, 1.5);
+  }
+  to {
+    opacity: 1;
   }
 }
 
@@ -243,6 +319,37 @@ body {
       line-height: 1.5rem;
     }
 
+    .step1-marker {
+      width: 1.6rem;
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+    }
+    .marker-0 {
+      top: 34vw;
+      left: 50vw;
+      animation: marker0-fade-in 2s;
+      opacity: 1;
+    }
+    .marker-1 {
+      top: 26vw;
+      left: 42vw;
+      animation: marker1-fade-in 2s;
+      opacity: 1;
+    }
+    .marker-2 {
+      top: 36vw;
+      left: 24vw;
+      animation: marker0-fade-in 3s;
+      opacity: 1;
+    }
+    .marker-3 {
+      top: 24vw;
+      left: 20vw;
+      animation: marker0-fade-in 1.5s;
+      opacity: 1;
+    }
     .right-img {
       margin-top: 5vh;
       width: 60vw;

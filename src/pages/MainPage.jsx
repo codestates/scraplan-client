@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Navbar from "../components/UI/Navbar";
 import scrollEventListener from "../hooks/scrollEventListener";
 import { useHistory } from "react-router-dom";
+import { PutBucketMetricsConfigurationCommand } from "@aws-sdk/client-s3";
+import { parseJsonSourceFileConfigFileContent } from "typescript";
 
 const MainPage = () => {
   const history = useHistory();
@@ -76,6 +78,65 @@ const MainPage = () => {
       const draw = length * scrollpercent;
       svg.style.strokeDashoffset = length + draw;
     });
+  }, []);
+
+  useEffect(() => {
+    const animation = function () {
+      let items, markers, markerBound, winH;
+
+      const initModule = function () {
+        items = document.querySelectorAll(".mainpage__page");
+        markers = document.querySelectorAll(".step1-marker");
+        markerBound = document.querySelector(".first-step");
+        winH = window.innerHeight;
+        _addEventHandlers();
+        return () => _removeEventHandlers();
+      };
+
+      const _addEventHandlers = function () {
+        window.addEventListener("scroll", _checkPosition);
+        window.addEventListener("load", _checkPosition);
+        window.addEventListener("resize", initModule);
+      };
+
+      const _removeEventHandlers = function () {
+        window.removeEventListener("scroll", _checkPosition);
+        window.removeEventListener("load", _checkPosition);
+        window.removeEventListener("resize", initModule);
+      };
+
+      const _checkPosition = function () {
+        const markerBoundTop = markerBound.getBoundingClientRect().top;
+        if (winH > markerBoundTop) {
+          for (let j = 0; j < markers.length; j++) {
+            markers[j].classList.add(`marker-${j}`);
+          }
+        } else {
+          for (let j = 0; j < markers.length; j++) {
+            markers[j].classList.remove(`marker-${j}`);
+          }
+        }
+
+        for (let i = 0; i < items.length; i++) {
+          // const scrollY = window.scrollY;
+          const posFromTop = items[i].getBoundingClientRect().top;
+          // const posFromBottom = items[i].getBoundingClientRect().bottom;
+          // const itemHeight = items[i].offsetHeight;
+          // if (winH > posFromTop && scrollY < posFromBottom + itemHeight) {
+          if (winH > posFromTop) {
+            items[i].classList.add("active");
+          } else {
+            items[i].classList.remove("active");
+          }
+        }
+      };
+
+      return {
+        init: initModule,
+      };
+    };
+
+    animation().init();
   }, []);
 
   return (
@@ -173,7 +234,7 @@ const MainPage = () => {
           </div>
         </div>
         <div
-          className="mainpage__page"
+          className="mainpage__page first-step"
           ref={firstRef}
           // onClick={() => {
           //   secondRef.current.scrollIntoView({
@@ -182,7 +243,22 @@ const MainPage = () => {
           // }}
         >
           <div className="mainpage__body">
-            <img className="left-img" src="/images/mainpage/step1.png" alt="" />
+            <img
+              className="left-img"
+              src="/images/mainpage/step1_map.png"
+              alt=""
+            />
+            {Array(4)
+              .fill(true)
+              .map(() => {
+                return (
+                  <img
+                    className={`step1-marker`}
+                    src="/images/mainpage/step1_marker.png"
+                    alt=""
+                  ></img>
+                );
+              })}
             <div className="mainpage__texts right-text">
               <div className="mainpage__step">Step 1</div>
               <div className="mainpage__title">
