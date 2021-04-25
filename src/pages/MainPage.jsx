@@ -148,11 +148,20 @@ const MainPage = () => {
                 여러분만의 계획표를 만들고 공유해보세요
               </div>
               <div className="mainpage__btns">
-                <button onClick={() => history.push("/planpage/newplan")}>
-                  일정 만들기
+                <button
+                  onClick={() =>
+                    history.push({
+                      pathname: `/planpage/newplan`,
+                      state: {
+                        mode: "tutorial",
+                      },
+                    })
+                  }
+                >
+                  일정 만들어보기
                 </button>
                 <button onClick={() => history.push("/feedpage")}>
-                  먼저구경하기
+                  피드 구경하기
                 </button>
               </div>
             </div>

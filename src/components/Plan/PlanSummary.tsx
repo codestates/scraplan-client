@@ -40,12 +40,7 @@ const PlanSummary = (props: PlanSummaryProps) => {
     user: { token, email, nickname },
   } = userState;
 
-  const [toggleShareBtn, setToggleShareBtn] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
-
-  const handleToggleShareBtn = () => {
-    setToggleShareBtn(!toggleShareBtn);
-  };
 
   const handleClickShowmore = () => {
     history.push({
@@ -137,7 +132,10 @@ const PlanSummary = (props: PlanSummaryProps) => {
       />
       <div className="plansummary">
         <div className="plansummary__contents__plan">
-          <div className="plansummary__contents__plan__img">
+          <div
+            className="plansummary__contents__plan__img"
+            onClick={handleClickShowmore}
+          >
             <img
               src={`https://source.unsplash.com/random?${Math.floor(
                 Math.random() * 100,
@@ -145,8 +143,16 @@ const PlanSummary = (props: PlanSummaryProps) => {
               alt=""
             />
           </div>
-          <p className="plansummary__contents__plan__title">{title}</p>
-          <div className="plansummary__contents__plan__info">
+          <p
+            className="plansummary__contents__plan__title"
+            onClick={handleClickShowmore}
+          >
+            {title}
+          </p>
+          <div
+            className="plansummary__contents__plan__info"
+            onClick={handleClickShowmore}
+          >
             <div className="plansummary__contents__plan__info-addr">
               <img src="images/pin.png" alt="" />
               <p>{representAddr.split("-").join(" ")}</p>

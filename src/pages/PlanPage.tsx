@@ -4,11 +4,12 @@ import { RootState } from "../reducers";
 import Navbar from "../components/UI/Navbar";
 import CurationList from "../components/Curation/CurationList";
 import PlanList from "../components/Plan/PlanList";
-import { getCurationCards, getPlanCards, getPlanCardsByDay } from "../actions";
+import { getCurationCards, getPlanCardsByDay } from "../actions";
 import Modal from "../components/UI/Modal";
 import AddPlan from "../components/Plan/AddPlan";
 import { useLocation } from "react-router";
 import Loading from "../components/UI/Loading";
+import Tutorial from "./Tutorial";
 
 declare global {
   interface Window {
@@ -49,10 +50,13 @@ const PlanPage = () => {
     37.5139795454969,
     127.048963363388,
   ]);
+
+  const [openTutorial, setOpenTutorial] = useState<boolean>(true);
   const [openList, setOpenList] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [modalType, setModalType] = useState<string>("");
   const [modalComment, setModalComment] = useState<string>("");
+
   const [openAddRequest, setOpenAddRequest] = useState<boolean>(false);
   const [viewOnlyMine, setViewOnlyMine] = useState<boolean>(false);
   const [selectTheme, setSelectTheme] = useState<number>(-1);
@@ -66,6 +70,7 @@ const PlanPage = () => {
       setLoading(false);
     }, 1500);
   }, []);
+
   useEffect(() => {
     setPlanId(Number(location.pathname.split("/")[2]));
     dispatch(getCurationCards([]));
@@ -677,6 +682,10 @@ const PlanPage = () => {
         comment={modalComment}
         modalType={modalType}
       />
+      <Tutorial
+        open={openTutorial}
+        close={() => setOpenTutorial(false)}
+      ></Tutorial>
       <div className="planpage__layout">
         <div className="planpage__layout__options">
           <button
