@@ -264,26 +264,31 @@ const FeedPage = () => {
       />
       <div className="feedpage">
         <div className="feedpage__banner">
-          <div className="feedpage__banner__wrapper"></div>
-          <img
-            className="feedpage__banner-img"
-            src="/images/feed-banner.gif"
-            alt=""
-          />
-          <p className="feedpage__banner-text">
-            다른 사람들은 <br />
-            어떤 하루를 보낼까요?
-          </p>
-          <button
-            className="feedpage__banner__btn"
-            onClick={handleCreateMyPlan}
-          >
-            <p>나만의 일정 만들기</p>
-            <img src="/images/next-pink.png" alt="" />
-          </button>
+          <div className="feedpage__banner__wrapper">
+            <p className="feedpage__banner-text">
+              뭐부터 해야할 지 모르겠다구요? <br />
+              먼저 다른 일정들을 둘러보세요!
+            </p>
+            <button
+              className="feedpage__banner__btn"
+              onClick={handleCreateMyPlan}
+            >
+              <p>나만의 일정 만들기</p>
+            </button>
+            <img
+              className="feedpage__banner-img"
+              src="/images/feed-banner.jpg"
+              alt=""
+            />
+          </div>
         </div>
         <div className="feedpage__title">
           <p className="feedpage__title-text">일정 구경하기</p>
+          <p className="feedpage__title-desc">
+            다른 사람은 어떤 곳에서 무엇을 하며 시간을 보낼까요?
+            <br />
+            지역별, 기간별로 검색해 구경해보세요!
+          </p>
         </div>
         <div className="feedpage__contents__search-bar">
           <div className="feedpage__contents__search-bar-address">
@@ -375,7 +380,7 @@ const FeedPage = () => {
             </button>
           </div>
           <div className="feedpage__contents__search-bar-daycount">
-            <p>기간</p>
+            <p>기간(일)</p>
             <h6>최소</h6>
             <input
               type="number"

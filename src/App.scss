@@ -456,32 +456,29 @@ body {
   max-width: 1585px;
   &__header {
     margin-top: 5rem;
-    &__title {
-      font-size: 1.4rem;
-      font-weight: 600;
-    }
     &__nickname {
       height: 1.4rem;
-      font-size: 1rem;
+      font-size: 2rem;
       margin-top: 2rem;
       font-weight: 600;
     }
     &__email {
       height: 2rem;
-      margin-top: 0.4rem;
+      margin-top: 2rem;
       margin-bottom: 0.8rem;
-      font-size: 0.8rem;
+      font-size: 1.1rem;
     }
     &__edit-btn {
-      background-color: $light;
-      height: 2.3rem;
-      width: 8rem;
+      margin-top: 2rem;
+      background-color: #eee;
+      height: 2.5rem;
+      width: 8.5rem;
       display: flex;
       justify-content: center;
       align-items: center;
       border-radius: 3px;
       span {
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         font-weight: 500;
       }
       img {
@@ -490,7 +487,7 @@ body {
         opacity: 0.7;
       }
       &:hover {
-        background-color: #1919194b;
+        background-color: #ddd;
         transition: all ease 0.4s;
       }
     }
@@ -499,15 +496,22 @@ body {
     margin-top: 10vh;
     height: 4rem;
     button {
-      width: 6rem;
+      min-width: 7.6rem;
+      padding: 0.5rem 1rem;
       height: 3rem;
-      font-size: 0.9rem;
+      font-size: 1.1rem;
       font-weight: 600;
+      border-bottom: 3px solid rgba(0, 0, 0, 0);
       &:hover {
         border-bottom: 3px solid $main;
         color: $main;
         transition: ease color 0.2s;
       }
+    }
+    .focused {
+      border-bottom: 3px solid $main;
+      color: $main;
+      transition: ease color 0.2s;
     }
   }
   .mypage__contents {
@@ -558,16 +562,17 @@ body {
         align-items: center;
       }
       input {
-        background-color: $light;
+        border: 1.6px solid #ddd;
+        background-color: rgba(238, 238, 238, 0.5);
         width: 4rem;
         height: 2rem;
         padding: 1.1rem 1.2rem;
         border-radius: 3px;
       }
       p {
+        width: 6rem;
         font-size: 0.9rem;
         font-weight: 600;
-        margin-right: 1.5rem;
       }
       h6 {
         margin-right: 0.6rem;
@@ -590,8 +595,9 @@ body {
           }
           display: flex;
           border-radius: 3px;
-          background-color: $light;
-          min-width: 3rem;
+          border: 1.6px solid #ddd;
+          background-color: rgba(238, 238, 238, 0.5);
+          min-width: 21rem;
           padding: 0.2rem 1rem;
           span {
             width: 6rem;
@@ -623,7 +629,7 @@ body {
           cursor: pointer;
           width: auto;
           text-align: center;
-          background-color: $light;
+          background-color: rgba(238, 238, 238, 0);
           height: 2rem;
           border-radius: 3px;
           margin-right: 1rem;
@@ -709,12 +715,31 @@ body {
   display: flex;
   flex-direction: column;
   &__notice-img {
+    position: relative;
     margin-top: 2rem;
     margin-bottom: 3rem;
-    background-color: $main;
-    height: 13rem;
+    background-color: rgba(255, 235, 235, 0.9);
+    height: 15rem;
     width: 68vw;
     border-radius: 5px;
+    overflow: hidden;
+    p {
+      color: $main;
+      font-size: 1.8rem;
+      margin: 3rem 0 1rem 4rem;
+      font-weight: 600;
+      letter-spacing: -0.05rem;
+    }
+    span {
+      font-size: 0.95rem;
+      margin: 1rem 4rem;
+    }
+    img {
+      z-index: -20;
+      position: absolute;
+      width: 100%;
+      object-fit: cover;
+    }
   }
   &__req-table {
     &__top-bar {
@@ -1026,20 +1051,20 @@ body {
     display: flex;
     flex-direction: column;
     background-color: #fff;
-    width: 54vw;
-    height: 62vh;
+    width: 60vw;
+    height: 65vh;
     min-width: 400px;
     min-height: 200px;
     border-radius: 4px;
     padding: 4rem;
     .viewcuration__close-btn {
-      position: relative;
+      position: absolute;
       background-color: #fff;
       font-size: 1rem;
       border: 0;
       outline: 0;
-      top: -8vh;
-      left: 46.5vw;
+      right: 2rem;
+      top: 2rem;
       padding: 0.2rem 0.4rem;
       border-radius: 50%;
       &:hover {
@@ -1050,21 +1075,23 @@ body {
     &__top-bar {
       width: 100%;
       height: 16%;
+      padding: 1rem 1rem;
+      border-bottom: 2px solid #eee;
       &__wrapper {
+        position: relative;
         display: flex;
         align-items: center;
         &__theme {
-          border: 2px solid #eee;
-          padding: 0.2rem;
-          width: 2rem;
-          height: 2rem;
+          padding: 0.5rem;
+          width: 4rem;
+          height: 3rem;
           border-radius: 8px;
           margin-right: 0.5rem;
           display: flex;
           justify-content: center;
           align-items: center;
           span {
-            font-size: 1rem;
+            font-size: 2.5rem;
           }
         }
         h1 {
@@ -1073,41 +1100,43 @@ body {
         }
         h4 {
           align-self: flex-end;
-          height: 1.5rem;
+          height: 1.9rem;
           font-size: 0.9rem;
-          font-weight: 500;
+          font-weight: 700;
+          color: $main;
         }
       }
     }
     .viewcuration__contents {
       display: flex;
-      height: 40vh;
-      padding: 1rem;
+      height: 100%;
       justify-content: center;
       &__desc {
-        width: 44%;
-        height: 38vh;
+        padding: 2rem;
+        width: 40%;
+        height: 100%;
         display: flex;
         flex-direction: column;
         &__title {
-          font-size: 1rem;
+          font-size: 1.2rem;
           font-weight: 600;
           overflow: hidden;
           text-overflow: ellipsis;
           word-wrap: break-word;
         }
         &__items {
-          margin-top: 0.8rem;
+          margin-top: 0.9rem;
+          overflow: hidden;
           &__item {
             display: flex;
             align-items: center;
-            font-size: 0.7rem;
-            margin: 0;
+            font-size: 0.9rem;
+            margin: 0.2rem;
             img {
-              opacity: 0.7;
-              margin-top: 0.2rem;
-              width: 0.8rem;
-              height: 0.8rem;
+              opacity: 0.8;
+              margin-top: 0.4rem;
+              width: 0.9rem;
+              height: 0.9rem;
               margin-right: 0.5rem;
             }
             p {
@@ -1129,23 +1158,29 @@ body {
           }
         }
         &__photo {
+          height: 70%;
+          // border: 1px solid #ccc;
           margin-top: 2rem;
-          height: 8.75rem;
+          max-height: 20rem;
           width: 95%;
           overflow: hidden;
           img {
-            width: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
           }
         }
       }
       &__feedback {
         display: flex;
         flex-direction: column;
-        margin-left: 1.5rem;
-        height: 38vh;
+        padding: 2rem;
+        width: 50%;
+        height: 45vh;
         &__top-bar {
           display: flex;
           flex-wrap: wrap;
+          width: 100%;
           p {
             font-size: 1rem;
             font-weight: 600;
@@ -1153,12 +1188,19 @@ body {
             margin-left: 0.5rem;
             margin-bottom: 0.5rem;
           }
+          span {
+            text-align: right;
+            margin-top: 1rem;
+            font-size: 0.65rem;
+            font-weight: 500;
+            color: #f79fa6ec;
+          }
           &__form {
+            margin-top: 1vh;
             padding: 0.4rem;
-            width: 16.3rem;
-            height: 4rem;
-            border-radius: 3px;
-            box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.1);
+            width: 95%;
+            height: 5rem;
+            border-bottom: 1px solid #ddd;
             margin-left: 0.5rem;
             .set-time,
             .set-theme {
@@ -1170,8 +1212,8 @@ body {
               margin-bottom: -1.2rem;
             }
             input {
-              width: 80%;
-              padding: 0 0.5rem;
+              width: 75%;
+              padding: 0.5rem 0.5rem;
               font-size: 0.8rem;
             }
             button {
@@ -1179,23 +1221,22 @@ body {
               font-size: 0.6rem;
               font-weight: 500;
               color: #fff;
-              width: 3rem;
-              border-radius: 8px;
-              padding: 0.2rem 0rem;
+              width: 4rem;
+              border-radius: 3px;
+              padding: 0.3rem 1rem;
               background-color: $main;
             }
           }
         }
         &__lists {
-          width: 120%;
+          width: 100%;
+          height: 40vh;
           padding: 0.2rem 0.2rem;
           margin-top: 0.5rem;
           display: flex;
           align-content: flex-start;
           flex-wrap: wrap;
           flex-flow: row wrap;
-          height: 30vh;
-          width: 23vw;
           overflow-y: scroll;
           .feedback {
             height: 6.2rem;
@@ -1236,69 +1277,74 @@ body {
     margin-top: 5rem;
     margin-bottom: 3rem;
     box-shadow: inset;
-    height: 13rem;
+    height: 18rem;
     width: 68vw;
-    border-radius: 5px;
+    border-radius: 6px;
+    overflow: hidden;
     &__wrapper {
-      position: absolute;
-      height: 15rem;
+      height: 18rem;
       width: 68vw;
       border-radius: 5px;
-      background-color: #f3667215;
-    }
-    &-img {
-      position: relative;
-      top: 1rem;
-      left: 15%;
-      height: 100%;
-      box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.6);
-      z-index: -90;
+      background-color: rgba(68, 67, 67, 0.4);
+      overflow: hidden;
+      img {
+        filter: blur(1px);
+        width: 68vw;
+        height: 18rem;
+        z-index: -90;
+        position: absolute;
+        object-fit: cover;
+      }
     }
     &-text {
+      color: rgba(255, 255, 255, 0.89);
       font-size: 1.8rem;
-      font-weight: 600;
+      font-weight: 500;
       letter-spacing: -1px;
-      position: relative;
-      top: -9rem;
-      left: 30vw;
+      position: absolute;
+      margin: 5rem;
     }
     &__btn {
-      position: relative;
-      top: -8.5rem;
-      left: 30vw;
+      position: absolute;
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 2.2rem;
-      border-radius: 1.1rem;
-      background-color: rgba(0, 0, 0, 0);
+      height: 2.7rem;
+      width: 13rem;
+      margin: 11.6rem 5rem;
+      border-radius: 4px;
+      background-color: $main;
       p {
-        color: $main;
-        font-size: 0.8rem;
+        color: #fff;
+        font-size: 0.9rem;
         font-weight: 500;
-        margin-right: 2px;
-      }
-      img {
-        height: 0.8rem;
-        opacity: 0.7;
       }
       &:hover {
-        color: #e05f6a;
+        color: #c7535d;
         transition: all ease 0.5s;
       }
     }
   }
   &__title {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
     justify-content: space-between;
-    padding: 1rem 0;
+    padding: 0;
     width: 68vw;
-    height: 5rem;
+    margin-top: 2rem;
+    padding-bottom: 3rem;
     border-bottom: 2px solid $light;
     &-text {
-      font-size: 1.2rem;
-      font-weight: 600;
+      font-family: "S-CoreDream-7ExtraBold";
+      // color: $main;
+      font-size: 1.7rem;
+    }
+    &-desc {
+      margin-top: 1rem;
+      color: #666;
+      font-weight: 400;
+      font-size: 0.9rem;
     }
   }
   &__contents {
@@ -1311,16 +1357,17 @@ body {
         align-items: center;
       }
       input {
-        background-color: $light;
+        border: 1.6px solid #ddd;
+        background-color: rgba(238, 238, 238, 0.5);
         width: 4rem;
         height: 2rem;
         padding: 1.1rem 1.2rem;
         border-radius: 3px;
       }
       p {
+        width: 6rem;
         font-size: 0.9rem;
         font-weight: 600;
-        margin-right: 1.5rem;
       }
       h6 {
         margin-right: 0.6rem;
@@ -1338,13 +1385,14 @@ body {
         margin-bottom: 1rem;
         &-all {
           p {
-            margin: 0;
+            margin-right: 0;
             font-weight: 400;
           }
           display: flex;
           border-radius: 3px;
-          background-color: $light;
-          min-width: 3rem;
+          border: 1.6px solid #ddd;
+          background-color: rgba(238, 238, 238, 0.5);
+          min-width: 21rem;
           padding: 0.2rem 1rem;
           span {
             width: 6rem;
@@ -1376,7 +1424,7 @@ body {
           cursor: pointer;
           width: auto;
           text-align: center;
-          background-color: $light;
+          background-color: rgba(238, 238, 238, 0);
           height: 2rem;
           border-radius: 3px;
           margin-right: 1rem;
@@ -1536,7 +1584,6 @@ body {
 
 .infoWindow {
   position: absolute;
-  width: 200px;
   bottom: -1.5rem;
   left: -2rem;
   width: 230px;
@@ -1569,7 +1616,7 @@ body {
     margin-bottom: 0.2rem;
     width: 100%;
     text-align: right;
-    padding-right: 0.5rem;
+    padding-right: 1.5rem;
   }
 }
 
@@ -1587,11 +1634,13 @@ body {
 
 .curation__info {
   width: 220px;
+  padding: 1rem;
   text-align: center;
   padding: 0.25rem;
-  border: 1px solid $main;
-  background-color: $main;
+  border: 3px solid #f6707b;
+  background-color: #f6707b;
   color: white;
-  outline: 2px solid $main;
-
+  outline: 2px solid #f6707b;
+  font-size: 0.8rem;
+  border-radius: 2px;
 }

@@ -347,8 +347,7 @@ const PlanPage = () => {
 
         const iwContent =
           "<div class='infoWindow'>" +
-          "<div class='title'>" +
-          `<div class='day'>Day ${currentDay}</div>` +
+          `<div class='day'>${currentDay}일차</div>` +
           `<div class='time'>${
             sortByPlan[i].startTime.split(":")[1] === "0"
               ? `${sortByPlan[i].startTime.split(":")[0]}:00`
@@ -358,7 +357,6 @@ const PlanPage = () => {
               ? `${sortByPlan[i].endTime.split(":")[0]}:00`
               : sortByPlan[i].endTime
           }</div>` +
-          "</div>" +
           `<div class='plan'>${sortByPlan[i].comment}</div>` +
           `<div class='address'>${sortByPlan[i].address}</div>` +
           "</div>";
