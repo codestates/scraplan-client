@@ -7,7 +7,7 @@
 ### Team
 
 👉🏻 **Hoit!**
-|**Member**|Role|E-mail|
+|**Member**|Role|Github|
 |:---:|:---:|:---:|
 |👩‍💻 김주혜|Front-end|https://github.com/Juhye-Kim|
 |👨‍💻 장유빈|Back-end|https://github.com/yubin-j|
