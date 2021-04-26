@@ -176,7 +176,17 @@ const MainPage = () => {
             </g>
           </g>
         </svg>
-        <button className={`bottom-btn ${bottomBtn ? "fixToBottom" : ""}`}>
+        <button
+          className={`bottom-btn ${bottomBtn ? "fixToBottom" : ""}`}
+          onClick={() =>
+            history.push({
+              pathname: `/planpage/newplan`,
+              state: {
+                mode: "tutorial",
+              },
+            })
+          }
+        >
           일정 만들러 가기
         </button>
         <button
