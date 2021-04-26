@@ -6,7 +6,13 @@
 
 ### Team
 
-👉🏻 **Hoit!** (장유빈(팀장), 김주혜, 연제원)
+👉🏻 **Hoit!**
+|**Member**|Role|E-mail|
+|:---:|:---:|:---:|
+|👩‍💻 김주혜|Front-end|https://github.com/Juhye-Kim|
+|👨‍💻 장유빈|Back-end|https://github.com/yubin-j|
+|👨‍💻 연제원|Front-end|https://github.com/JewonYeon|
+
 
 ### Link
 
@@ -33,7 +39,8 @@
 <br />
 <br />
 
-### 일단, 따라해보세요!
+### 🙌🏻 일단, 따라해보세요!
+<br />
 
 <img width="500" alt="스크린샷 2021-03-25 오후 3 43 02" src="https://user-images.githubusercontent.com/63178953/116127176-7d5dbb00-a702-11eb-84dd-c10beead6fe3.png">
 
@@ -65,9 +72,3 @@
 <img width="800" alt="스크린샷 2021-03-25 오후 3 43 02" src="https://user-images.githubusercontent.com/63178953/115832511-f1236d80-a44d-11eb-87cb-43925dcdc899.jpg">
 
 <br />
-
-|**Member**|Role|E-mail|
-|:---:|:---:|:---:|
-|👩‍💻 김주혜|Front-end|https://github.com/Juhye-Kim|
-|👨‍💻 장유빈|Back-end|https://github.com/yubin-j|
-|👨‍💻 연제원|Front-end|https://github.com/JewonYeon|
