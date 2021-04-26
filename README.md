@@ -1,17 +1,48 @@
 <img width="120" alt="스크린샷 2021-03-25 오후 3 43 02" src="https://user-images.githubusercontent.com/63178953/115838996-2da69780-a455-11eb-9827-14f97fdf2321.png">
 
+# Overview
 
-<br>
-<img width="600" alt="스크린샷 2021-03-25 오후 3 43 02" src="https://user-images.githubusercontent.com/63178953/115836551-93ddeb00-a452-11eb-9327-e4e92a80b4f6.png">
+### Project
 
-## 👋🏻 About Scraplan
-Scraplan은 지도를 기반으로 **해당 장소의 즐길거리**를 큐레이션 형식으로 제공하고 <br>
-해당 큐레이션을 이용해 **나만의 일정**을 작성할 수 있는 서비스입니다.
+👉🏻 21.04.02 ~ 2021.04.26 (약 한달 간 진행) 
 
-비회원의 경우 일정 작성, 다른 사람의 일정 구경까지 기능을 체험해 볼 수 있으며<br>
-해당 일정을 저장하거나 다른 사람에게 공유하고 싶은 경우는 회원만 가능합니다.
-<br>
-![bg자산 36@288x-8](https://user-images.githubusercontent.com/63178953/115839185-5d559f80-a455-11eb-9271-88f490c0ed5a.png)
+### Team
+
+👉🏻 **Hoit!** (장유빈(팀장), 김주혜, 연제원)
+
+### Link
+
+👉🏻 [https://www.scraplan.com/](https://www.scraplan.com/)
+
+
+# Scraplan 서비스 소개
+
+### **📍 Scrap  + Plan**
+
+```
+주말에 무엇을 할 지 고민하고 계시나요?
+다른 사람들은 어떻게 하루를 보내는지, 지금 바로 확인해보세요!
+```
+
+**Scraplan**은 지도를 기반으로 **해당 장소의 다양한 즐길거리**를 큐레이션 형식으로 제공하고, 
+해당 큐레이션을 이용해 **나만의 일정**을 편리하게 관리할 수 있는 서비스입니다.
+
+<img width="600" alt="스크린샷 2021-03-25 오후 3 43 02" src="https://user-images.githubusercontent.com/63178953/116126888-20fa9b80-a702-11eb-9df9-c7571ecc3c46.png">
+
+<img width="600" alt="스크린샷 2021-03-25 오후 3 43 02" src="https://user-images.githubusercontent.com/63178953/116126869-1d671480-a702-11eb-8eff-097a74ff5255.png">
+
+### 일단, 따라해보세요!
+
+<img width="600" alt="스크린샷 2021-03-25 오후 3 43 02" src="https://user-images.githubusercontent.com/63178953/116127176-7d5dbb00-a702-11eb-84dd-c10beead6fe3.png">
+
+<img width="600" alt="스크린샷 2021-03-25 오후 3 43 02" src="https://user-images.githubusercontent.com/63178953/116127128-6e770880-a702-11eb-8f09-181ece3f934f.png">
+
+<img width="600" alt="스크린샷 2021-03-25 오후 3 43 02" src="https://user-images.githubusercontent.com/63178953/116127135-70d96280-a702-11eb-8ddc-e993227501ad.png">
+
+<img width="600" alt="스크린샷 2021-03-25 오후 3 43 02" src="https://user-images.githubusercontent.com/63178953/116127139-720a8f80-a702-11eb-872a-dc859f4889ba.png">
+
+<img width="600" alt="스크린샷 2021-03-25 오후 3 43 02" src="https://user-images.githubusercontent.com/63178953/116127146-73d45300-a702-11eb-944c-9ff67f769170.png">
+
 
 ## 🔧 사용 스택 및 스택 아키텍처 
 ![image](https://user-images.githubusercontent.com/74640917/115865253-0c54a400-a473-11eb-83a0-9cc0e516fcb6.png)
@@ -27,6 +58,6 @@ Scraplan은 지도를 기반으로 **해당 장소의 즐길거리**를 큐레�
 
 |**Member**|Role|E-mail|
 |:---:|:---:|:---:|
-|👩‍💻 김주혜|Front-end|kjh960215@gmail.com|
-|👨‍💻 장유빈|Back-end|developersurfer@gmail.com|
-|👨‍💻 연제원|Front-end|yjw9852@gmail.com|
+|👩‍💻 김주혜|Front-end|https://github.com/Juhye-Kim|
+|👨‍💻 장유빈|Back-end|https://github.com/yubin-j|
+|👨‍💻 연제원|Front-end|https://github.com/JewonYeon|
