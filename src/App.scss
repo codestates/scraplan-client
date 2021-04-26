@@ -69,15 +69,19 @@ body {
       }
     }
   }
+
   &__page {
-    opacity: 0;
-    animation: mainpage-fade-out 1.4s;
+    // opacity: 0;
+    // animation: mainpage-fade-out 1.4s;
     display: flex;
     flex-direction: column;
     height: 100vh;
     width: 100vw;
     padding: 12vw;
   }
+  // .intro {
+  //   opacity: 1;
+  // }
   .active {
     opacity: 1;
     animation: mainpage-fade-in 1.4s;

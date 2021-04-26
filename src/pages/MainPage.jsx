@@ -85,7 +85,7 @@ const MainPage = () => {
       let items, markers, markerBound, winH;
 
       const initModule = function () {
-        items = document.querySelectorAll(".mainpage__page");
+        items = document.querySelectorAll(".mainpage-img");
         markers = document.querySelectorAll(".step1-marker");
         markerBound = document.querySelector(".first-step");
         winH = window.innerHeight;
@@ -105,28 +105,30 @@ const MainPage = () => {
         window.removeEventListener("resize", initModule);
       };
 
-      const _checkPosition = function () {
-        const markerBoundTop = markerBound.getBoundingClientRect().top;
-        if (winH > markerBoundTop) {
-          for (let j = 0; j < markers.length; j++) {
-            markers[j].classList.add(`marker-${j}`);
-          }
-        } else {
-          for (let j = 0; j < markers.length; j++) {
-            markers[j].classList.remove(`marker-${j}`);
-          }
-        }
-
-        for (let i = 0; i < items.length; i++) {
-          // const scrollY = window.scrollY;
-          const posFromTop = items[i].getBoundingClientRect().top;
-          // const posFromBottom = items[i].getBoundingClientRect().bottom;
-          // const itemHeight = items[i].offsetHeight;
-          // if (winH > posFromTop && scrollY < posFromBottom + itemHeight) {
-          if (winH > posFromTop) {
-            items[i].classList.add("active");
+      const _checkPosition = () => {
+        if (markerBound) {
+          const markerBoundTop = markerBound.getBoundingClientRect().top;
+          if (winH > markerBoundTop) {
+            for (let j = 0; j < markers.length; j++) {
+              markers[j].classList.add(`marker-${j}`);
+            }
           } else {
-            items[i].classList.remove("active");
+            for (let j = 0; j < markers.length; j++) {
+              markers[j].classList.remove(`marker-${j}`);
+            }
+          }
+
+          for (let i = 0; i < items.length; i++) {
+            // const scrollY = window.scrollY;
+            const posFromTop = items[i].getBoundingClientRect().top;
+            // const posFromBottom = items[i].getBoundingClientRect().bottom;
+            // const itemHeight = items[i].offsetHeight;
+            // if (winH > posFromTop && scrollY < posFromBottom + itemHeight) {
+            if (winH > posFromTop) {
+              items[i].classList.add("active");
+            } else {
+              items[i].classList.remove("active");
+            }
           }
         }
       };
@@ -227,7 +229,7 @@ const MainPage = () => {
               </div>
             </div>
             <img
-              className="right-img"
+              className="right-img mainpage-img"
               src="/images/mainpage/step3.png"
               alt=""
             />
@@ -244,7 +246,7 @@ const MainPage = () => {
         >
           <div className="mainpage__body">
             <img
-              className="left-img"
+              className="left-img mainpage-img"
               src="/images/mainpage/step1_map.png"
               alt=""
             />
@@ -311,7 +313,7 @@ const MainPage = () => {
               </div>
             </div>
             <img
-              className="right-img"
+              className="right-img mainpage-img"
               src="/images/mainpage/step2.png"
               alt=""
             />
@@ -327,7 +329,11 @@ const MainPage = () => {
           // }}
         >
           <div className="mainpage__body">
-            <img className="left-img" src="/images/mainpage/step3.png" alt="" />
+            <img
+              className="left-img mainpage-img"
+              src="/images/mainpage/step3.png"
+              alt=""
+            />
             <div className="mainpage__texts right-text">
               <div className="mainpage__step">Step 3</div>
               <div className="mainpage__title">
@@ -388,7 +394,7 @@ const MainPage = () => {
               </div>
             </div>
             <img
-              className="right-img"
+              className="right-img mainpage-img"
               src="/images/mainpage/step4.png"
               alt=""
             />
@@ -419,7 +425,7 @@ const MainPage = () => {
               </button>
             </div>
             <img
-              className="right-img"
+              className="right-img mainpage-img"
               src="/images/mainpage/step5.png"
               alt=""
             />
