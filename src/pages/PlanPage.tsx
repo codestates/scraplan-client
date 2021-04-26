@@ -617,7 +617,7 @@ const PlanPage = () => {
             ? cur
             : plan;
         },
-        { day: currentDay, endTime: "10:00" },
+        { day: currentDay, endTime: "00:00" },
       );
 
     let endMin =
