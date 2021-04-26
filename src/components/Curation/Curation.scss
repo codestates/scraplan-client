@@ -1,0 +1,235 @@
+$main: #f73d5c;
+$dark: #191919;
+$mediumdark: rgba(0, 0, 0, 0.7);
+$light: #e8e8e8;
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+// CurationList
+.curationlist {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  bottom: 0px;
+  height: 36rem;
+  z-index: 996;
+  &__wrapper {
+    background-color: #f7f7f9;
+    width: 20rem;
+    height: 100%;
+    border-radius: 0 0.5rem 0.5rem 0;
+    animation: appear-curationlist 0.8s;
+    padding: 2.8rem 1rem 3rem 1.2rem;
+    box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.1);
+    .curationlist__content {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 17.5rem;
+      height: 100%;
+      &__title {
+        margin-right: 9rem;
+        flex: 0.1 1 auto;
+        width: 100%;
+        font-size: 1.1rem;
+        font-weight: 700;
+        text-align: center;
+      }
+      &__desc {
+        font-size: 0.7rem;
+        margin-top: 0.4rem;
+        margin-bottom: 2.5rem;
+      }
+      &__order-by-new,
+      &__order-by-time {
+        position: absolute;
+        cursor: pointer;
+        margin-top: 4.3rem;
+        margin-left: 13rem;
+        background-color: #f36671;
+        border: 1.8px solid $main;
+        color: #fff;
+        border-radius: 5px;
+        flex: 0.1 1 auto;
+        padding: 0.05rem 0.4rem;
+        text-align: right;
+        font-size: 0.65rem;
+        font-weight: 500;
+      }
+      &__order-by-new {
+        margin-left: 7rem;
+      }
+      &__focused {
+        background-color: #fff;
+        border: 1.8px solid $main;
+        color: $main;
+      }
+      &__cards {
+        display: block;
+        flex: 3 1 auto;
+        width: 102%;
+        overflow-y: scroll;
+        li {
+          margin: 0.6rem 1.35rem;
+        }
+      }
+    }
+  }
+  .disappear {
+    animation: disappear-curationlist 1s forwards;
+  }
+  &__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 4rem;
+    border-radius: 0 0.5rem 0.5rem 0;
+    background-color: #f7f7f9;
+    img {
+      height: 1rem;
+    }
+  }
+}
+
+@keyframes disappear-curationlist {
+  from {
+    margin-left: 0rem;
+  }
+  to {
+    display: none;
+    margin-left: -20rem;
+  }
+}
+
+@keyframes appear-curationlist {
+  from {
+    margin-left: -20rem;
+  }
+  to {
+    margin-left: 0;
+  }
+}
+
+// CurationCard
+.curation-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  list-style: none;
+  cursor: pointer;
+  background-color: #fff;
+  box-shadow: 1px 0px 4px 1px rgba(107, 106, 106, 0.1);
+  width: 15.5rem;
+  height: 4.8rem;
+  padding: 1rem 1.1rem;
+  border-radius: 4px;
+  &:hover {
+    background-color: rgb(250, 250, 250);
+  }
+  &__info {
+    display: flex;
+    &__theme {
+      border: 2px solid $light;
+      border-radius: 10px;
+      width: 1rem;
+      height: 1rem;
+      padding: 0.8rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 1rem;
+      background-color: #fff;
+      span {
+        height: 2rem;
+        width: 1rem;
+      }
+    }
+    &__desc {
+      display: flex;
+      flex-direction: column;
+      &-title {
+        font-size: 0.88rem;
+        font-weight: 500;
+        max-width: 9.5rem;
+        margin-bottom: 0.1rem;
+      }
+      &-summary {
+        font-size: 0.7rem;
+        span {
+          margin-right: 0.4rem;
+        }
+      }
+    }
+  }
+  &__add-btn {
+    text-align: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 5px;
+    color: #666;
+    &:hover {
+      color: #f36671;
+    }
+    &-desc {
+      display: none;
+    }
+    // &:hover + &-desc {
+    //   display: block;
+    //   position: absolute;
+    //   left: 13.5rem;
+    //   margin-top: 3rem;
+    //   width: 10rem;
+    //   font-size: 0.7rem;
+    //   font-weight: 500;
+    //   color: $main;
+    // }
+  }
+}
+
+// Feedbck
+.feedback {
+  flex: 0 0 30%;
+  width: 126px;
+  margin: 0.3rem;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  padding: 0.6rem;
+  border-radius: 4px;
+  box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.1);
+  div {
+    display: flex;
+    align-items: center;
+  }
+  &__emotion {
+    padding: 0rem 0.15rem;
+    text-align: center;
+    border-radius: 8px;
+  }
+  &__time {
+    color: $main;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0 0.2rem;
+    text-align: center;
+    border-radius: 6px;
+  }
+  &__comment {
+    font-size: 0.8rem;
+    font-weight: 400;
+    max-height: 80px;
+    padding: 0 0.2rem;
+    overflow-y: hidden;
+    // text-overflow: ellipsis;
+    word-wrap: break-word;
+  }
+}
+
+.hidden {
+  display: none;
+}

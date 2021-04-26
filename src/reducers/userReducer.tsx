@@ -1,6 +1,7 @@
 import {
   SIGN_IN,
   SIGN_OUT,
+  USER_INFO,
   USER_EDIT_INFO,
   WITHDRAW,
   GET_GOOGLE_TOKEN,
@@ -12,7 +13,11 @@ const userReducer = (state: State = initialState, action: Action): State => {
   switch (action.type) {
     case SIGN_IN:
       return Object.assign({}, state, {
-        user: action.payload,
+        user: {
+          token: action.payload.token,
+          email: action.payload.email,
+          nickname: "",
+        },
       });
 
     case SIGN_OUT:
@@ -21,6 +26,15 @@ const userReducer = (state: State = initialState, action: Action): State => {
           token: "",
           email: "",
           nickname: "guest",
+        },
+      });
+
+    case USER_INFO:
+      return Object.assign({}, state, {
+        user: {
+          token: action.payload.token,
+          email: action.payload.email,
+          nickname: action.payload.nickname,
         },
       });
 

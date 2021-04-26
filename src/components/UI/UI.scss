@@ -1,10 +1,81 @@
-$main: #f36671;
+$main: #f73d5c;
 $dark: #191919;
 $mediumdark: rgba(0, 0, 0, 0.7);
 $light: #e8e8e8;
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
-// YesNoModal
-.yesnomodal {
+* {
+  font-family: "Noto Sans KR", sans-serif;
+}
+button {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background-color: rgba($color: #fff, $alpha: 1);
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  position: fixed;
+  z-index: 994;
+  height: 60px;
+  width: 100vw;
+  min-width: 760px;
+  justify-content: space-between;
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.1);
+  .navbar__logo {
+    padding: 0 3vw;
+    margin-top: 6px;
+    img {
+      height: 2rem;
+      cursor: pointer;
+    }
+  }
+  .navbar__btns {
+    padding: 0 80px;
+    display: flex;
+    &__first {
+      background-color: rgba(0, 0, 0, 0);
+      border: none;
+      color: $main;
+      margin-left: 8px;
+      height: 2.3rem;
+      width: 6.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      &:hover {
+        color: #fff;
+        border: none;
+        transition: all ease 0.3s;
+        background-color: $main;
+      }
+    }
+    &__second {
+      margin-left: 8px;
+      height: 2.3rem;
+      width: 6.5rem;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 14px;
+      background-color: $main;
+      color: #fff;
+      &:hover {
+        border: none;
+        transition: all ease 0.3s;
+      }
+    }
+  }
+}
+@media (min-width: 480px) and (max-width: 768px) {
+  .navbar__btns {
+    display: 0;
+  }
+}
+// Modal
+.modal {
   display: none;
   position: fixed;
   z-index: 999;
@@ -30,35 +101,55 @@ $light: #e8e8e8;
     justify-content: center;
     background-color: #fff;
     width: 380px;
-    height: 200px;
+    min-height: 200px;
     border-radius: 4px;
-    .yesnomodal__close-btn {
+    .modal__close-btn {
       position: sticky;
       background-color: #fff;
-      font-size: 20px;
+      font-size: 1rem;
       border: 0;
       outline: 0;
       position: relative;
-      top: -52px;
+      top: -2.4rem;
       left: 170px;
       &:hover {
         color: $main;
         transition: all ease 0.2s;
       }
     }
-    .yesnomodal__title {
+    .modal__caution {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: $main;
+      margin-top: -1rem;
+      margin-bottom: 1.2rem;
+    }
+    .modal__title {
+      margin-top: -1rem;
       position: relative;
       color: $dark;
-      font-weight: 700;
-      font-size: 20px;
+      font-weight: 500;
+      font-size: 1rem;
     }
-    .yesnomodal__btns {
+    .modal__input-text {
+      border: 2px solid $light;
+      border-radius: 3px;
+      margin-top: 1rem;
+      padding: 0.3rem 1rem;
+      &:focus {
+        outline: none;
+        border: 1px solid $main;
+        transition: all ease 0.3s;
+      }
+    }
+    .modal__btns {
       position: relative;
       top: 20px;
       width: 180px;
       height: 30px;
       display: flex;
       justify-content: space-between;
+      margin-bottom: 1rem;
       button {
         font-size: 12px;
         font-weight: 700;
@@ -81,6 +172,7 @@ $light: #e8e8e8;
     }
   }
 }
+
 .show {
   display: flex;
   align-items: center;
@@ -96,5 +188,192 @@ $light: #e8e8e8;
   to {
     opacity: 1;
     margin-top: 0;
+  }
+}
+
+// SetTheme
+.set-theme {
+  width: 1.5rem;
+  height: 1.5rem;
+  position: absolute;
+  left: 0.1rem;
+  top: 0.05rem;
+  &__img {
+    box-sizing: border-box;
+    width: 1.6rem;
+    height: 1.6rem;
+    font-size: 0.85rem;
+    border: 2px solid #e8e8e8;
+    border-radius: 8px;
+    background-color: #fff;
+    &:hover {
+      background-color: #eee;
+      cursor: pointer;
+    }
+    div {
+      position: relative;
+      margin-left: 2px;
+      margin-top: -2px;
+    }
+  }
+  .feedback {
+    width: 7rem;
+  }
+  &__select-btn {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 11rem;
+    height: 2rem;
+    border-radius: 6px;
+    background-color: #f1f1f1f5;
+    .selectTheme {
+      width: 1.55rem;
+      height: 1.5rem;
+      border-radius: 8px;
+      // background-color: #fff;
+      font-size: 0.8rem;
+      &:hover {
+        background-color: #ffeaec;
+        cursor: pointer;
+      }
+      &-pick {
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        margin-top: 1px;
+      }
+    }
+  }
+}
+
+//SetTime
+.set-time {
+  position: absolute;
+  left: 2rem;
+  top: 0.05rem;
+  z-index: 998;
+  &__text {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+    width: 3rem;
+    height: 1.4rem;
+    color: #fff;
+    padding: 0px 8px 1px 8px;
+    border-radius: 6px;
+    background-color: #f3707a;
+    vertical-align: center;
+    div {
+      font-size: 0.65rem;
+      font-weight: 500;
+      color: white;
+    }
+    &:hover {
+      background-color: $main;
+      cursor: pointer;
+      .set-time__text__currentTime,
+      .set-time__text__unit {
+        color: #ddd;
+      }
+    }
+  }
+  &__input-wrapper {
+    width: 4rem;
+    background-color: #fff;
+    border-radius: 4px;
+    overflow-y: scroll;
+    position: absolute;
+    height: 6rem;
+    ul {
+      display: block;
+      background-color: #f3667215;
+      width: 100%;
+      height: 8rem;
+      overflow-y: scroll;
+      list-style: none;
+      li {
+        text-align: center;
+        box-sizing: border-box;
+        font-size: 0.8rem;
+        font-weight: 500;
+        &:hover {
+          background-color: #f3667221;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+// Toast
+.notification-container {
+  font-size: 0.85rem;
+  position: fixed;
+  z-index: 999;
+  bottom: 2vh;
+  right: 12px;
+}
+
+.notification {
+  transition: transform 0.6s ease-in-out;
+  animation: toast-in-right 1s;
+  background: $main;
+  transition: 0.3s ease;
+  border-radius: 3px;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.6);
+  color: #000;
+  opacity: 0.9;
+  font-weight: 500;
+  height: 2.5rem;
+  width: 13rem;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem;
+  text-align: center;
+  vertical-align: center;
+}
+
+.loading {
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &__outsider {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+  &__wrapper {
+    img {
+      height: 6rem;
+      width: 6rem;
+    }
+  }
+}
+
+.fade-out {
+  opacity: 0;
+  transform: opacity 3s;
+}
+
+@keyframes toast-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
   }
 }

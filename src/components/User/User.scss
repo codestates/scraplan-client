@@ -1,0 +1,301 @@
+$main: #f73d5c;
+$dark: #191919;
+$mediumdark: rgba(0, 0, 0, 0.7);
+$light: #e8e8e8;
+
+// signin
+.signin {
+  display: none;
+  position: fixed;
+  z-index: 998;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0);
+  &__outsider {
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+}
+
+.show {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: show-modal 0.4s;
+}
+
+.signin__wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border-radius: 5px;
+  width: 22rem;
+  height: 32rem;
+  .signin__close-btn {
+    position: relative;
+    top: -3rem;
+    left: 8rem;
+    font-weight: 700;
+    font-size: 1rem;
+    &:hover {
+      color: $main;
+      transition: all ease 0.2s;
+    }
+  }
+  .signin__form {
+    display: flex;
+    flex-direction: column;
+    &__title {
+      color: $dark;
+      font-weight: 700;
+      font-size: 1.4rem;
+      text-align: center;
+      margin-bottom: 1.2rem;
+    }
+    &__list {
+      padding: 0;
+      li {
+        list-style: none;
+        margin-bottom: 0.5rem;
+        p {
+          font-size: 12px;
+          font-weight: 600;
+          color: #707174;
+          margin: 0;
+          margin-bottom: 4px;
+        }
+        input {
+          height: 1.2rem;
+          width: 14rem;
+          padding: 1rem;
+          border: 1px solid #9b9b9c;
+          border-radius: 3px;
+          font-size: 12px;
+          color: #5f6063;
+          &:focus {
+            outline: none;
+            border: 1px solid $main;
+            transition: all ease 0.3s;
+          }
+        }
+      }
+    }
+    &__deny-message {
+      width: 220px;
+      height: 12px;
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 1.2rem;
+      color: $main;
+    }
+    &__submit-btn {
+      height: 2.2rem;
+      width: 14rem;
+      border-radius: 3px;
+      margin-bottom: 0.5rem;
+      background-color: $main;
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 500;
+      &:hover {
+        background-color: #b3535b;
+        transition: all ease 0.3s;
+      }
+    }
+    &__google-btn {
+      height: 2.2rem;
+      width: 14rem;
+      border-radius: 3px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background-color: $light;
+      &:hover {
+        background-color: #b6b3b3;
+        transition: all ease 0.3s;
+      }
+    }
+    &__find-btns {
+      width: 14rem;
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 1.2rem;
+      button {
+        margin-left: 0.6rem;
+        font-size: 0.7rem;
+        color: $mediumdark;
+        &:hover {
+          color: $main;
+          transition: all ease 0.3s;
+        }
+      }
+    }
+  }
+}
+
+@keyframes show-modal {
+  from {
+    opacity: 0.3;
+    margin-top: 50px;
+  }
+  to {
+    opacity: 1;
+    margin-top: 0;
+  }
+}
+// signup
+.signup {
+  display: none;
+  position: fixed;
+  z-index: 998;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  &__outsider {
+    background-color: $mediumdark;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+  &__wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    border-radius: 5px;
+    width: 30rem;
+    height: 40rem;
+    .signup__close-btn {
+      position: relative;
+      top: -3rem;
+      left: 13rem;
+      font-weight: 700;
+      font-size: 1rem;
+      &:hover {
+        color: $main;
+        transition: all ease 0.2s;
+      }
+    }
+    .signup__form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      &__title {
+        color: $dark;
+        font-weight: 700;
+        font-size: 1.4rem;
+        text-align: center;
+        margin-bottom: 1.2rem;
+      }
+      &__list {
+        padding: 0;
+        li {
+          position: relative;
+          list-style: none;
+          margin-bottom: 0.5rem;
+          p {
+            font-size: 12px;
+            font-weight: 600;
+            color: #707174;
+            margin: 0;
+            margin-bottom: 4px;
+          }
+          input {
+            height: 1rem;
+            width: 16rem;
+            padding: 1rem;
+            border: 1px solid #9b9b9c;
+            border-radius: 3px;
+            font-size: 12px;
+            color: #5f6063;
+            &:focus {
+              outline: none;
+              border: 1px solid $main;
+              transition: all ease 0.3s;
+            }
+          }
+          div {
+            position: absolute;
+            box-sizing: border-box;
+            top: 30px;
+            left: 13.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            font-weight: 700;
+            border-radius: 4px;
+            width: 2rem;
+            height: 1rem;
+            // padding: 1rem 0 1rem 0;
+            background-color: #fff;
+            // border: 1px solid $main;
+            outline: 0;
+            color: $main;
+            &:hover {
+              cursor: pointer;
+              background-color: $main;
+              border: 0;
+              outline: 0;
+              color: #fff;
+              transition: all ease 0.2s;
+            }
+          }
+        }
+      }
+      &__deny-message {
+        width: 220px;
+        height: 12px;
+        font-size: 12px;
+        font-weight: 500;
+        margin-bottom: 1.2rem;
+        color: $main;
+        word-break: keep-all;
+      }
+      &__submit-btn {
+        height: 2.2rem;
+        width: 16rem;
+        border-radius: 3px;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+        background-color: $main;
+        color: #fff;
+        font-size: 0.8rem;
+        font-weight: 400;
+        &:hover {
+          background-color: #b3535b;
+          transition: all ease 0.3s;
+        }
+      }
+      &__google-btn {
+        height: 2.2rem;
+        width: 16rem;
+        border-radius: 3px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        background-color: $light;
+        &:hover {
+          background-color: #b6b3b3;
+          transition: all ease 0.3s;
+        }
+      }
+    }
+  }
+}

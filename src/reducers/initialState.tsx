@@ -6,10 +6,21 @@ export type State = {
   };
   googleToken: string;
   plans: any;
-  planCards: any;
+  planList: {
+    isValid: boolean;
+    isMember: boolean;
+    planCards: any;
+    plan: any;
+  };
+  planCardsByDay: any;
+  nonMemberPlanCards: any;
+  nonMemberSave: boolean;
   curations: any;
   curationCards: any;
   curationRequests: any;
+  curationRequestsResolved: any;
+  themeList: string[];
+  notifications: string[];
 };
 
 export const initialState: State = {
@@ -21,10 +32,30 @@ export const initialState: State = {
   },
   googleToken: "",
   // Plan
-  plans: {},
-  planCards: {},
+  plans: [],
+  planList: {
+    plan: {},
+    isValid: false,
+    isMember: false,
+    planCards: [],
+  },
+  planCardsByDay: [],
+  nonMemberPlanCards: {
+    planCards: [],
+    title: null,
+    si: null,
+    gun: null,
+    gu: null,
+  },
+  nonMemberSave: false,
   // Curation
   curations: {},
-  curationCards: {},
+  curationCards: {
+    origin: [],
+    sortByAvgTime: [],
+  },
   curationRequests: {},
+  curationRequestsResolved: {},
+  themeList: ["🍽", "☕️", "🎬", "🚴🏻", "🏔", "🤔"],
+  notifications: [],
 };

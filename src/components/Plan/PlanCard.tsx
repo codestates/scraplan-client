@@ -1,7 +1,9 @@
 import React from "react";
+import SetTime from "../UI/SetTime";
+import SetTheme from "../UI/SetTheme";
 
-function PlanCard() {
-  return <div></div>;
-}
+const PlanCard = () => {
+  return <div className="plancard"></div>;
+};
 
 export default PlanCard;
