@@ -69,6 +69,7 @@ body {
       }
     }
   }
+
   &__page {
     opacity: 0;
     animation: mainpage-fade-out 1.4s;
@@ -77,6 +78,9 @@ body {
     height: 100vh;
     width: 100vw;
     padding: 12vw;
+  }
+  .intro {
+    opacity: 1;
   }
   .active {
     opacity: 1;

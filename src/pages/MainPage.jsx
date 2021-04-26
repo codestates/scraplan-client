@@ -189,7 +189,7 @@ const MainPage = () => {
           <p>맨위로</p>
         </button>
         <div
-          className="mainpage__page"
+          className="mainpage__page intro"
           ref={topRef}
           // onClick={() => {
           //   firstRef.current.scrollIntoView({
