@@ -192,7 +192,7 @@ const AddPlan = ({
               ? cur
               : plan;
           },
-          { day: currentDay, endTime: "10:00" },
+          { day: currentDay, endTime: "00:00" },
         );
       let endMin =
         (Number(max.endTime.split(":")[1]) +
