@@ -19,7 +19,7 @@ Scraplan은 지도를 기반으로 **해당 장소의 즐길거리**를 큐레�
 ## Front End
 ### 요약
 <img width="400" alt="스크린샷 2021-03-25 오후 3 43 02" src="https://user-images.githubusercontent.com/73941966/115836694-c1c32f80-a452-11eb-8c3b-eb430f0b58d8.png">
-
+![Scraplan - Flow Chart(Front-End)](https://user-images.githubusercontent.com/73941966/116125611-ae3cf080-a700-11eb-86ca-f62f1dd06876.jpg)
 <br/>
 <br/>
 
